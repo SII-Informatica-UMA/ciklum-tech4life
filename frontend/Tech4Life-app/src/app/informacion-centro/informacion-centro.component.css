@@ -1,0 +1,11 @@
+/* 
+  informacion-centro.component.css
+  Esto es el css del componente que ha realizado Raúl
+*/
+
+body {
+    font-family: Helvetica ;
+    font-size: 15pt;
+    zoom: 100%;
+    background-color: rgb(169,204,227);
+}

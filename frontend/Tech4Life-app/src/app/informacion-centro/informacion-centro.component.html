@@ -1,0 +1,47 @@
+<!-- 
+  TO DO
+    Me falta tema textos dinámicos, alineaciones, la imagen...
+-->
+
+<!-- 
+  informacion-centro.component.html
+  Esto es el html del componente que ha realizado Raúl 
+-->
+<!DOCTYPE html>
+<html lang="es"> <!-- Esto es el idioma en el que va a estar la web -->
+
+<head>
+    <meta charset="UTF-8"> <!-- Esto es para especificar la codificación de caracteres de la web -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="informacion-centro.component.css"> <!-- Esto es el linkeo con el archivo css -->
+</head>
+
+<body>
+    <div class="container">
+       
+        <div class="row">
+            <h2 >INFORMACIÓN DEL CENTRO</h2>
+        </div>
+
+        <div class="row">
+            <label for="nombreCentro">Nombre del centro: </label>
+            <span class="col-md-9 offset-2 offset-md-0">BasicFit</span> <!-- {{contacto?.nombre}} Para el texto dinámico -->
+        </div>
+
+        <div class="row">
+            <label for="direccion">Dirección: </label>
+            <span class="col-md-9 offset-2 offset-md-0">Urb avestruz, calle calamar, nº5</span> <!-- {{contacto?.nombre}} Para el texto dinámico -->
+        </div>
+
+        <div class="row">
+            <label for="direccion">Valoración: </label>
+            <span class="col-md-9 offset-2 offset-md-0">3 estrellas</span> <!-- {{contacto?.nombre}} Para el texto dinámico -->
+        </div>
+
+        <div class="row">
+            <label for="direccion">Número de personas inscritas: </label>
+            <span class="col-md-9 offset-2 offset-md-0">1259</span> <!-- {{contacto?.nombre}} Para el texto dinámico -->
+        </div>
+    </div>
+</body>
+</html>
