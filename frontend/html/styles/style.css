@@ -15,24 +15,59 @@ nav{
    width:100%;
    background-color: rgb(166, 165, 162);
    text-align: center;
+   padding-top: 10px;
 }
-nav .logo{
+nav .superior{
     font: optional;
 }
 nav .barranav{
    display:grid;
-   grid-template-columns: repeat(4,auto);
+   grid-template-columns: repeat(3,auto);
    /* margin-right: 30px; */
    text-align: center;
    justify-content: center;
    gap: 4px;
    grid-auto-flow: column;
-  
+   margin-bottom: 5px;
+   margin-top: 5px;
 }
 nav .barranav div{
    padding: 10px 20px;
 }
 nav .barranav div:hover{
    cursor: pointer;
-   background:rgb(165, 255, 244);
+   background:rgb(2, 109, 180);
+   font-weight: bold;
 }
+
+nav .superior .perfil{
+   display: inline-block;
+   position:fixed;
+   padding: 30px;
+   right: 0;
+   
+}
+
+nav .contenido{
+   display: none;
+   position:absolute;
+   width:50%;
+   overflow: auto;
+   box-shadow: 0px 8px 16px 0px rgb(2, 109, 180);
+}
+
+nav .perfil:hover .contenido{
+   display: block;
+}
+
+nav .perfil:hover a{
+   display: block;
+   color: black;
+   padding: 5px;
+   text-decoration: none;
+}
+
+nav .contenido a:hover{
+   color: rgb(2, 109, 180);
+}
+
