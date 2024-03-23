@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
   
     constructor(public modal: NgbActiveModal) { }
   
-    guardarContacto(): void {
+    guardarCentro(): void {
       this.modal.close(this.centro);
     }
   

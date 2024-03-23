@@ -7,8 +7,9 @@ import { FormularioCentroComponent } from './formulario-centro/formulario-centro
 @Component({
   selector: 'app-root',
   templateUrl: './CentroList.html',
-  styleUrl: './CentroList.css'
-})
+  styleUrls: ['./CentroList.css'],
+  standalone: true
+  })
 export class CentroList implements OnInit{
   centros: Centro[]= [];
   centroElegido?: Centro;
