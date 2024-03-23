@@ -1,6 +1,7 @@
 <!-- 
   TO DO
-    Me falta tema textos dinámicos, alineaciones, la imagen...
+    Me falta alineaciones (colocación del texto e imagen en css)
+    Tema validador html -> Error de la imagen
 -->
 
 <!-- 
@@ -13,35 +14,39 @@
 <head>
     <meta charset="UTF-8"> <!-- Esto es para especificar la codificación de caracteres de la web -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No se va a mostrar</title> <!-- Esto es el nombre de la página que aparece en la pestaña del navegador -->
     <link rel="stylesheet" href="informacion-centro.component.css"> <!-- Esto es el linkeo con el archivo css -->
 </head>
 
 <body>
+
+    <div class="row">
+        <h2 >INFORMACIÓN DEL CENTRO</h2>
+    </div>
+
     <div class="container">
-       
+    
         <div class="row">
-            <h2 >INFORMACIÓN DEL CENTRO</h2>
+            <label>Nombre del centro: </label>
+            <span class="resp">{{centroNombre}}</span> <!-- {{centro?.centroNombre}} Para el texto dinámico -->
         </div>
 
         <div class="row">
-            <label for="nombreCentro">Nombre del centro: </label>
-            <span class="col-md-9 offset-2 offset-md-0">BasicFit</span> <!-- {{contacto?.nombre}} Para el texto dinámico -->
+            <label>Dirección: </label>
+            <span class="resp">{{centroDir}}</span> <!-- {{centro?.centroDir}} Para el texto dinámico -->
         </div>
 
         <div class="row">
-            <label for="direccion">Dirección: </label>
-            <span class="col-md-9 offset-2 offset-md-0">Urb avestruz, calle calamar, nº5</span> <!-- {{contacto?.nombre}} Para el texto dinámico -->
+            <label>Valoración: </label>
+            <span class="resp">{{centroValorac}}</span> <!-- {{centro?.centroValorac}} Para el texto dinámico -->
         </div>
 
         <div class="row">
-            <label for="direccion">Valoración: </label>
-            <span class="col-md-9 offset-2 offset-md-0">3 estrellas</span> <!-- {{contacto?.nombre}} Para el texto dinámico -->
-        </div>
-
-        <div class="row">
-            <label for="direccion">Número de personas inscritas: </label>
-            <span class="col-md-9 offset-2 offset-md-0">1259</span> <!-- {{contacto?.nombre}} Para el texto dinámico -->
+            <label>Número de personas inscritas: </label>
+            <span class="resp">{{centroInscr}}</span> <!-- {{centro?.centroInscr}} Para el texto dinámico -->
         </div>
     </div>
+    <!-- {{imagen}} coge la variable definida en typescript --> <!-- {{centro?.centroImagen}} Para el texto dinámico -->
+    <img src= '{{centroImagen}}' alt="Imagen del centro deportivo" class="imagenCentroDeportivo">
 </body>
 </html>
