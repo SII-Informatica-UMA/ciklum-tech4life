@@ -1,0 +1,38 @@
+@charset "utf-8";
+
+html {
+    font-size: 20px;
+    font-family: Helvetica;
+    background-color: rgb(169,204,227);
+}
+
+nav{
+   display:grid;
+   align-items: center;
+   font-family: sans-serif;
+   position:fixed;
+   top:0;
+   width:100%;
+   background-color: rgb(166, 165, 162);
+   text-align: center;
+}
+nav .logo{
+    font: optional;
+}
+nav .barranav{
+   display:grid;
+   grid-template-columns: repeat(4,auto);
+   /* margin-right: 30px; */
+   text-align: center;
+   justify-content: center;
+   gap: 4px;
+   grid-auto-flow: column;
+  
+}
+nav .barranav div{
+   padding: 10px 20px;
+}
+nav .barranav div:hover{
+   cursor: pointer;
+   background:rgb(165, 255, 244);
+}
