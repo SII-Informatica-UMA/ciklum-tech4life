@@ -1,0 +1,37 @@
+<div class="container">
+  
+  <div class="row">
+    <div class="col-md-6"> 
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Buscar por nombre" [(ngModel)]="term">
+        <button class="btn btn-outline-secondary" type="button" (click)="searchContact()">Buscar</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">Limpiar</button>
+      </div>
+      <div class="input-group">
+      <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nombre del Centro</th>
+      <th>Dirección</th>
+      <th>Gestor Afiliado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let contacto of contactos">
+      <td>{{contacto.nombre}}</td>
+      <td>{{contacto.direccion}}</td>
+      <td> </td>
+      <td>
+        
+      <button class="btn btn-outline-primary" (click)="editarContacto(contacto)"><i class="bi bi-pencil-fill"></i></button>
+      <button class="btn btn-outline-danger ms-2" (click)="eliminarContacto(contacto.id)"><i class="bi bi-trash-fill"></i></button>
+        
+      </td>
+    </tr>
+  </tbody>  
+</table>
+
+
+</div>
+</div>
+</div>

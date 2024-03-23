@@ -1,0 +1,17 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">{{accion}} contacto</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre usuario')"></button>
+</div>
+<div class="modal-body">
+  <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input class="form-control" id="nombre" [(ngModel)]="contacto.nombre" placeholder="nombre">
+      <label for="apellidos">Apellidos:</label>
+      <input class="form-control" id="apellidos" [(ngModel)]="contacto.direccion" placeholder="apellidos">
+      
+
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="guardarContacto()">Guardar</button>
+</div>

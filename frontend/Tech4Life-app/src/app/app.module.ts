@@ -2,15 +2,16 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
-import { CentroList } from './CentroList';
+import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormularioCentroComponent } from './formulario-centro/formulario-centro.component';
-
+import { DetalleContactoComponent } from './detalle-contacto/detalle-contacto.component';
+import { FormularioContactoComponent } from './formulario-contacto/formulario-contacto.component';
 
 @NgModule({
   declarations: [
-    CentroList,
-    FormularioCentroComponent
+    AppComponent,
+    DetalleContactoComponent,
+    FormularioContactoComponent
   ],
   imports: [
     BrowserModule,
@@ -19,6 +20,6 @@ import { FormularioCentroComponent } from './formulario-centro/formulario-centro
     FormsModule
   ],
   providers: [],
-  bootstrap: [CentroList]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
