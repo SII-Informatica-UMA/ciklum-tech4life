@@ -1,9 +1,14 @@
+<div style="height: 50px;"></div>
+
 <div class="container">
   
   <div class="row">
     <div class="col-md-6"> 
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Buscar por nombre" [(ngModel)]="term">
+        <button type="button" class="btn btn-outline-secondary" (click)="aniadirContacto()">Añadir Centro</button>
+        <div style="width: 20px;"></div>
+        <input type="text" class="form-control" placeholder="Buscar Centro" [(ngModel)]="term">
+        <div style="width: 10px;"></div>
         <button class="btn btn-outline-secondary" type="button" (click)="searchContact()">Buscar</button>
         <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">Limpiar</button>
       </div>
