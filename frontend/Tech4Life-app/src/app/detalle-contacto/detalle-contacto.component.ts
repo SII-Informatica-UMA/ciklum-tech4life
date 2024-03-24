@@ -10,12 +10,20 @@ import { ContactosService } from '../contactos.service';
   styleUrls: ['./detalle-contacto.component.css']
 })
 export class DetalleContactoComponent {
+  mostrarDetalles: boolean = true;
+CerrarDetalles():void {
+  this.mostrarDetalles = false;
+
+
+}
   @Input() contacto?: Contacto;
   @Output() contactoEditado = new EventEmitter<Contacto>();
   @Output() contactoEliminado = new EventEmitter<number>();
-
+  @Output() cerrarDetalles = new EventEmitter<void>();
   constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
-
+  cerrar() {
+    this.cerrarDetalles.emit();
+  }
   editarcontacto(): void {
     let ref = this.modalService.open(FormularioContactoComponent);
     ref.componentInstance.accion = "Editar";

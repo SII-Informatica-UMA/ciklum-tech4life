@@ -13,20 +13,23 @@ export class AppComponent implements OnInit {
 onSearch($event: Event) {
 throw new Error('Method not implemented.');
 }
+
   contactos: Contacto [] = [];
   contactoElegido?: Contacto;
   term: string = ''; // término de búsqueda
   constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
-//AGREGAMOS LO DE ORDENAR PARA QUE ORDENE CADA ACTUALIZACION
+
   ngOnInit(): void {
     this.contactos = this.contactosService.getContactos();
     this.OrdenarPorNombre();
   }
-
+  
   elegirContacto(contacto: Contacto): void {
     this.contactoElegido = contacto;
   }
-
+  cerrarDetalles() {
+    this.contactoElegido = undefined; // Establece el contactoElegido como null para cerrar los detalles
+  }
   aniadirContacto(): void {
     let ref = this.modalService.open(FormularioContactoComponent);
     ref.componentInstance.accion = "Añadir";
@@ -84,4 +87,11 @@ throw new Error('Method not implemented.');
     this.term = '';
     this.contactos = this.contactosService.getContactos();
   }
+
+  onEnter(event: KeyboardEvent) {
+    if (event.key === "Enter") {
+      this.searchContact();
+    }
+  }
+
 }

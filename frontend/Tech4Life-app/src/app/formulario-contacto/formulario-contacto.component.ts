@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./formulario-contacto.component.css']
 })
 export class FormularioContactoComponent {
+
   accion?: "Añadir" | "Editar";
   contacto: Contacto = {id: 0, nombre: '', direccion: ''};
 

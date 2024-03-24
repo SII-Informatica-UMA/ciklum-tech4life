@@ -17,7 +17,7 @@ import { FormularioContactoComponent } from './formulario-contacto/formulario-co
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
