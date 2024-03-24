@@ -6,6 +6,26 @@
 body {
   font-family: Helvetica;
   font-size: 15pt;
+  color: rgb(0, 102, 255);
   zoom: 100%;
   background-color: rgb(169, 204, 227);
+  margin: 70px;
+}
+
+h1{
+  color: rgb(1, 52, 155);
+}
+
+.destacado {
+  font-weight: bold;
+}
+
+.container1, .container2 {
+  width: 40%; /* O ajusta el ancho según tus necesidades */
+  display: inline-block; /* Muestra los divs en línea */
+  vertical-align: top; /* Alinea los divs en la parte superior */
+}
+
+.row {
+  line-height: 2; /* Puedes ajustar el valor según tus necesidades */
 }

@@ -1,6 +1,5 @@
 <!-- 
   TO DO
-    Me falta alineaciones (colocación del texto e imagen en css)
     Tema validador html -> Error de la imagen
 -->
 
@@ -21,32 +20,35 @@
 <body>
 
     <div class="row">
-        <h2 >INFORMACIÓN DEL CENTRO</h2>
+        <h1 >INFORMACIÓN DEL CENTRO</h1>
     </div>
 
-    <div class="container">
+    <div class="container1">
     
         <div class="row">
-            <label>Nombre del centro: </label>
+            <label class="destacado">Nombre del centro: </label>
             <span class="resp">{{centroNombre}}</span> <!-- {{centro?.centroNombre}} Para el texto dinámico -->
         </div>
 
         <div class="row">
-            <label>Dirección: </label>
+            <label class="destacado">Dirección: </label>
             <span class="resp">{{centroDir}}</span> <!-- {{centro?.centroDir}} Para el texto dinámico -->
         </div>
 
         <div class="row">
-            <label>Valoración: </label>
+            <label class="destacado">Valoración: </label>
             <span class="resp">{{centroValorac}}</span> <!-- {{centro?.centroValorac}} Para el texto dinámico -->
         </div>
 
         <div class="row">
-            <label>Número de personas inscritas: </label>
+            <label class="destacado">Número de personas inscritas: </label>
             <span class="resp">{{centroInscr}}</span> <!-- {{centro?.centroInscr}} Para el texto dinámico -->
         </div>
     </div>
-    <!-- {{imagen}} coge la variable definida en typescript --> <!-- {{centro?.centroImagen}} Para el texto dinámico -->
-    <img src= '{{centroImagen}}' alt="Imagen del centro deportivo" class="imagenCentroDeportivo">
+    <div class="container2">
+        <!-- {{imagen}} coge la variable definida en typescript --> <!-- {{centro?.centroImagen}} Para el texto dinámico -->
+        <img src= '{{centroImagen}}' alt="Imagen del centro deportivo" class="imagenCentroDeportivo">
+        <!-- La línea anterior dá un Error en el validador HTML -->
+    </div>
 </body>
 </html>
