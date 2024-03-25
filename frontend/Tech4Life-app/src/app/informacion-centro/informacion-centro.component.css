@@ -27,5 +27,6 @@ h1{
 }
 
 .row {
-  line-height: 2; /* Puedes ajustar el valor según tus necesidades */
+  line-height: 3; /* Puedes ajustar el valor según tus necesidades */
+  margin-left: 40px;
 }
