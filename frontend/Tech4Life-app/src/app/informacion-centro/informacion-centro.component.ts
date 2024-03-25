@@ -3,6 +3,7 @@
   Esto es el typescript del componente que ha realizado Raúl
 */
 import { Component } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common'
 
 // Aquí hay que importar todos los componentes que vaya a usar este componente.
 // Por ahora ninguno.

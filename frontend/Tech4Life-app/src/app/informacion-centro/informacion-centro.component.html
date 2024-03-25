@@ -47,8 +47,9 @@
     </div>
     <div class="container2">
         <!-- {{imagen}} coge la variable definida en typescript --> <!-- {{centro?.centroImagen}} Para el texto dinámico -->
-        <img src= '{{centroImagen}}' alt="Imagen del centro deportivo" class="imagenCentroDeportivo">
+        <img [src]="centroImagen" alt="Imagen del centro deportivo" class="imagenCentroDeportivo">
         <!-- La línea anterior dá un Error en el validador HTML -->
+
     </div>
 </body>
 </html>
