@@ -1,11 +1,11 @@
 <div class="container">
   <div class="row">
-    <h2>Información sobre {{contacto?.nombre}}</h2>
+    <h2 class="black-text">Información sobre {{contacto?.nombre}}</h2>
   </div>
 
   <div class="row">
     <div class="col-md-3">
-      <strong>ID:</strong>
+      <strong class="black-text">ID:</strong>
     </div>
     <div class="col-md-9">
       {{contacto?.id}}
@@ -13,7 +13,7 @@
     
   <div class="row">
     <div class="col-md-3">
-      <strong>Nombre:</strong>
+      <strong class="black-text">Nombre:</strong>
     </div>
     <div class="col-md-9">
       {{contacto?.nombre}}
@@ -23,7 +23,7 @@
   </div>
   <div class="row">
     <div class="col-md-3">
-      <strong>Dirección:</strong>
+      <strong class="black-text">Dirección:</strong>
     </div>
     <div class="col-md-9">
       {{contacto?.direccion}}
@@ -32,10 +32,10 @@
 
   <div class="row mt-3">
     <div class="col-auto">
-      <button class="btn btn-outline-primary" (click)="cerrar()">Cerrar <i class="bi bi-trash-fill"></i></button>
+      <button class="btn btn-outline-primary" (click)="cerrar()">Cerrar <i ></i></button>
     </div>
     <div class="col-auto">
-      <button class="btn btn-outline-primary" (click)="editarcontacto()">Editar <i class="bi bi-pencil-fill"></i></button>
+      <button class="btn btn-outline-primary" (click)="editarcontacto()">Editar <i ></i></button>
     </div>
   </div>
 </div>

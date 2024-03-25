@@ -1,0 +1,11 @@
+body{
+    font-family: Helvetica;
+    color: rgb(0, 102, 255);
+    background-color: rgb(169, 204, 227);
+}
+
+
+.btn-white-bg {
+    background-color: white;
+    color: rgb(1, 52, 155);
+}

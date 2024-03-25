@@ -1,4 +1,4 @@
-/aumentar el tamaño de la fuente */
+
 .fs-5 {
     font-size: 1.25rem; /* Puedes ajustar el tamaño de la fuente según tus necesidades */
   }
@@ -6,4 +6,8 @@
   /* Estilo para agregar margen superior */
   .mt-3 {
     margin-top: 2rem; /* Puedes ajustar el margen superior según tus necesidades */
+  }
+
+  .black-text {
+    color: black;
   }
