@@ -1,15 +1,15 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {Contacto } from '../contacto';
+import {Contacto } from '../centro';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormularioContactoComponent} from '../formulario-contacto/formulario-contacto.component'
-import { ContactosService } from '../contactos.service';
+import {FormularioContactoComponent} from '../formulario-centro/formulario-centro'
+import { ContactosService } from '../centro.service';
 
 @Component({
-  selector: 'app-detalle-contacto',
-  templateUrl: './detalle-contacto.component.html',
-  styleUrls: ['./detalle-contacto.component.css']
+  selector: 'app-detalle-centro',
+  templateUrl: './detalle-centro.html',
+  styleUrls: ['./detalle-centro.css']
 })
-export class DetalleContactoComponent {
+export class DetalleCentroComponent {
   mostrarDetalles: boolean = true;
 CerrarDetalles():void {
   this.mostrarDetalles = false;

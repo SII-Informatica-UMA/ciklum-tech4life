@@ -1,0 +1,56 @@
+<body>
+
+    <div style="height: 50px;"></div>
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="input-group mb-3">
+            <button type="button" class="btn btn-outline-secondary btn-white-bg" (click)="aniadirContacto()">
+              <i class="bi bi-pencil-fill"></i> Añadir Centro
+            </button>
+            <div style="width: 20px;"></div>
+            <input type="text" class="form-control" placeholder="Buscar Centro" [(ngModel)]="term" (keypress)="onEnter($event)">
+            <button class="bi bi-search" type="button" (click)="searchContact()">Buscar</button>
+            <div style="width: 5px;"></div>
+            <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">Clear</button>
+          </div>
+          
+          <div class="input-group">
+            <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th>Nombre del Centro</th>
+                  <th>Dirección</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let contacto of contactos">
+                  <td>{{contacto.nombre}}</td>
+                  <td>{{contacto.direccion}}</td>
+                  <td></td>
+                  <td>
+                    <button type="button" (click)="elegirContacto(contacto)" [class.active]="contacto === contactoElegido">
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button class="btn btn-outline-danger ms-2" (click)="eliminarContacto(contacto.id)">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>  
+            </table>
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="contactoElegido">
+          <app-detalle-centro [contacto]="contactoElegido" 
+          (contactoEditado)="contactoEditado($event)"
+          (cerrarDetalles)="cerrarDetalles()"
+          ></app-detalle-centro>
+          
+        </div>
+      </div>
+    </div>
+    </body>
