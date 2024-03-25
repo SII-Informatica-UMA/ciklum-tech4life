@@ -19,17 +19,26 @@ throw new Error('Method not implemented.');
   term: string = ''; // término de búsqueda
   constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
 
+  //actualiza en tiempo real
   ngOnInit(): void {
     this.contactos = this.contactosService.getContactos();
     this.OrdenarPorNombre();
   }
   
+
+  //elige contacto
   elegirContacto(contacto: Contacto): void {
     this.contactoElegido = contacto;
   }
+
+
+  //cierra detalles
   cerrarDetalles() {
     this.contactoElegido = undefined; // Establece el contactoElegido como null para cerrar los detalles
   }
+
+
+  //añade centro
   aniadirContacto(): void {
     let ref = this.modalService.open(FormularioContactoComponent);
     ref.componentInstance.accion = "Añadir";
@@ -41,6 +50,8 @@ throw new Error('Method not implemented.');
     }, (reason) => {});
     
   }
+
+  //edita centro
   contactoEditado(contacto: Contacto): void {
     this.contactosService.editarContacto(contacto);
     this.contactos = this.contactosService.getContactos();
@@ -48,13 +59,15 @@ throw new Error('Method not implemented.');
    
   }
 
+  //Elimina centro
   eliminarContacto(id: number): void {
     this.contactosService.eliminarContacto(id);
     this.contactos = this.contactosService.getContactos();
     this.contactoElegido = undefined;
   }
-  //----------------------FUNCIONES AGREGADAS:--------------------------
-  //EDITAR CONTACTOS:
+  
+  
+//Editar cada fila:
 
   editarContacto(contacto: Contacto): void {
     let ref = this.modalService.open(FormularioContactoComponent);
@@ -66,8 +79,8 @@ throw new Error('Method not implemented.');
       this.OrdenarPorNombre();
     }, (reason) => { });
   }
-  //se muestra todo ordenado:
 
+//ordena los centros por nombres
   OrdenarPorNombre(): void {
     this.contactos = this.contactosService.getContactos().sort((a, b) => a.nombre.localeCompare(b.nombre));
   }
@@ -82,12 +95,12 @@ throw new Error('Method not implemented.');
       );
     }
   }
-
+//limpia la busqueda , devuelve a estado inicial
   clearSearch() {
     this.term = '';
     this.contactos = this.contactosService.getContactos();
   }
-
+//cuando se pulsa enter se activa el buscar centro
   onEnter(event: KeyboardEvent) {
     if (event.key === "Enter") {
       this.searchContact();
