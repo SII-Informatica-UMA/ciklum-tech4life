@@ -5,17 +5,9 @@ import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.co
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet,BarraNavegacionComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
-})
-
-@Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [BarraNavegacionComponent],
-  templateUrl: './barra-navegacion/barra-navegacion.component.html',
-  styleUrl: './barra-navegacion/barra-navegacion.component.css'
 })
 
 export class AppComponent {
