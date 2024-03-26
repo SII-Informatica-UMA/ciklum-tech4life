@@ -6,6 +6,7 @@
       <div class="row">
         <div class="col-md-6">
           <div class="mb-3">
+            
             <button type="button" class="btn btn-outline-secondary btn-lg btn-white-bg" (click)="aniadirContacto()">
               <i class="bi bi-pencil-fill"></i> Añadir Centro
             </button>
@@ -22,6 +23,7 @@
                   <th style="width: 40%;">Nombre del Centro</th>
                   <th style="width: 40%;">Dirección</th>
                   <th style="width: 20%;"></th>
+                  <th style="width: 20%;"></th>
                 </tr>
               </thead>
               <tbody>
@@ -30,10 +32,12 @@
                   <td class="fw-bold">{{contacto.direccion}}</td>
                   <td>
                     <button type="button" (click)="elegirContacto(contacto)" class="btn btn-outline-secondary btn-lg" [class.active]="contacto === contactoElegido">
-                      <i class="bi bi-pencil-fill"></i>
+                      <i class="bi bi-pencil-fill">Escoger</i>
                     </button>
+                  </td>
+                  <td>
                     <button class="btn btn-outline-danger btn-lg ms-2" (click)="eliminarContacto(contacto.id)">
-                      <i class="bi bi-trash-fill"></i>
+                      <i class="bi bi-trash-fill">Borrar</i>
                     </button>
                   </td>
                 </tr>
