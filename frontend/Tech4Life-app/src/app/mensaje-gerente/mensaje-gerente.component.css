@@ -1,6 +1,5 @@
- 
-
-.chat-messages {
+ .chat-messages {
+  border: 10px solid black;
     flex-grow: 1;
     overflow-y: auto;
   }
@@ -8,19 +7,18 @@
     height: calc(100vh - 60px); /* 60px para dejar espacio para la barra de navegación */
     overflow-y: auto; /* Agrega barra de desplazamiento vertical si es necesario */
   }  
-  .chat-input {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-  }
   
-  .chat-input input {
-    flex-grow: 1;
-    margin-right: 10px;
-  }
-  
-  .chat-input button {
-    padding: 5px 10px;
-  }
-  
+ .grupo-texto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-control {
+  flex: 1; /* El input ocupa todo el espacio disponible */
+  margin-right: 10px; /* Margen derecho para separarlo del botón */
+}
+
+.btn-envio {
+  flex-shrink: 0; /* Evita que el botón se contraiga */
+}

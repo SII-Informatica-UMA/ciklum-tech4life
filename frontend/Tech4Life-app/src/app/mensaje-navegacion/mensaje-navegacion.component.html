@@ -10,15 +10,12 @@
     <div class="row">
       <div class="col-md-3">
         <h1>Chats</h1>
-        <!-- Columna de la lista de chats -->
-        <div class="chat-list">
-          <!-- Aquí irían los chats -->
-          <ul>
-            <li>Chat 1</li>
-            <li>Chat 2</li>
-            <!-- Más chats -->
-          </ul>
-        </div>
+      <div class="chat-list">
+        <ul>
+          <li *ngFor="let chat of chats">
+            <a href="#">{{ chat.nombreLocutor }}</a>  </li>
+        </ul>
+      </div>
       </div>
     </div>
   </div>
