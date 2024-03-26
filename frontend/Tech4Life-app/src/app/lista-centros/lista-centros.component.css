@@ -25,4 +25,5 @@ body {
   .custom-input {
     border-width: 1px;
     height:29px;
+    width: 400px;
 }
