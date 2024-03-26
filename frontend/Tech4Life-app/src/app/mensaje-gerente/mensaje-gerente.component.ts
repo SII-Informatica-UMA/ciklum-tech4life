@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Mensaje } from '../mensaje';
+
 
 @Component({
   selector: 'app-mensaje-gerente',
@@ -7,35 +9,37 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./mensaje-gerente.component.css']
 })
 export class MensajeGerenteComponent implements OnInit {
+  mensajes: Mensaje[] = []; // Lista de mensajes
 
   constructor() { }
 
   ngOnInit(): void {
-    // Puedes colocar tu lógica aquí, se ejecutará una vez que el componente esté inicializado.
+    // ...
   }
+  enviarMensaje(texto: string, destinatario: string) {
+    let nuevoMensaje: Mensaje;
+    nuevoMensaje = {
+      id: 4, // Incrementar el ID en base a los mensajes existentes
+      remitente: "Gerente",
+      destinatario: destinatario,
+      contenido: texto,
+      fechaHora: new Date(),
+    };
+  
+  // Función para enviar un mensaje
+  
+    // Crear un nuevo objeto de mensaje
+    
+    // Agregar el nuevo mensaje a la lista de mensajes
+    this.mensajes.push(nuevoMensaje);
 
-  enviarMensaje(): void {
-    const messageInput = document.getElementById('messageInput') as HTMLInputElement;
-    const chatMessages = document.getElementById('chatMessages');
+    // Actualizar la interfaz de usuario para mostrar el nuevo mensaje
+    // ...
 
-    if (chatMessages) { // Verificar si chatMessages no es null
-      const messageText = messageInput.value.trim();
-      if (messageText !== '') {
-        this.appendMessage('You', messageText, chatMessages);
-        messageInput.value = '';
-      }
-    }
-  }
+    // Desplazar la vista automáticamente al nuevo mensaje
+    // ...
 
-  appendMessage(sender: string, message: string, chatMessages: HTMLElement): void {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message');
-    messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
-    chatMessages.appendChild(messageElement);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Mostrar una notificación al usuario
+    // ...
   }
 }
-
-
-
-
