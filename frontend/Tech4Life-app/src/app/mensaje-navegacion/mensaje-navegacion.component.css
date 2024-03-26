@@ -1,0 +1,7 @@
+/* mensajes-navegacion.component.css */
+
+.chat-list {
+    max-height: calc(100vh - 60px); /* 60px para dejar espacio para la barra de navegación */
+    overflow-y: auto; /* Agrega barra de desplazamiento vertical si es necesario */
+  }
+  

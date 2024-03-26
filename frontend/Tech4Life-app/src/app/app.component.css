@@ -1,0 +1,10 @@
+.col-md-3 {
+    width: 30%; /* 30% del ancho de la pantalla */
+    float: left; /* Alineación a la izquierda */
+  }
+  
+  .col-md-9 {
+    width: 70%; /* 70% del ancho de la pantalla */
+    float: right; /* Alineación a la derecha */
+  }
+  

@@ -1,0 +1,26 @@
+ 
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  .chat-area {
+    height: calc(100vh - 60px); /* 60px para dejar espacio para la barra de navegación */
+    overflow-y: auto; /* Agrega barra de desplazamiento vertical si es necesario */
+  }  
+  .chat-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .chat-input input {
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+  
+  .chat-input button {
+    padding: 5px 10px;
+  }
+  
