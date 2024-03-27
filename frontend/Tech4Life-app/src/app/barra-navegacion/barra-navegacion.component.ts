@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './barra-navegacion.component.css'
 })
 export class BarraNavegacionComponent {
-
+logo = './assets/logoT4L.png'
 }

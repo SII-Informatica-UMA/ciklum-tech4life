@@ -37,6 +37,7 @@
     padding: 0 40px;
     line-height: 80px;
     display:grid;
+    margin-top: 5px;
   }
   
   .nav-menu {

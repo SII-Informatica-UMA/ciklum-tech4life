@@ -120,16 +120,6 @@
     background-color: #99f;
   }
   
-  .carousel__slide:before {
-    content: counter(item);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate3d(-50%,-40%,70px);
-    color: #fff;
-    font-size: 2em;
-  }
-  
   .carousel__snapper {
     position: absolute;
     top: 0;
@@ -234,5 +224,18 @@
   
   .carousel::after {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='100,50 20,100 20,0' fill='%23fff'/%3E%3C/svg%3E");
+  }
+
+  img {
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    margin: auto;
+    margin-top: 120px;
+    width: 700px;
+    object-fit: cover;
+    object-position: center center;
+    margin-top: 0;
   }
   
