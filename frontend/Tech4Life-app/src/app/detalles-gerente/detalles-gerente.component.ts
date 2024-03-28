@@ -1,17 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {Contacto } from '../contacto';
+import { Contacto } from '../lista-gerentes/contacto';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormularioCentroComponent} from '../formulario-centro/formulario-centro.component'
-import { ContactosService } from '../contacto.service';
+import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
+import { ContactosService } from '../lista-gerentes/contacto.service';
 
 @Component({
-  selector: 'app-detalles-centro',
+  selector: 'app-detalles-gerente',
   standalone: true,
   imports: [],
-  templateUrl: './detalles-centro.component.html',
-  styleUrl: './detalles-centro.component.css'
+  templateUrl: './detalles-gerente.component.html',
+  styleUrl: './detalles-gerente.component.css'
 })
-export class DetallesCentroComponent {
+export class DetallesGerenteComponent {
   mostrarDetalles: boolean = true;
   CerrarDetalles():void {
     this.mostrarDetalles = false;
@@ -25,7 +25,7 @@ export class DetallesCentroComponent {
       this.cerrarDetalles.emit();
     }
     editarcontacto(): void {
-      let ref = this.modalService.open(FormularioCentroComponent);
+      let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {...this.contacto};
       ref.result.then((contacto: Contacto) => {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import  {Contacto} from '../contacto';
+import  {Contacto}from '../lista-gerentes/contacto'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 //SI DA ERROR EL IMPORT DE ARRIBA EJECUTAR:
 //npm install @ng-bootstrap/ng-bootstrap
@@ -7,17 +7,17 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-formulario-centro',
+  selector: 'app-formulario-gerente',
   standalone: true,
   imports: [FormsModule,CommonModule],
-  templateUrl: './formulario-centro.component.html',
-  styleUrl: './formulario-centro.component.css'
+  templateUrl: './formulario-gerente.component.html',
+  styleUrl: './formulario-gerente.component.css'
+  
 })
-export class FormularioCentroComponent {
-
+export class FormularioGerenteComponent {
 
   accion?: "Añadir" | "Editar";
-  contacto: Contacto = {id: 0, nombre: '', direccion: ''};
+  contacto: Contacto = {id: 0, nombre: '', apellido: '',centro:''};
 
   constructor(public modal: NgbActiveModal) { }
 
@@ -27,7 +27,10 @@ export class FormularioCentroComponent {
 
 }
 
-imports: [
-  FormsModule,
-  CommonModule
-]
+
+
+
+
+
+
+

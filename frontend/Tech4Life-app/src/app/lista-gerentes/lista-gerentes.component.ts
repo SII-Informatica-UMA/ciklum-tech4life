@@ -3,19 +3,19 @@ import {Contacto} from './contacto';
 import {ContactosService } from './contacto.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
+import { DetallesGerenteComponent } from '../detalles-gerente/detalles-gerente.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DetallesCentroComponent } from '../detalles-centro/detalles-centro.component';
-import { FormularioCentroComponent } from '../formulario-centro/formulario-centro.component';
 
 @Component({
-    selector: 'app-lista-centros',
-    standalone: true,
-    templateUrl: './lista-centros.component.html',
-    styleUrl: './lista-centros.component.css',
-    imports: [DetallesCentroComponent,FormsModule,CommonModule]
+  selector: 'app-lista-gerentes',
+  standalone: true,
+  imports: [DetallesGerenteComponent,FormsModule,CommonModule],
+  templateUrl: './lista-gerentes.component.html',
+  styleUrl: './lista-gerentes.component.css'
 })
-export class ListaCentrosComponent implements OnInit {
+
+export class ListaGerentesComponent implements OnInit {
   onSearch($event: Event) {
   throw new Error('Method not implemented.');
   }
@@ -46,9 +46,9 @@ export class ListaCentrosComponent implements OnInit {
   
     //añade centro
     aniadirContacto(): void {
-      let ref = this.modalService.open(FormularioCentroComponent);
+      let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Añadir";
-      ref.componentInstance.contacto = {id: 0, nombre: '', direccion: ''};
+      ref.componentInstance.contacto = {id: 0, nombre: '', apellido: '',centro:''};
       ref.result.then((contacto: Contacto) => {
         this.contactosService.addContacto(contacto);
         this.contactos = this.contactosService.getContactos();
@@ -76,7 +76,7 @@ export class ListaCentrosComponent implements OnInit {
   //Editar cada fila:
   
     editarContacto(contacto: Contacto): void {
-      let ref = this.modalService.open(FormularioCentroComponent);
+      let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {}; 
       ref.result.then((contactoEditado: Contacto) => {
