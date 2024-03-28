@@ -1,0 +1,29 @@
+body {
+    font-family: Helvetica;
+    color: black;
+    background-color: rgb(169, 204, 227);
+    height: 100vh; 
+    width: 100%; 
+  }
+
+
+.btn-white-bg {
+    background-color: white;
+    color: rgb(1, 52, 155);
+}
+.btn {
+  font-size: 17px; /* Tamaño de fuente personalizado */
+  padding: 5px 5px; /* Relleno personalizado */
+}
+.table tbody tr {
+    border-bottom: 3px solid #dee2e6; 
+  }
+  
+  .table tbody tr td {
+    padding: 10px; /* tam celdas */
+  }
+  .custom-input {
+    border-width: 1px;
+    height:29px;
+    width: 400px;
+}
