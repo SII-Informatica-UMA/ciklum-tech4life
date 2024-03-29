@@ -4,6 +4,7 @@ import { Usuario } from "../entities/usuario";
 import { SECRET_JWT } from "../config/config";
 import { from } from "rxjs";
 import * as jose from 'jose';
+import { FRONTEND_URI } from "../config/config";
 
 // Este servicio imita al backend pero utiliza localStorage para almacenar los datos
 
@@ -129,7 +130,7 @@ export class BackendFakeService {
     let u = this.usuarios.find(u => u.email == email && u.password == password);
     if (!u) {
       return new Observable<string>(observer => {
-        observer.error('Usuario o contraseña incorrectos');
+        observer.error({status: 401, statusText: 'Usuario o contraseña incorrectos'});
       });
     }
     return from(this.generateJwt(u));
@@ -137,7 +138,7 @@ export class BackendFakeService {
 
   forgottenPassword(email: string): Observable<void> {
     const token = this.generarCadena()
-    console.log('Token generado: ', token);
+    console.log('Para resetar la contraseña acceda a: '+FRONTEND_URI+'/reset-password?token='+token);
     this.forgottenPasswordTokens.set(token, email);
     this.guardarForgottenPasswordTokensEnLocalStorage();
     return of();
