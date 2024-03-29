@@ -4,6 +4,10 @@ export interface Login {
   password: string;
 }
 
+export interface JwtResponse {
+  jwt: string;
+}
+
 export enum Rol {
   ADMINISTRADOR = 'administrador',
   GERENTE = 'gerente',

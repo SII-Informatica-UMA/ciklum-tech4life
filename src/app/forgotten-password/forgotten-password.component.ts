@@ -29,7 +29,7 @@ export class ForgottenPasswordComponent {
       this.error = true;
       return;
     }
-    this.usuarioService.doForgottenPassword(this.email);
+    this.usuarioService.doForgottenPassword(this.email).subscribe(()=>{});
     this.mensaje = "Si la cuenta existe recibirá en su correo un  mensaje con instrucciones para recuperar la contraseña."
     this.error = false;
   }

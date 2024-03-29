@@ -4,11 +4,9 @@ import { Observable, of, forkJoin, concatMap, lastValueFrom } from "rxjs";
 import {map} from 'rxjs/operators';
 import * as jose from 'jose';
 
-import { HttpClient } from "@angular/common/http";
-import { BACKEND_URI } from "../config/config";
-
 import { Usuario } from "../entities/usuario";
 import { BackendFakeService } from "./backend.fake.service";
+import { BackendService } from "./backend.service";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +14,7 @@ import { BackendFakeService } from "./backend.fake.service";
 export class UsuariosService {
   _rolCentro?: RolCentro;
 
-  constructor(private backend: BackendFakeService) {}
+  constructor(private backend: BackendService) {}
 
   doLogin(login: Login): Observable<UsuarioSesion> {
     let jwtObs = this.backend.login(login.email, login.password);
@@ -80,8 +78,8 @@ export class UsuariosService {
     localStorage.removeItem('usuario');
   }
 
-  doForgottenPassword(email: string) {
-    this.backend.forgottenPassword(email);
+  doForgottenPassword(email: string): Observable<void> {
+    return this.backend.forgottenPassword(email);
   }
 
   doCambiarContrasenia(password: string, token: string): Promise<void> {

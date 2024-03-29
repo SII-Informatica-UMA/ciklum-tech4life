@@ -45,8 +45,9 @@ export class ListadoUsuarioComponent {
     ref.componentInstance.accion = "Añadir";
     ref.componentInstance.usuario = new UsuarioImpl();
     ref.result.then((usuario: Usuario) => {
-      this.usuariosService.aniadirUsuario(usuario);
-      this.actualizarUsuarios();
+      this.usuariosService.aniadirUsuario(usuario).subscribe(usuario => {
+        this.actualizarUsuarios();
+      });
     }, (reason) => {});
 
   }

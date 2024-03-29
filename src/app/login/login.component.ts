@@ -26,7 +26,12 @@ export class LoginComponent {
       },
       error: (error) => {
         this.loginInfo = {email: '', password: ''};
-        this.error = error;
+        if (error.status === 401) {
+          this.error = 'Usuario o contraseña incorrectos';
+        } else {
+          this.error = error.statusText;
+        }
+
       }
     });
   }
