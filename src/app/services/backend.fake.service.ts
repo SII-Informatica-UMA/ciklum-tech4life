@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { Usuario } from "../entities/usuario";
-import {  }  from 'ts-jose';
+import { SECRET_JWT } from "../config/config";
+import { from } from "rxjs";
+import * as jose from 'jose';
 
 // Este servicio imita al backend pero utiliza localStorage para almacenar los datos
 
@@ -130,7 +132,7 @@ export class BackendFakeService {
         observer.error('Usuario o contraseña incorrectos');
       });
     }
-    return of(this.generateJwt(u));
+    return from(this.generateJwt(u));
   }
 
   forgottenPassword(email: string): Observable<void> {
@@ -163,8 +165,11 @@ export class BackendFakeService {
     return of();
   }
 
-  private generateJwt(usuario: Usuario): string { // TODO
-    return ""+usuario.id;
+  private generateJwt(usuario: Usuario): Promise<string> {
+    const secret = new TextEncoder().encode(SECRET_JWT);
+    return new jose.SignJWT({ sub: ""+usuario.id, email: usuario.email })
+      .setProtectedHeader({ alg: 'HS256' })
+      .sign(secret);
   }
 
   private generarCadena(): string {

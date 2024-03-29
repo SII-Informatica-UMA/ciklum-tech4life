@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import { Login, UsuarioSesion, Rol, RolCentro } from "../entities/login";
 import { Observable, of, forkJoin, concatMap, lastValueFrom } from "rxjs";
 import {map} from 'rxjs/operators';
+import * as jose from 'jose';
+
 import { HttpClient } from "@angular/common/http";
 import { BACKEND_URI } from "../config/config";
 
-
-import { passwords, usuarios } from "./usuarios.db.service";
 import { Usuario } from "../entities/usuario";
 import { BackendFakeService } from "./backend.fake.service";
 
@@ -48,12 +48,19 @@ export class UsuariosService {
   }
 
   private completarConRoles(usuarioSesion: UsuarioSesion): Observable<UsuarioSesion> {
-    // TODO
+    // TODO: acceder a lo sotros servicios (o simular) para completar con los roles necesarios
     return of(usuarioSesion);
   }
 
   private getUsuarioIdFromJwt(jwt: string): number {
-    return parseInt(jwt); // FIXME
+    let payload = jose.decodeJwt(jwt);
+    console.log("Payload: "+JSON.stringify(payload));
+    let id = payload.sub;
+    if (id == undefined) {
+      return 0;
+    } else {
+      return parseInt(id);
+    }
   }
 
   get rolCentro(): RolCentro | undefined {
