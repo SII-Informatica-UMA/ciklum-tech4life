@@ -11,12 +11,12 @@ import { FRONTEND_URI } from "../config/config";
 const usuariosC: Usuario [] = [
   {
     id: 1,
-    nombre: 'J. Francisco',
-    apellido1: 'Chicano',
-    apellido2: 'García',
-    email: 'chicano@uma.es',
+    nombre: 'Admin',
+    apellido1: 'Admin',
+    apellido2: 'Admin',
+    email: 'admin@uma.es',
     administrador: true,
-    password: '1234'
+    password: 'admin'
   },
   {
     id: 2,
