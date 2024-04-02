@@ -42,7 +42,7 @@ export class ListaCentrosComponent implements OnInit {
     //cierra detalles
     cerrarDetalles() {
       this.contactoElegido = undefined; 
-      this.contactoAEliminar;// Establece el contactoElegido como null para cerrar los detalles
+      this.contactoAEliminar= undefined;// Establece el contactoElegido como null para cerrar los detalles
     }
   
   
