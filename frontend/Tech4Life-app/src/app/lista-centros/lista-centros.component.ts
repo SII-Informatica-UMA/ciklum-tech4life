@@ -54,6 +54,7 @@ export class ListaCentrosComponent implements OnInit {
   
     //añade centro
     aniadirContacto(): void {
+      this.cerrarPaneles();
       let ref = this.modalService.open(FormularioCentroComponent);
       ref.componentInstance.accion = "Añadir";
       ref.componentInstance.contacto = {id: 0, nombre: '', direccion: ''};
@@ -67,6 +68,7 @@ export class ListaCentrosComponent implements OnInit {
   
     //edita centro
     contactoEditado(contacto: Contacto): void {
+     
       this.contactosService.editarContacto(contacto);
       this.contactos = this.contactosService.getContactos();
       this.contactoElegido = this.contactos.find(c => c.id == contacto.id);
@@ -105,6 +107,7 @@ export class ListaCentrosComponent implements OnInit {
   
      // Barra de búsqueda
      searchContact() {
+      this.cerrarPaneles()
       if (!this.term.trim()) {
         this.contactos = this.contactosService.getContactos();
       } else {
@@ -115,11 +118,13 @@ export class ListaCentrosComponent implements OnInit {
     }
   //limpia la busqueda , devuelve a estado inicial
     clearSearch() {
+
       this.term = '';
       this.contactos = this.contactosService.getContactos();
     }
   //cuando se pulsa enter se activa el buscar centro
     onEnter(event: KeyboardEvent) {
+      this.cerrarPaneles();
       if (event.key === "Enter") {
         this.searchContact();
       }

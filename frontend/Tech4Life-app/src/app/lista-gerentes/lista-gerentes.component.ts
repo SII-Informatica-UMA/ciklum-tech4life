@@ -52,8 +52,9 @@ export class ListaGerentesComponent implements OnInit {
     }
   
   
-    //añade centro
+    //añade gerente
     aniadirContacto(): void {
+      this.cerrarPaneles();
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Añadir";
       ref.componentInstance.contacto = {id: 0, nombre: '', apellido: ''};
@@ -65,7 +66,7 @@ export class ListaGerentesComponent implements OnInit {
       
     }
   
-    //edita centro
+    //edita gerente
     contactoEditado(contacto: Contacto): void {
       this.contactosService.editarContacto(contacto);
       this.contactos = this.contactosService.getContactos();
@@ -73,7 +74,7 @@ export class ListaGerentesComponent implements OnInit {
      
     }
   
-    //Elimina centro
+    //Elimina gerente
     eliminarContacto(id: number): void {
       this.contactosService.eliminarContacto(id);
       this.contactos = this.contactosService.getContactos();
@@ -88,6 +89,7 @@ export class ListaGerentesComponent implements OnInit {
   //Editar cada fila:
   
     editarContacto(contacto: Contacto): void {
+      this.cerrarPaneles();
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {}; 
@@ -105,6 +107,7 @@ export class ListaGerentesComponent implements OnInit {
   
      // Barra de búsqueda
      searchContact() {
+      this.cerrarPaneles();
       if (!this.term.trim()) {
         this.contactos = this.contactosService.getContactos();
       } else {
@@ -118,8 +121,9 @@ export class ListaGerentesComponent implements OnInit {
       this.term = '';
       this.contactos = this.contactosService.getContactos();
     }
-  //cuando se pulsa enter se activa el buscar centro
+  //cuando se pulsa enter se activa el buscar gerente
     onEnter(event: KeyboardEvent) {
+      this.cerrarPaneles();
       if (event.key === "Enter") {
         this.searchContact();
       }
