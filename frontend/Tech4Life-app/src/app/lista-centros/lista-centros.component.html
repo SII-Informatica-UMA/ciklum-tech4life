@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="col-md-6" *ngIf="contactoElegido">
-        <app-detalles-centro [contacto]="contactoElegido" 
+        <app-detalles-centro [contacto]="contactoElegido"  
         (contactoEditado)="contactoEditado($event)"
         (cerrarDetalles)="cerrarDetalles()"
         ></app-detalles-centro>

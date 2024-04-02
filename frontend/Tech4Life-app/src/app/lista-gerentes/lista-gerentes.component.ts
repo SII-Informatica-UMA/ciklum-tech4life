@@ -32,10 +32,16 @@ export class ListaGerentesComponent implements OnInit {
       this.OrdenarPorNombre();
     }
     
-  
+    //cerrar paneles cuando se abre otro:
+    cerrarPaneles(): void {
+      this.contactoElegido = undefined;
+      this.contactoAEliminar = undefined;
+    }
     //elige contacto
     elegirContacto(contacto: Contacto): void {
+      this.cerrarPaneles();
       this.contactoElegido = contacto;
+      
     }
   
   
@@ -75,7 +81,9 @@ export class ListaGerentesComponent implements OnInit {
     }
     
     mostrarConfirmacion(contacto: any) {
+      this.cerrarPaneles();
       this.contactoAEliminar = contacto; // Guarda el contacto a eliminar
+     
     }
   //Editar cada fila:
   
