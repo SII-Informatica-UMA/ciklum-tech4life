@@ -1,45 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { Mensaje } from '../mensaje';
-
+import { Component, NgModule} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-mensaje-gerente',
   standalone: true,
+  imports: [FormsModule, CommonModule],
   templateUrl: './mensaje-gerente.component.html',
   styleUrls: ['./mensaje-gerente.component.css']
 })
-export class MensajeGerenteComponent implements OnInit {
-  mensajes: Mensaje[] = []; // Lista de mensajes
 
-  constructor() { }
 
-  ngOnInit(): void {
-    // ...
-  }
-  enviarMensaje(texto: string, destinatario: string) {
-    let nuevoMensaje: Mensaje;
-    nuevoMensaje = {
-      id: 4, // Incrementar el ID en base a los mensajes existentes
-      remitente: "Gerente",
-      destinatario: destinatario,
-      contenido: texto,
-      fechaHora: new Date(),
-    };
-  
-  // Función para enviar un mensaje
-  
-    // Crear un nuevo objeto de mensaje
-    
-    // Agregar el nuevo mensaje a la lista de mensajes
-    this.mensajes.push(nuevoMensaje);
+export class MensajeGerenteComponent {
+  mensajesEnviados: string[] = [];
+  mensajesRecibidos: string[] = [];
+  mensajeEnviar: string = '';
 
-    // Actualizar la interfaz de usuario para mostrar el nuevo mensaje
-    // ...
-
-    // Desplazar la vista automáticamente al nuevo mensaje
-    // ...
-
-    // Mostrar una notificación al usuario
-    // ...
+  enviarMensaje() {
+    if (this.mensajeEnviar.trim() !== '') {
+      this.mensajesEnviados.unshift('Yo: ' + this.mensajeEnviar); // Agrega el mensaje al principio del arreglo de mensajes enviados
+      this.mensajeEnviar = '';
+    }
   }
 }

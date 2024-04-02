@@ -1,24 +1,33 @@
- .chat-messages {
-  border: 10px solid black;
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-  .chat-area {
-    height: calc(100vh - 60px); /* 60px para dejar espacio para la barra de navegación */
-    overflow-y: auto; /* Agrega barra de desplazamiento vertical si es necesario */
-  }  
-  
- .grupo-texto {
+.chat {
+  width: 100%;
+  height: 100vh; /* Utiliza toda la altura de la ventana */
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  position: relative; /* Necesario para posicionar los elementos hijos absolutamente */
 }
 
-.form-control {
-  flex: 1; /* El input ocupa todo el espacio disponible */
-  margin-right: 10px; /* Margen derecho para separarlo del botón */
+.mensajes {
+  flex-grow: 1; /* Hace que este div ocupe todo el espacio disponible */
+  overflow-y: auto;
 }
 
-.btn-envio {
-  flex-shrink: 0; /* Evita que el botón se contraiga */
+input[type="text"], button {
+  width: calc(100% - 70px);
+  margin-right: 10px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
+
+button {
+  width: 60px;
+  bottom: 10px;
+  right: 10px;
+}
+
+
+
+
+
+
+

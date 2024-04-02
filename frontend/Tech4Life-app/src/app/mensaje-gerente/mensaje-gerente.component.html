@@ -1,33 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chats</title>
-  <link rel="stylesheet" href="./mensaje-gerente.component.css">
-</head>
-
-    <div class = container>
-      <div class = row>
-        <h2></h2>
-      </div>
-
-    </div>
-      <!-- Columna del chat actual -->
-      <div class="chat-area">
-        <!-- Aquí irían los mensajes del chat actual -->
-        <div>Mensaje 1</div>
-        <div>Mensaje 2</div>
-        <!-- Más mensajes -->
-      </div>
-      <!-- Caja de entrada de mensajes -->
-      <div class="grupo-texto">
-        <input type="text" class="form-control" placeholder="Escribe tu mensaje...">
-        <div class="btn-envio">
-          <button class="btn btn-primary" type="button">Enviar</button>
-        </div>
-      </div>
-
-</html>
-
+<div class="chat">
+  <div class="mensajes">
+    <div *ngFor="let mensaje of mensajesEnviados">{{ mensaje }}</div>
+    <div *ngFor="let mensaje of mensajesRecibidos">{{ mensaje }}</div>
+  </div>
+  <input type="text" [(ngModel)]="mensajeEnviar" placeholder="Escribe un mensaje...">
+  <button (click)="enviarMensaje()">Enviar</button>
+</div>
 
