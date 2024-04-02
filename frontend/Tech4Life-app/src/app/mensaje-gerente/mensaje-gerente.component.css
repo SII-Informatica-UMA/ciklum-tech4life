@@ -2,13 +2,16 @@
   width: 100%;
   height: 100vh; /* Utiliza toda la altura de la ventana */
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   position: relative; /* Necesario para posicionar los elementos hijos absolutamente */
 }
-
-.mensajes {
-  flex-grow: 1; /* Hace que este div ocupe todo el espacio disponible */
+.mensajes-container {
+  flex-grow: 1;
   overflow-y: auto;
+}
+.mensajes {
+  display: flex;
+  flex-direction: column-reverse; /*Hace que este div ocupe todo el espacio disponible */
 }
 
 input[type="text"], button {
