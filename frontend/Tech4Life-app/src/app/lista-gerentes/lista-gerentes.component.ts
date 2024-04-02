@@ -22,6 +22,7 @@ export class ListaGerentesComponent implements OnInit {
   
     contactos: Contacto [] = [];
     contactoElegido?: Contacto;
+    contactoAEliminar?: Contacto;
     term: string = ''; // término de búsqueda
     constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
   
@@ -40,7 +41,8 @@ export class ListaGerentesComponent implements OnInit {
   
     //cierra detalles
     cerrarDetalles() {
-      this.contactoElegido = undefined; // Establece el contactoElegido como null para cerrar los detalles
+      this.contactoElegido = undefined;
+      this.contactoAEliminar= undefined; // Establece el contactoElegido como null para cerrar los detalles
     }
   
   
@@ -69,10 +71,12 @@ export class ListaGerentesComponent implements OnInit {
     eliminarContacto(id: number): void {
       this.contactosService.eliminarContacto(id);
       this.contactos = this.contactosService.getContactos();
-      this.contactoElegido = undefined;
+      this.contactoAEliminar = undefined;
     }
     
-    
+    mostrarConfirmacion(contacto: any) {
+      this.contactoAEliminar = contacto; // Guarda el contacto a eliminar
+    }
   //Editar cada fila:
   
     editarContacto(contacto: Contacto): void {

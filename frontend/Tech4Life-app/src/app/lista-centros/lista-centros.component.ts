@@ -16,10 +16,11 @@ import { FormularioCentroComponent } from '../formulario-centro/formulario-centr
     imports: [DetallesCentroComponent,FormsModule,CommonModule]
 })
 export class ListaCentrosComponent implements OnInit {
+
   onSearch($event: Event) {
   throw new Error('Method not implemented.');
   }
-  
+    contactoAEliminar?: Contacto;
     contactos: Contacto [] = [];
     contactoElegido?: Contacto;
     term: string = ''; // término de búsqueda
@@ -40,7 +41,8 @@ export class ListaCentrosComponent implements OnInit {
   
     //cierra detalles
     cerrarDetalles() {
-      this.contactoElegido = undefined; // Establece el contactoElegido como null para cerrar los detalles
+      this.contactoElegido = undefined; 
+      this.contactoAEliminar;// Establece el contactoElegido como null para cerrar los detalles
     }
   
   
@@ -69,9 +71,11 @@ export class ListaCentrosComponent implements OnInit {
     eliminarContacto(id: number): void {
       this.contactosService.eliminarContacto(id);
       this.contactos = this.contactosService.getContactos();
-      this.contactoElegido = undefined;
+      this.contactoAEliminar = undefined;
     }
-    
+    mostrarConfirmacion(contacto: any) {
+      this.contactoAEliminar = contacto; // Guarda el contacto a eliminar
+    }
     
   //Editar cada fila:
   

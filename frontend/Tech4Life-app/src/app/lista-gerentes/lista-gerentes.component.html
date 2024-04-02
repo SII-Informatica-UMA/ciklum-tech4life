@@ -37,7 +37,7 @@
                     <button type="button" (click)="elegirContacto(contacto)" [class.active]="contacto === contactoElegido">
                       <i class="bi bi-pencil-fill"></i>
                     </button>
-                    <button class="btn btn-outline-danger ms-2" (click)="eliminarContacto(contacto.id)">
+                    <button type="button" class="btn btn-outline-danger ms-2" (click)="mostrarConfirmacion(contacto)" [class.active]="contacto === contactoAEliminar">
                       <i class="bi bi-trash-fill"></i>
                     </button>
                   </td>
@@ -51,7 +51,17 @@
           (contactoEditado)="contactoEditado($event)"
           (cerrarDetalles)="cerrarDetalles()"
           ></app-detalles-gerente>
-          
+        </div>
+        <div class="col-md-2" *ngIf="contactoAEliminar">
+          <div class="card">
+            <div class="card-body p-4">
+              <p>¿Eliminar Gerente?</p>
+              <div class="d-flex justify-content-around">
+                <button (click)="eliminarContacto(contactoAEliminar.id)">Sí</button>
+                <button (click)="cerrarDetalles()">No</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
