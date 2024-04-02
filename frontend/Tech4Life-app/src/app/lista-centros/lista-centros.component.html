@@ -22,6 +22,7 @@
               <tr>
                 <th>Nombre del Centro</th>
                 <th>Dirección</th>
+                <th>Gerente</th>
                 <th></th>
                 <th></th>
               </tr>
@@ -30,6 +31,7 @@
               <tr *ngFor="let contacto of contactos">
                 <td>{{contacto.nombre}}</td>
                 <td>{{contacto.direccion}}</td>
+                <td>{{contacto.gerente}}</td>
                 <td></td>
                 <td>
                   <button type="button" (click)="elegirContacto(contacto)" [class.active]="contacto === contactoElegido">

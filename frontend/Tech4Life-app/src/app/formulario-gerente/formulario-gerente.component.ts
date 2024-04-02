@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 export class FormularioGerenteComponent {
 
   accion?: "Añadir" | "Editar";
-  contacto: Contacto = {id: 0, nombre: '', apellido: '',centro:''};
+  contacto: Contacto = {id: 0, nombre: '', apellido: ''};
 
   constructor(public modal: NgbActiveModal) { }
 

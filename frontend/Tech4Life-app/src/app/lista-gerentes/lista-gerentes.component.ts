@@ -56,7 +56,7 @@ export class ListaGerentesComponent implements OnInit {
     aniadirContacto(): void {
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Añadir";
-      ref.componentInstance.contacto = {id: 0, nombre: '', apellido: '',centro:''};
+      ref.componentInstance.contacto = {id: 0, nombre: '', apellido: ''};
       ref.result.then((contacto: Contacto) => {
         this.contactosService.addContacto(contacto);
         this.contactos = this.contactosService.getContactos();

@@ -7,11 +7,11 @@ import {Contacto } from './contacto';
 
 export class ContactosService {
   private contactos: Contacto [] = [
-    {id: 1, nombre: "Lorax",direccion: "huelva"},
-        {id: 2, nombre: "MegaGym",direccion: "malaga"},
-        {id: 3, nombre: "Semperclara",direccion: "Castilla Leon"},
-        {id: 4, nombre: "chupi panzis",direccion: "Gotham"},
-        {id: 5, nombre: "campygym",direccion: "Verdansk"}
+    {id: 1, nombre: "Lorax",direccion: "huelva",gerente:"pepa"},
+        {id: 2, nombre: "MegaGym",direccion: "malaga",gerente:"lola"},
+        {id: 3, nombre: "Semperclara",direccion: "Castilla Leon",gerente: "juan"},
+        {id: 4, nombre: "chupi panzis",direccion: "Gotham",gerente: "juan"},
+        {id: 5, nombre: "campygym",direccion: "Verdansk",gerente: "juan"}
   ];
 
   constructor() { }
