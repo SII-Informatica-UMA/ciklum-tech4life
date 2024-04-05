@@ -1,12 +1,9 @@
 <html>
 <header class="header">
     <nav class="nav">
-        <div class="logo">
+        <div class="logo" id="menu">
             <img [src]="logo" alt="Logo Tech4Life">
         </div>
-      <button class="nav-toggle" aria-label="Abrir menú">
-        <i class="fas fa-bars"></i>
-      </button>
       <ul class="nav-menu">
         <li class="nav-menu-item">
           <a href="/src/index.html" class="nav-menu-link nav-link">Menú Principal</a>
@@ -16,6 +13,14 @@
         </li>
         <li class="nav-menu-item">
           <a href="#" class="nav-menu-link nav-link">Gestión de Centros</a>
+        </li>
+        <li class="nav-menu-item">
+          <a href="#" class="nav-menu-link nav-link dropdown-toggle">Nombre</a>  
+          <ul class="dropdown-menu show">  
+            <li><a href="#" class="nav-menu-link nav-link">Nombre</a></li>
+            <li><a href="#" class="nav-menu-link nav-link">Rol</a></li>
+            <li><a href="#" class="nav-menu-link nav-link">CerrarSesion</a></li>
+          </ul>
         </li>
       </ul>
     </nav>
