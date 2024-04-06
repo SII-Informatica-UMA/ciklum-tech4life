@@ -84,8 +84,7 @@
   }
   
   .dropdown-menu {
-    display: none;
-    position: relative; 
+    position: absolute; 
     list-style: none; 
     padding: 0; 
     margin: 0; 
@@ -93,15 +92,19 @@
     background-color:rgb(0, 12, 112) ;
     font-size: 13px;
     margin-top: 0;
+    right: 425px;
   }
   
   .dropdown-toggle:hover .dropdown-menu,
   .dropdown-menu.show { 
     display: block;
   }
-  
+
   .dropdown-menu li {
     line-height: 16px;
     padding: 7px;
   }
 
+  /*#name{
+    
+  }*/

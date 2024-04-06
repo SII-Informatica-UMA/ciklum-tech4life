@@ -13,10 +13,6 @@ export class BarraNavegacionComponent {
 logo = './assets/logoT4L.png'
 isDropdownOpen = false;
 
-open(): void{
-  this.isDropdownOpen=true;
-}
-
 }
 
 

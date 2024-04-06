@@ -15,7 +15,7 @@
           <a href="#" class="nav-menu-link nav-link">Gestión de Centros</a>
         </li>
         <li class="nav-menu-item">
-          <a href="#" class="nav-menu-link nav-link dropdown-toggle" (click)="open()" [class.active]="isDropdownOpen ">Nombre</a>  
+          <a href="#" class="nav-menu-link nav-link dropdown-toggle" id="name" (click)="isDropdownOpen=!isDropdownOpen" [class.active]="isDropdownOpen">Nombre</a>  
           <ul class="dropdown-menu" *ngIf="isDropdownOpen">  
             <li><a href="#" class="nav-menu-link nav-link">Nombre</a></li>
             <li><a href="#" class="nav-menu-link nav-link">Rol</a></li>
