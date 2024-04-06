@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Contacto} from '../contacto';
-import {ContactosService } from '../contacto.service';
+import {Usuario} from '../usuario';
+import {ContactosService } from '../usuario.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
 import { DetallesGerenteComponent } from '../detalles-gerente/detalles-gerente.component';
@@ -20,9 +20,9 @@ export class ListaGerentesComponent implements OnInit {
   throw new Error('Method not implemented.');
   }
   
-    contactos: Contacto [] = [];
-    contactoElegido?: Contacto;
-    contactoAEliminar?: Contacto;
+    contactos: Usuario [] = [];
+    contactoElegido?: Usuario;
+    contactoAEliminar?: Usuario;
     term: string = ''; // término de búsqueda
     constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
   
@@ -38,7 +38,7 @@ export class ListaGerentesComponent implements OnInit {
       this.contactoAEliminar = undefined;
     }
     //elige contacto
-    elegirContacto(contacto: Contacto): void {
+    elegirContacto(contacto: Usuario): void {
       this.cerrarPaneles();
       this.contactoElegido = contacto;
       
@@ -58,7 +58,7 @@ export class ListaGerentesComponent implements OnInit {
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Añadir";
       ref.componentInstance.contacto = {id: 0, nombre: '', apellido: ''};
-      ref.result.then((contacto: Contacto) => {
+      ref.result.then((contacto: Usuario) => {
         this.contactosService.addContacto(contacto);
         this.contactos = this.contactosService.getContactos();
         this.OrdenarPorNombre();
@@ -67,7 +67,7 @@ export class ListaGerentesComponent implements OnInit {
     }
   
     //edita gerente
-    contactoEditado(contacto: Contacto): void {
+    contactoEditado(contacto: Usuario): void {
       this.contactosService.editarContacto(contacto);
       this.contactos = this.contactosService.getContactos();
       this.contactoElegido = this.contactos.find(c => c.id == contacto.id);
@@ -88,12 +88,12 @@ export class ListaGerentesComponent implements OnInit {
     }
   //Editar cada fila:
   
-    editarContacto(contacto: Contacto): void {
+    editarContacto(contacto: Usuario): void {
       this.cerrarPaneles();
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {}; 
-      ref.result.then((contactoEditado: Contacto) => {
+      ref.result.then((contactoEditado: Usuario) => {
         // Actualizar los datos del contacto editado en la lista de contactos
         this.contactosService.editarContacto(contactoEditado)
         this.OrdenarPorNombre();

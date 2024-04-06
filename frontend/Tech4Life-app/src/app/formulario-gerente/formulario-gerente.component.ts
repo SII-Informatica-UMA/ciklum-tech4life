@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import  {Contacto}from '../contacto'
+import  {Usuario}from '../usuario'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 //SI DA ERROR EL IMPORT DE ARRIBA EJECUTAR:
 //npm install @ng-bootstrap/ng-bootstrap
@@ -17,7 +17,15 @@ import { CommonModule } from '@angular/common';
 export class FormularioGerenteComponent {
 
   accion?: "Añadir" | "Editar";
-  contacto: Contacto = {id: 0, nombre: '', apellido: ''};
+  contacto: Usuario = {
+    id: 0, 
+    nombre: '',
+    apellido1: '',
+    apellido2: '',
+    email: '',
+    password: '',
+    administrador: false
+  };
 
   constructor(public modal: NgbActiveModal) { }
 

@@ -29,7 +29,7 @@
               <tbody>
                 <tr *ngFor="let contacto of contactos">
                   <td>{{contacto.nombre}}</td>
-                  <td>{{contacto.apellido}}</td>
+                  <td>{{contacto.apellido1}}</td>
                   <td></td>
                   <td>
                     <button type="button" (click)="elegirContacto(contacto)" [class.active]="contacto === contactoElegido">
