@@ -9,8 +9,8 @@ export class CentrosService {
   private centros: Centro [] = [
         {id: 1, nombre: "Lorax",direccion: "huelva",gerente:"pepa",idUsuario: 34526},
         {id: 2, nombre: "MegaGym",direccion: "malaga",gerente:"lola", idUsuario: 34525},
-        {id: 3, nombre: "Semperclara",direccion: "Castilla Leon",gerente: "juan", idUsuario: 34524},
-        {id: 4, nombre: "chupi panzis",direccion: "Gotham",gerente: "juan",idUsuario: 34523},
+        {id: 3, nombre: "Semperclara",direccion: "Castilla Leon",gerente: "juan", idUsuario: 34522},
+        {id: 4, nombre: "chupi panzis",direccion: "Gotham",gerente: "juan",idUsuario: 34522},
         {id: 5, nombre: "campygym",direccion: "Verdansk",gerente: "juan", idUsuario: 34522}
   ];
 
@@ -18,6 +18,20 @@ export class CentrosService {
 
   getCentros(): Centro [] {
     return this.centros;
+  }
+  // Devuelve los centros asociados a un usuario
+  getCentrosUsuario(id: number): Centro [] {
+    
+    // Tendrá que recorrer la lista de centros y 
+
+    // Definir una lista vacía
+    let listaResultado: Centro[] = [];
+
+    // Usar un bucle for para agregar elementos a la lista
+    for (let i = 0; i < this.centros.length; i++) {
+      if (id == this.centros[i].idUsuario) listaResultado.push(this.centros[i]);
+    }
+    return listaResultado ;
   }
 
   addCentro(centro: Centro) {

@@ -46,8 +46,8 @@ export class ContactosService {
   ];
 
   private login:Usuario = {
-    id: 1,
-    nombre: '',
+    id: 34522,
+    nombre: 'juan',
     apellido1: '',
     apellido2: '',
     email: '',
@@ -59,6 +59,10 @@ export class ContactosService {
 
   getContactos(): Usuario [] {
     return this.contactos;
+  }
+
+  getUsuarioLoginID(): number {
+    return this.login.id;
   }
 
   addContacto(contacto: Usuario) {
@@ -74,12 +78,5 @@ export class ContactosService {
   eliminarContacto(id: number) {
     let indice = this.contactos.findIndex(c => c.id == id);
     this.contactos.splice(indice, 1);
-  }
-
-  getMisCentros(id: number): Centro [] {
-    let indice = this.contactos.findIndex(c => c.id == id);
-        
-    
-    return []
   }
 }
