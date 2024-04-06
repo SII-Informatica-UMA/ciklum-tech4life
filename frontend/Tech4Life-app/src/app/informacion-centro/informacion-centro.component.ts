@@ -4,6 +4,8 @@
 */
 import { Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common'
+import { Centro } from '../centro';
+import { CentrosService } from '../centro.service';
 
 // Aquí hay que importar todos los componentes que vaya a usar este componente.
 // Por ahora ninguno.
