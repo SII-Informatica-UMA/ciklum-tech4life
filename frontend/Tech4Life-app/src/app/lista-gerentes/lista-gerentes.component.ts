@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Contacto} from './contacto';
-import {ContactosService } from './contacto.service';
+import {Contacto} from '../contacto';
+import {ContactosService } from '../contacto.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
 import { DetallesGerenteComponent } from '../detalles-gerente/detalles-gerente.component';

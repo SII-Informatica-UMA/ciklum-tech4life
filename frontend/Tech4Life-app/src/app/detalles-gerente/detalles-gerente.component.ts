@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Contacto } from '../lista-gerentes/contacto';
+import { Contacto } from '../contacto';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
-import { ContactosService } from '../lista-gerentes/contacto.service';
+import { ContactosService } from '../contacto.service';
 
 @Component({
   selector: 'app-detalles-gerente',

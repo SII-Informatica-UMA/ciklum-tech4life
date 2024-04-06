@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Contacto} from './contacto';
-import {ContactosService } from './contacto.service';
+import { Centro } from '../centro';
+import { CentrosService } from '../centro.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DetallesCentroComponent } from '../detalles-centro/detalles-centro.component';
@@ -20,11 +19,11 @@ export class ListaCentrosComponent implements OnInit {
   onSearch($event: Event) {
   throw new Error('Method not implemented.');
   }
-    contactoAEliminar?: Contacto;
-    contactos: Contacto [] = [];
-    contactoElegido?: Contacto;
+    contactoAEliminar?: Centro;
+    contactos:Centro [] = [];
+    contactoElegido?: Centro;
     term: string = ''; // término de búsqueda
-    constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
+    constructor(private contactosService: CentrosService, private modalService: NgbModal) { }
   
     //actualiza en tiempo real
     ngOnInit(): void {
@@ -38,7 +37,7 @@ export class ListaCentrosComponent implements OnInit {
        this.contactoAEliminar = undefined;
     }
     //elige contacto
-    elegirContacto(contacto: Contacto): void {
+    elegirContacto(contacto: Centro): void {
       this.cerrarPaneles();
       this.contactoElegido = contacto;
       
@@ -58,7 +57,7 @@ export class ListaCentrosComponent implements OnInit {
       let ref = this.modalService.open(FormularioCentroComponent);
       ref.componentInstance.accion = "Añadir";
       ref.componentInstance.contacto = {id: 0, nombre: '', direccion: ''};
-      ref.result.then((contacto: Contacto) => {
+      ref.result.then((contacto: Centro) => {
         this.contactosService.addContacto(contacto);
         this.contactos = this.contactosService.getContactos();
         this.OrdenarPorNombre();
@@ -67,7 +66,7 @@ export class ListaCentrosComponent implements OnInit {
     }
   
     //edita centro
-    contactoEditado(contacto: Contacto): void {
+    contactoEditado(contacto: Centro): void {
      
       this.contactosService.editarContacto(contacto);
       this.contactos = this.contactosService.getContactos();
@@ -89,11 +88,11 @@ export class ListaCentrosComponent implements OnInit {
     
   //Editar cada fila:
   
-    editarContacto(contacto: Contacto): void {
+    editarContacto(contacto: Centro): void {
       let ref = this.modalService.open(FormularioCentroComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {}; 
-      ref.result.then((contactoEditado: Contacto) => {
+      ref.result.then((contactoEditado: Centro) => {
         // Actualizar los datos del contacto editado en la lista de contactos
         this.contactosService.editarContacto(contactoEditado)
         this.OrdenarPorNombre();

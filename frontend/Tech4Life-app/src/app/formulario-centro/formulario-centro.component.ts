@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import  {Contacto}from '../lista-centros/contacto'
+import  {Centro}from '../centro'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 //SI DA ERROR EL IMPORT DE ARRIBA EJECUTAR:
 //npm install @ng-bootstrap/ng-bootstrap
@@ -17,7 +17,7 @@ export class FormularioCentroComponent {
 
 
   accion?: "Añadir" | "Editar";
-  contacto: Contacto = {id: 0, nombre: '', direccion: '',gerente: ''};
+  contacto: Centro = {id: 0, nombre: '', direccion: '',gerente: ''};
 
   constructor(public modal: NgbActiveModal) { }
 

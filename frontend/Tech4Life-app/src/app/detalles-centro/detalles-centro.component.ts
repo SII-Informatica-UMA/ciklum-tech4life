@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {Contacto } from '../lista-centros/contacto';
+import { Centro } from '../centro';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioCentroComponent } from '../formulario-centro/formulario-centro.component';
-import { ContactosService } from '../lista-centros/contacto.service';
+import { CentrosService } from '../centro.service';
 
 @Component({
   selector: 'app-detalles-centro',
@@ -16,11 +16,11 @@ export class DetallesCentroComponent {
   CerrarDetalles():void {
     this.mostrarDetalles = false;
   }
-    @Input() contacto?: Contacto;
-    @Output() contactoEditado = new EventEmitter<Contacto>();
+    @Input() contacto?: Centro;
+    @Output() contactoEditado = new EventEmitter<Centro>();
     @Output() contactoEliminado = new EventEmitter<number>();
     @Output() cerrarDetalles = new EventEmitter<void>();
-    constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
+    constructor(private contactosService: CentrosService, private modalService: NgbModal) { }
     cerrar() {
       this.cerrarDetalles.emit();
     }
@@ -28,7 +28,7 @@ export class DetallesCentroComponent {
       let ref = this.modalService.open(FormularioCentroComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {...this.contacto};
-      ref.result.then((contacto: Contacto) => {
+      ref.result.then((contacto: Centro) => {
         this.contactoEditado.emit(contacto);
       }, (reason) => {});
     }
