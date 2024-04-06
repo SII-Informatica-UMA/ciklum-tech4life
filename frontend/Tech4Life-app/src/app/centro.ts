@@ -1,10 +1,10 @@
 
 export interface Centro {
-    id: number;
+    id: number; // id del centro
     nombre: string;
     direccion: string;
     gerente: string;
-    idUsuario: number;
+    idUsuario: number; // id del usuario que es gerente del centro
 }
   
   

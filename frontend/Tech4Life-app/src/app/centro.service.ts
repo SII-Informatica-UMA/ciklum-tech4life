@@ -19,7 +19,7 @@ export class CentrosService {
   getCentros(): Centro [] {
     return this.centros;
   }
-  // Devuelve los centros asociados a un usuario
+  // Devuelve los centros asociados a un usuario a partir de la id de dicho usuario
   getCentrosUsuario(id: number): Centro [] {
     
     // Tendrá que recorrer la lista de centros y 
@@ -29,6 +29,7 @@ export class CentrosService {
 
     // Usar un bucle for para agregar elementos a la lista
     for (let i = 0; i < this.centros.length; i++) {
+      // Comparamos la id que se nos pasa como parámetro con la id del usuario asignado al centro
       if (id == this.centros[i].idUsuario) listaResultado.push(this.centros[i]);
     }
     return listaResultado ;

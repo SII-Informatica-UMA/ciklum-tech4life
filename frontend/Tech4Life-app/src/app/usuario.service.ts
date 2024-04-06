@@ -44,10 +44,10 @@ export class ContactosService {
       administrador: false
     }
   ];
-
+  // Este es el usuario que se ha loggueado en la aplicación
   private login:Usuario = {
     id: 34522,
-    nombre: 'juan',
+    nombre: 'Juan',
     apellido1: '',
     apellido2: '',
     email: '',
@@ -61,8 +61,14 @@ export class ContactosService {
     return this.contactos;
   }
 
+  // Método que devuelve el id del usuario que se ha loggeado en la aplicación
   getUsuarioLoginID(): number {
     return this.login.id;
+  }
+
+  // Método que devuelve el nombre del usuario que se ha loggeado en la aplicación
+  getUsuarioLoginNombre(): string {
+    return this.login.nombre;
   }
 
   addContacto(contacto: Usuario) {
