@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common'
 import { Centro } from '../centro';
 import { CentrosService } from '../centro.service';
+import { CommonModule } from '@angular/common';
 
 // Aquí hay que importar todos los componentes que vaya a usar este componente.
 // Por ahora ninguno.
@@ -13,7 +14,7 @@ import { CentrosService } from '../centro.service';
 @Component({
   selector: 'app-informacion-centro',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './informacion-centro.component.html',
   styleUrl: './informacion-centro.component.css'
 })
@@ -21,12 +22,5 @@ export class InformacionCentroComponent {
 
   constructor(private centrosService: CentrosService) {}
   centros = this.centrosService.getCentros();
-  
-  // Variables que me tiene que dar Ana Martín de la gestión de centros o el objeto centro
-  // Fijarnos del ts del profe
-  centroNombre = "" ;
-  centroDir = "Urb avestruz, calle calamar, nº5" ;
-  centroValorac = "3 estrellas" ;
-  centroInscr = 1259 ;
   centroImagen = 'assets/gimnasio.png' ;
 }

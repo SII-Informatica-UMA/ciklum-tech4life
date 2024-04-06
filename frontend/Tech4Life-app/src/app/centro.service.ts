@@ -7,11 +7,11 @@ import {Centro} from './centro';
 
 export class CentrosService {
   private centros: Centro [] = [
-    {id: 1, nombre: "Lorax",direccion: "huelva",gerente:"pepa"},
-        {id: 2, nombre: "MegaGym",direccion: "malaga",gerente:"lola"},
-        {id: 3, nombre: "Semperclara",direccion: "Castilla Leon",gerente: "juan"},
-        {id: 4, nombre: "chupi panzis",direccion: "Gotham",gerente: "juan"},
-        {id: 5, nombre: "campygym",direccion: "Verdansk",gerente: "juan"}
+        {id: 1, nombre: "Lorax",direccion: "huelva",gerente:"pepa",idUsuario: 34526},
+        {id: 2, nombre: "MegaGym",direccion: "malaga",gerente:"lola", idUsuario: 34525},
+        {id: 3, nombre: "Semperclara",direccion: "Castilla Leon",gerente: "juan", idUsuario: 34524},
+        {id: 4, nombre: "chupi panzis",direccion: "Gotham",gerente: "juan",idUsuario: 34523},
+        {id: 5, nombre: "campygym",direccion: "Verdansk",gerente: "juan", idUsuario: 34522}
   ];
 
   constructor() { }

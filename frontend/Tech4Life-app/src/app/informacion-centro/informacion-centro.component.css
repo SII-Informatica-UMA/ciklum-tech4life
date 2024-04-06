@@ -14,19 +14,38 @@ body {
 
 h1{
   color: rgb(1, 52, 155);
+  margin-bottom: 50px;
+}
+
+h3{
+  margin-left: 50px;
 }
 
 .destacado {
   font-weight: bold;
 }
 
-.container1, .container2 {
+.container1 {
+  margin-left: 50px;
+  margin-top: 15px;
   width: 40%; /* O ajusta el ancho según tus necesidades */
-  display: inline-block; /* Muestra los divs en línea */
-  vertical-align: top; /* Alinea los divs en la parte superior */
+  float:left
 }
 
+.container2 {
+  margin-top: 40px;
+  float: right;
+}
+
+.imagenCentroDeportivo {
+  width: 1000px;
+  border-radius: 100px; /* Agrega bordes redondeados */
+}
 .row {
-  line-height: 3; /* Puedes ajustar el valor según tus necesidades */
+  line-height: 2; /* Puedes ajustar el valor según tus necesidades */
   margin-left: 40px;
+}
+
+hr {
+  border-color: rgb(1, 52, 155); /* Establece el color de fondo de la línea */
 }

@@ -20,29 +20,27 @@
 <body>
 
     
-    <h1 >INFORMACIÓN DEL CENTRO</h1>
+    <h1>INFORMACIÓN DE LOS CENTROS</h1>
     
+    <h3>Se muestran a continuación los centros a los que perteneces:</h3>
 
     <div class="container1">
-    
-        <div class="row">
-            <label class="destacado">Nombre del centro: </label>
-            <span class="resp">{{centroNombre}}</span> <!-- {{centro?.centroNombre}} Para el texto dinámico -->
-        </div>
-
-        <div class="row">
-            <label class="destacado">Dirección: </label>
-            <span class="resp">{{centroDir}}</span> <!-- {{centro?.centroDir}} Para el texto dinámico -->
-        </div>
-
-        <div class="row">
-            <label class="destacado">Valoración: </label>
-            <span class="resp">{{centroValorac}}</span> <!-- {{centro?.centroValorac}} Para el texto dinámico -->
-        </div>
-
-        <div class="row">
-            <label class="destacado">Número de personas inscritas: </label>
-            <span class="resp">{{centroInscr}}</span> <!-- {{centro?.centroInscr}} Para el texto dinámico -->
+        <hr>
+        <div *ngFor="let centro of centros">
+           
+            <div class="row">
+                <label class="destacado">Nombre del centro: </label>
+                <span class="resp">{{centro.nombre}}</span>
+            </div>
+            <div class="row">
+                <label class="destacado">Dirección: </label>
+                <span class="resp">{{centro.direccion}}</span>
+            </div>
+            <div class="row">
+                <label class="destacado">Gerente: </label>
+                <span class="resp">{{centro.gerente}}</span>
+            </div>
+            <hr>
         </div>
     </div>
     <div class="container2">

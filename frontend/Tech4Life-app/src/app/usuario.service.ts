@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Usuario } from './usuario';
+import { Centro } from './centro';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,16 @@ export class ContactosService {
     }
   ];
 
+  private login:Usuario = {
+    id: 1,
+    nombre: '',
+    apellido1: '',
+    apellido2: '',
+    email: '',
+    password: '',
+    administrador: false
+  }
+
   constructor() { }
 
   getContactos(): Usuario [] {
@@ -63,5 +74,12 @@ export class ContactosService {
   eliminarContacto(id: number) {
     let indice = this.contactos.findIndex(c => c.id == id);
     this.contactos.splice(indice, 1);
+  }
+
+  getMisCentros(id: number): Centro [] {
+    let indice = this.contactos.findIndex(c => c.id == id);
+        
+    
+    return []
   }
 }

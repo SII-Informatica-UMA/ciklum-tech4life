@@ -4,6 +4,7 @@ export interface Centro {
     nombre: string;
     direccion: string;
     gerente: string;
+    idUsuario: number;
 }
   
   
