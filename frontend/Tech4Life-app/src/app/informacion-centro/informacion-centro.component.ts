@@ -18,10 +18,13 @@ import { CentrosService } from '../centro.service';
   styleUrl: './informacion-centro.component.css'
 })
 export class InformacionCentroComponent {
+
+  constructor(private centrosService: CentrosService) {}
+  centros = this.centrosService.getCentros();
   
   // Variables que me tiene que dar Ana Martín de la gestión de centros o el objeto centro
   // Fijarnos del ts del profe
-  centroNombre = "BasicFit" ; // centro.centroNombre
+  centroNombre = "" ;
   centroDir = "Urb avestruz, calle calamar, nº5" ;
   centroValorac = "3 estrellas" ;
   centroInscr = 1259 ;
