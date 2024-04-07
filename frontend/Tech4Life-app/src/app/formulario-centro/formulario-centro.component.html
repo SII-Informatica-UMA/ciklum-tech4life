@@ -1,0 +1,21 @@
+<div class="modal-dialog modal-dialog-centered modal-lg modal-left" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{accion}} Centro</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre usuario')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input class="form-control" id="nombre" [(ngModel)]="contacto.nombre" placeholder="nombre">
+            <label for="direccion">Direccion:</label>
+            <input class="form-control" id="direccion" [(ngModel)]="contacto.direccion" placeholder="direccion">
+            <label for="gerente">Gerente:</label>
+            <input class="form-control" id="gerente" [(ngModel)]="contacto.gerente" placeholder="gerente">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="guardarContacto()">Guardar</button>
+      </div>
+    </div>
+  </div>

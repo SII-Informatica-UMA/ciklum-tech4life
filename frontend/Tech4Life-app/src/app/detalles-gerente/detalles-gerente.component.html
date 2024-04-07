@@ -1,0 +1,43 @@
+
+<div class="container">
+    <div class="row">
+      <h2 class="black-text">Información sobre {{contacto?.nombre}}</h2>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-3">
+        <strong class="black-text">ID:</strong>
+      </div>
+      <div class="col-md-9">
+        {{contacto?.id}}
+      </div>
+      
+    <div class="row">
+      <div class="col-md-3">
+        <strong class="black-text">Nombre:</strong>
+      </div>
+      <div class="col-md-9">
+        {{contacto?.nombre}}
+      </div>
+    </div>
+   
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <strong class="black-text">Apellido:</strong>
+      </div>
+      <div class="col-md-9">
+        {{contacto?.apellido1}}
+      </div>
+    
+</div>
+  
+    <div class="row mt-3">
+      <div class="col-auto">
+        <button class="btn btn-outline-primary" (click)="cerrar()">Cerrar <i ></i></button>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-outline-primary" (click)="editarcontacto()">Editar <i ></i></button>
+      </div>
+    </div>
+  </div>

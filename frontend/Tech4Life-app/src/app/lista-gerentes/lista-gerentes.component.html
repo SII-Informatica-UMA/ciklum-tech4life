@@ -1,0 +1,66 @@
+<body>
+
+    <div style="height: 50px;"></div>
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="input-group mb-3">
+            <button type="button" class="btn btn-outline-secondary btn-white-bg" (click)="aniadirContacto()">
+              <i class="bi bi-pencil-fill"></i> Añadir Gerente
+            </button>
+            <div style="width: 20px;"></div>
+            <input type="text" class="form-control" placeholder="Buscar Gerente" [(ngModel)]="term" (keypress)="onEnter($event)">
+            <button class="bi bi-search" type="button" (click)="searchContact()">Buscar</button>
+            <div style="width: 5px;"></div>
+            <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">Clear</button>
+          </div>
+          
+          <div class="input-group">
+            <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th>Nombre del Gerente</th>
+                  <th>Apellidos</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let contacto of contactos">
+                  <td>{{contacto.nombre}}</td>
+                  <td>{{contacto.apellido1}}</td>
+                  <td></td>
+                  <td>
+                    <button type="button" (click)="elegirContacto(contacto)" [class.active]="contacto === contactoElegido">
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-danger ms-2" (click)="mostrarConfirmacion(contacto)" [class.active]="contacto === contactoAEliminar">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>  
+            </table>
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="contactoElegido">
+          <app-detalles-gerente [contacto]="contactoElegido" 
+          (contactoEditado)="contactoEditado($event)"
+          (cerrarDetalles)="cerrarDetalles()"
+          ></app-detalles-gerente>
+        </div>
+        <div class="col-md-2" *ngIf="contactoAEliminar">
+          <div class="card">
+            <div class="card-body p-4">
+              <p>¿Eliminar Gerente?</p>
+              <div class="d-flex justify-content-around">
+                <button (click)="eliminarContacto(contactoAEliminar.id)">Sí</button>
+                <button (click)="cerrarDetalles()">No</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </body>
