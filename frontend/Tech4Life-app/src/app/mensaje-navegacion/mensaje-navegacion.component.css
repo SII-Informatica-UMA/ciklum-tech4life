@@ -1,7 +1,78 @@
 /* mensajes-navegacion.component.css */
 
 .chat-list {
-    max-height: calc(100vh - 60px); /* 60px para dejar espacio para la barra de navegación */
-    overflow-y: auto; /* Agrega barra de desplazamiento vertical si es necesario */
+  max-height: calc(100vh - 60px); /* 60px para dejar espacio para la barra de navegación */  
+  overflow-y: auto; /* Agrega barra de desplazamiento vertical si es necesario */
   }
+
+  body {
+    font-family: Helvetica;
+    font-size: 15pt;
+    color: rgb(0, 102, 255);
+    background-color: rgb(169, 204, 227);
+    margin: 30px;
+  }
+
+  .nav {
+    background-color: rgb(80, 159, 213);
+    height:fit-content;
+    width: 500px;
+    padding-left: 100px;
+  }
+  /*
+  .fondo {
+    background-color: rgb(80, 159, 213);
+    width: 530px;
+    height: 730px;
+  }
+  */
+
+  * {
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .nav-link {
+    color: rgb(0, 102, 255);
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .nav-menu-item {
+    font-size: 18px;
+    margin: 0 10px;
+    line-height: 80px;
+    text-transform: uppercase;
+    width: max-content;
+  }
+
+  .nav-toggle {
+    color: white;
+    background: none;
+    border: none;
+    font-size: 30px;
+    padding: 0 20px;
+    line-height: 60px;
+    cursor: pointer;
+    text-decoration: solid;
+  
+    display: none;
+  }
+
+  .nav-menu {
+    list-style: none;
+  }
+
+  .nav-menu-link {
+    padding: 8px 12px;
+    border-radius: 3px;
+  }
+  
+  .nav-menu-link:hover,
+  .nav-menu-link_active {
+    background-color: #2a83c2;
+    transition: 0.5s;
+  }
+  
   
