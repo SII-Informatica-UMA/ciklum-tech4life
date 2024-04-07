@@ -6,18 +6,15 @@
   <title>Chats</title>
   <link rel="stylesheet" href="./mensaje-navegacion.component.css">
 </head>
-<div class="container-fluid">
-    <div class="row">
-      <div class="col-md-3">
-      <div class="chat-list">
-        <ul>
-          <li *ngFor="let chat of chats">
-            <!--<a href="#" (click)="selectChat(chat)">{{ chat.nombreLocutor }}</a>  </li>-->
-            <li (click)="onChatSelected(chat.id)">{{chat.nombreLocutor}}</li>
-
-        </ul>
-      </div>
-      </div>
-    </div>
-  </div>
+<div class="fondo">
+  <body>
+    <nav class="nav">
+      <ul class="nav-menu">
+        <li class="nav-menu-item" *ngFor="let chat of chats">
+          <a href="#" class="nav-menu-link nav-link" (click)="onChatSelected(chat.id)">{{chat.nombreLocutor}}</a>
+        </li>
+      </ul>
+    </nav>
+  </body>
+</div>
 </html>
