@@ -1,0 +1,57 @@
+<!-- 
+  TO DO
+    Tema validador html -> Error de la imagen
+-->
+
+<!-- 
+  informacion-centro.component.html
+  Esto es el html del componente que ha realizado Raúl 
+-->
+<!DOCTYPE html>
+<html lang="es"> <!-- Esto es el idioma en el que va a estar la web -->
+
+<head>
+    <meta charset="UTF-8"> <!-- Esto es para especificar la codificación de caracteres de la web -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No se va a mostrar</title> <!-- Esto es el nombre de la página que aparece en la pestaña del navegador -->
+    <link rel="stylesheet" href="informacion-centro.component.css"> <!-- Esto es el linkeo con el archivo css -->
+</head>
+
+<body>
+    <h1>INFORMACIÓN DE LOS CENTROS</h1>
+    <!-- Si la lista tiene elementos-->
+    <div *ngIf="centros.length > 0">
+        <div class="container1">
+            <h4> {{usuarioLoginNombre}}, se muestran a continuación información de los centros que gestionas:</h4>
+            <hr>
+            <div *ngFor="let centro of centros"> <!-- Esto es un bucle que itera por la lista de objetos Centro -->
+            
+                <div class="row">
+                    <label class="destacado">Nombre del centro: </label>
+                    <span class="resp">{{centro.nombre}}</span>
+                </div>
+                <div class="row">
+                    <label class="destacado">Dirección: </label>
+                    <span class="resp">{{centro.direccion}}</span>
+                </div>
+                <div class="row">
+                    <label class="destacado">Gerente: </label>
+                    <span class="resp">{{centro.gerente}}</span>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+    <!-- Si la lista es vacía -->
+    <div *ngIf="centros.length <= 0">
+        <h4> {{usuarioLoginNombre}}, no gestionas ningún centro actualmente </h4>
+    </div>
+    
+    <div class="container2">
+        <!-- {{imagen}} coge la variable definida en typescript --> <!-- {{centro?.centroImagen}} Para el texto dinámico -->
+        <img [src]="centroImagen" alt="Imagen del centro deportivo" class="imagenCentroDeportivo">
+        <!-- La línea anterior dá un Error en el validador HTML -->
+
+    </div>
+</body>
+</html>

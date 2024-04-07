@@ -1,0 +1,51 @@
+/* 
+  informacion-centro.component.css
+  Esto es el css del componente que ha realizado Raúl
+*/
+
+body {
+  font-family: Helvetica;
+  font-size: 15pt;
+  color: rgb(0, 102, 255);
+  zoom: 100%;
+  background-color: rgb(169, 204, 227);
+  margin: 70px;
+}
+
+h1{
+  color: rgb(1, 52, 155);
+  margin-bottom: 50px;
+}
+
+.h4{
+  margin-left: 50px;
+}
+
+.destacado {
+  font-weight: bold;
+}
+
+.container1 {
+  margin-left: 50px;
+  margin-top: 15px;
+  width: 40%; /* O ajusta el ancho según tus necesidades */
+  float:left
+}
+
+.container2 {
+  margin-top: 40px;
+  float: right;
+}
+
+.imagenCentroDeportivo {
+  width: 1000px;
+  border-radius: 100px; /* Agrega bordes redondeados */
+}
+.row {
+  line-height: 2; /* Puedes ajustar el valor según tus necesidades */
+  margin-left: 40px;
+}
+
+hr {
+  border-color: rgb(1, 52, 155); /* Establece el color de fondo de la línea */
+}
