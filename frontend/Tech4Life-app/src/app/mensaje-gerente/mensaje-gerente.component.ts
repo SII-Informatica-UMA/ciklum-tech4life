@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 
 
 export class MensajeGerenteComponent {
-  @Input() chat?: Chat;
+ // @Input() chatSelected: string;
   mensajesEnviados: string[] = [];
   mensajesRecibidos: string[] = [];
   mensajeEnviar: string = '';
@@ -23,4 +23,8 @@ export class MensajeGerenteComponent {
       this.mensajeEnviar = '';
     }
   }
+  /*ngOnInit() {
+    this.chatSelected.subscribe((chatName) => {
+      this.chatSelected = chatName;
+    });*/
 }
