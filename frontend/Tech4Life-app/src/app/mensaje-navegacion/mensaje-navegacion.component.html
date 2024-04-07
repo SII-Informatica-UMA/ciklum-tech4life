@@ -11,7 +11,7 @@
     <nav class="nav">
       <ul class="nav-menu">
         <li class="nav-menu-item" *ngFor="let chat of chats">
-          <a href="#" class="nav-menu-link nav-link">{{chat.nombreLocutor}}</a>
+          <a href="#" class="nav-menu-link nav-link" (click)="selectChat(chat)">{{chat.nombreLocutor}}</a>
         </li>
       </ul>
     </nav>
