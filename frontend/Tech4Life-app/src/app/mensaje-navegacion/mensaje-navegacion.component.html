@@ -12,7 +12,9 @@
       <div class="chat-list">
         <ul>
           <li *ngFor="let chat of chats">
-            <a href="#" (click)="selectChat(chat)">{{ chat.nombreLocutor }}</a>  </li>
+            <!--<a href="#" (click)="selectChat(chat)">{{ chat.nombreLocutor }}</a>  </li>-->
+            <li (click)="onChatSelected(chat.id)">{{chat.nombreLocutor}}</li>
+
         </ul>
       </div>
       </div>

@@ -1,4 +1,4 @@
-import { Component, NgModule} from '@angular/core';
+import { Component, Input, NgModule} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 
 
 export class MensajeGerenteComponent {
- // @Input() chatSelected: string;
+  @Input() selectedChatId: number | undefined;
   mensajesEnviados: string[] = [];
   mensajesRecibidos: string[] = [];
   mensajeEnviar: string = '';
@@ -23,8 +23,4 @@ export class MensajeGerenteComponent {
       this.mensajeEnviar = '';
     }
   }
-  /*ngOnInit() {
-    this.chatSelected.subscribe((chatName) => {
-      this.chatSelected = chatName;
-    });*/
 }
