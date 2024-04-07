@@ -15,6 +15,15 @@ import { InformacionCentroComponent } from '../informacion-centro/informacion-ce
   styleUrl: './barra-navegacion-gerente.component.css'
 })
 export class BarraNavegacionGerenteComponent {
+mostrarRol() {
+    const Adm = "Administrador";
+    const Usr = "Usuario";
+    if (this.usuario?.administrador==true){
+      return Adm;
+    } else {
+      return Usr;
+    }
+}
   isMenu = true;
   isInfoCentro = false;
   cerrarVentanas(){
