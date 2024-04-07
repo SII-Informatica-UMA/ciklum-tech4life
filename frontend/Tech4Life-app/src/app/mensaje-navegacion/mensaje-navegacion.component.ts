@@ -17,5 +17,6 @@ export class MensajeNavegacionComponent {
     new Chat("Juan", mensajes[1]),
     new Chat("María", mensajes[2]),
   ];
+  accion?: "Añadir" | "Editar";
 }
 

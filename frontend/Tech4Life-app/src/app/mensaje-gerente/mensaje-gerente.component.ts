@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 
 
 export class MensajeGerenteComponent {
+  @Input() chat?: Chat;
   mensajesEnviados: string[] = [];
   mensajesRecibidos: string[] = [];
   mensajeEnviar: string = '';
