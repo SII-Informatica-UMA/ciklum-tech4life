@@ -6,10 +6,10 @@
         </div>
       <ul class="nav-menu">
         <li class="nav-menu-item">
-          <a href="/src/index.html" class="nav-menu-link nav-link">Menú Principal</a>
+          <a href="#" class="nav-menu-link nav-link" (click)="abrirMenu()">Menú Principal</a>
         </li>
         <li class="nav-menu-item">
-          <a href="#" class="nav-menu-link nav-link">Informacion Centros</a>
+          <a href="#" class="nav-menu-link nav-link" (click)="abrirInfoCentro()">Informacion Centros</a>
         </li>
         <li class="nav-menu-item">
           <a href="#" class="nav-menu-link nav-link">Mensajeria</a>
@@ -25,5 +25,11 @@
       </ul>
     </nav>
   </header>
+  <div *ngIf="isMenu"> 
+    <app-carrusel></app-carrusel>
+    </div>
+    <div *ngIf="isInfoCentro"> 
+      <app-informacion-centro></app-informacion-centro>
+      </div>
   <app-informacion></app-informacion>
 </html>
