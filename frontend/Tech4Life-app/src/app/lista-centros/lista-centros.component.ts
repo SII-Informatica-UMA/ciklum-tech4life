@@ -27,7 +27,7 @@ export class ListaCentrosComponent implements OnInit {
   
     //actualiza en tiempo real
     ngOnInit(): void {
-      this.contactos = this.contactosService.getContactos();
+      this.contactos = this.contactosService.getCentros();
       this.OrdenarPorNombre();
     }
     
@@ -58,8 +58,8 @@ export class ListaCentrosComponent implements OnInit {
       ref.componentInstance.accion = "Añadir";
       ref.componentInstance.contacto = {id: 0, nombre: '', direccion: ''};
       ref.result.then((contacto: Centro) => {
-        this.contactosService.addContacto(contacto);
-        this.contactos = this.contactosService.getContactos();
+        this.contactosService.addCentro(contacto);
+        this.contactos = this.contactosService.getCentros();
         this.OrdenarPorNombre();
       }, (reason) => {});
       
@@ -68,16 +68,16 @@ export class ListaCentrosComponent implements OnInit {
     //edita centro
     contactoEditado(contacto: Centro): void {
      
-      this.contactosService.editarContacto(contacto);
-      this.contactos = this.contactosService.getContactos();
+      this.contactosService.editarCentro(contacto);
+      this.contactos = this.contactosService.getCentros();
       this.contactoElegido = this.contactos.find(c => c.id == contacto.id);
      
     }
   
     //Elimina centro
     eliminarContacto(id: number): void {
-      this.contactosService.eliminarContacto(id);
-      this.contactos = this.contactosService.getContactos();
+      this.contactosService.eliminarCentro(id);
+      this.contactos = this.contactosService.getCentros();
       this.contactoAEliminar = undefined;
     }
     mostrarConfirmacion(contacto: any) {
@@ -94,23 +94,23 @@ export class ListaCentrosComponent implements OnInit {
       ref.componentInstance.contacto = {}; 
       ref.result.then((contactoEditado: Centro) => {
         // Actualizar los datos del contacto editado en la lista de contactos
-        this.contactosService.editarContacto(contactoEditado)
+        this.contactosService.editarCentro(contactoEditado)
         this.OrdenarPorNombre();
       }, (reason) => { });
     }
   
   //ordena los centros por nombres
     OrdenarPorNombre(): void {
-      this.contactos = this.contactosService.getContactos().sort((a, b) => a.nombre.localeCompare(b.nombre));
+      this.contactos = this.contactosService.getCentros().sort((a, b) => a.nombre.localeCompare(b.nombre));
     }
   
      // Barra de búsqueda
      searchContact() {
       this.cerrarPaneles()
       if (!this.term.trim()) {
-        this.contactos = this.contactosService.getContactos();
+        this.contactos = this.contactosService.getCentros();
       } else {
-        this.contactos = this.contactosService.getContactos().filter(contacto =>
+        this.contactos = this.contactosService.getCentros().filter(contacto =>
           contacto.nombre.toLowerCase().includes(this.term.toLowerCase())
         );
       }
@@ -119,7 +119,7 @@ export class ListaCentrosComponent implements OnInit {
     clearSearch() {
 
       this.term = '';
-      this.contactos = this.contactosService.getContactos();
+      this.contactos = this.contactosService.getCentros();
     }
   //cuando se pulsa enter se activa el buscar centro
     onEnter(event: KeyboardEvent) {
