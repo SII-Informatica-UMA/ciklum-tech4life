@@ -62,12 +62,12 @@
   
   .nav-menu-link:hover,
   .nav-menu-link_active {
-    background-color: #034574;
+    font-weight: bolder;
     transition: 0.5s;
   }
   
   /* TOGGLE */
-  .nav-toggle {
+  /*.nav-toggle {
     color: white;
     background: none;
     border: none;
@@ -78,7 +78,7 @@
     text-decoration: solid;
   
     display: none;
-  }
+  }*/
 
   .dropdown-toggle {
     position: relative;
