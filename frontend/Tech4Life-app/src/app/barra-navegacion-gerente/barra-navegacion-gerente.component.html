@@ -1,0 +1,29 @@
+<html>
+<header class="header">
+    <nav class="nav">
+        <div class="logo" id="menu">
+            <img [src]="logo" alt="Logo Tech4Life">
+        </div>
+      <ul class="nav-menu">
+        <li class="nav-menu-item">
+          <a href="/src/index.html" class="nav-menu-link nav-link">Menú Principal</a>
+        </li>
+        <li class="nav-menu-item">
+          <a href="#" class="nav-menu-link nav-link">Informacion Centros</a>
+        </li>
+        <li class="nav-menu-item">
+          <a href="#" class="nav-menu-link nav-link">Mensajeria</a>
+        </li>
+        <li class="nav-menu-item">
+            <a href="#" class="nav-menu-link nav-link dropdown-toggle" id="name" (click)="isDropdownOpen=!isDropdownOpen" [class.active]="isDropdownOpen">{{ usuario?.nombre }}</a>  
+            <ul class="dropdown-menu" *ngIf="isDropdownOpen">  
+              <li><a href="#" class="nav-menu-link nav-link">{{ usuario?.nombre }}</a></li>
+            <li><a href="#" class="nav-menu-link nav-link">Rol</a></li>
+            <li><a href="#" class="nav-menu-link nav-link">CerrarSesion</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <app-informacion></app-informacion>
+</html>

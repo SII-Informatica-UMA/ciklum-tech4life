@@ -44,16 +44,6 @@ export class ContactosService {
       administrador: false
     }
   ];
-  // Este es el usuario que se ha loggueado en la aplicación
-  private login:Usuario = {
-    id: 34522,
-    nombre: 'Juan',
-    apellido1: '',
-    apellido2: '',
-    email: '',
-    password: '',
-    administrador: false
-  }
 
   constructor() { }
 
@@ -85,4 +75,19 @@ export class ContactosService {
     let indice = this.contactos.findIndex(c => c.id == id);
     this.contactos.splice(indice, 1);
   }
+
+  private login:Usuario = {
+    id: 1,
+    nombre: "Juan",
+    apellido1: "Diaz",
+    apellido2: "Ruiz",
+    email:"correo" ,
+    password: "123",
+    administrador: true
+  }
+
+  getLogin(): Usuario {
+    return this.login;
+  }
+
 }
