@@ -6,13 +6,19 @@ body {
     width: 100%; 
   }
 
+  .container{
+    display:block;
+    justify-content:left;
+    margin-top: 100px;
+  }
+
 
 .btn-white-bg {
     background-color: white;
     color: rgb(1, 52, 155);
 }
 .btn {
-  font-size: 17px; /* Tamaño de fuente personalizado */
+  font-size: 13px; /* Tamaño de fuente personalizado */
   padding: 5px 5px; /* Relleno personalizado */
 }
 .table tbody tr {
@@ -24,6 +30,6 @@ body {
   }
   .custom-input {
     border-width: 1px;
-    height:29px;
-    width: 400px;
+    height:fit-content;
+    width: fit-content;
 }

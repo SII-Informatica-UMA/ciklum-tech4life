@@ -67,7 +67,7 @@
   }
   
   /* TOGGLE */
-  /*.nav-toggle {
+  .nav-toggle {
     color: white;
     background: none;
     border: none;
@@ -78,7 +78,7 @@
     text-decoration: solid;
   
     display: none;
-  }*/
+  }
 
   .dropdown-toggle {
     position: relative;
