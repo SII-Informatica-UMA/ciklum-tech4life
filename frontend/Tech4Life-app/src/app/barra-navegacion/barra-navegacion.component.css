@@ -92,7 +92,7 @@
     background-color:rgb(0, 12, 112) ;
     font-size: 13px;
     margin-top: 0;
-    right: 425px;
+    left: 0;
   }
   
   .dropdown-toggleq:hover .dropdown-menuq,

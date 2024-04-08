@@ -33,7 +33,8 @@ h1{
   margin-left: 50px;
   margin-top: 15px;
   width: 40%; /* O ajusta el ancho según tus necesidades */
-  float:left
+  float:left;
+  margin-bottom: 10px;
 }
 
 .container2 {
