@@ -9,6 +9,7 @@ import { CentrosService } from '../services/centro.service';
 import { Usuario } from '../entities/usuario';
 import { ContactosService } from '../services/usuario.service';
 import { CommonModule } from '@angular/common';
+import { BackendService } from '../services/backend.service';
 
 // Aquí hay que importar todos los componentes que vaya a usar este componente.
 // Por ahora ninguno.
@@ -32,7 +33,7 @@ export class InformacionCentroComponent {
   usuarioLoginNombre = this.contactosService.getUsuarioLoginNombre();
   
   // centros va a contener una lista de objetos Centro, solo apareceran los centros de los que es gestor el usuario loggueado
-  centros = this.centrosService.getCentrosUsuario(this.usuarioLoginID);
+  centros = this.centrosService.getCentrosUsuario(this.usuarioLoginID) ;
   
   // En principio la idea era poner una imagen de cada centro, pero no se nos ha proporcionado dicho atributo
   // Por tanto lo he dejado como imagen decorativa
