@@ -45,7 +45,7 @@
   }
   
   body {
-    max-width: 37.5rem;
+    max-width: 35rem;
     margin: 0 auto;
     
     font-family:Helvetica;
@@ -85,14 +85,14 @@
   .carouselq {
     position: relative;
     padding-top: 75%;
-    filter: drop-shadow(0 0 10px #0003);
+    background-color: rgb(169, 204, 227);
     perspective: 100px;
     text-align: center;
     justify-content: center;
     display: flex;
     align-items: center;
-    margin: auto;
-    margin-top: 140px;
+    margin: 0 auto;
+    margin-top: 120px;
     width: 100%;
   }
   
@@ -228,15 +228,13 @@
   img {
     text-align: center;
     justify-content: center;
-    display: flex;
+    display: absolute;
     align-items: center;
     margin: auto;
     margin-top: 120px;
     width: 100%;
     object-position: center center;
     margin-top: 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
     background-color: transparent;
     padding: 0;
   }
