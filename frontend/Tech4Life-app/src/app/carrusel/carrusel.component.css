@@ -47,7 +47,7 @@
   body {
     max-width: 37.5rem;
     margin: 0 auto;
-    padding: 0 1.25rem;
+    
     font-family:Helvetica;
     text-align: center;
     justify-content: center;
@@ -82,7 +82,7 @@
     padding: 0;
   }
   
-  .carousel {
+  .carouselq {
     position: relative;
     padding-top: 75%;
     filter: drop-shadow(0 0 10px #0003);
@@ -96,7 +96,7 @@
     width: 100%;
   }
   
-  .carousel__viewport {
+  .carousel__viewportq {
     position: absolute;
     top: 0;
     right: 0;
@@ -109,7 +109,7 @@
     scroll-snap-type: x mandatory;
   }
   
-  .carousel__slide {
+  .carousel__slideq {
     position: relative;
     flex: 0 0 100%;
     width: 100%;
@@ -117,7 +117,7 @@
   }
   
 
-  .carousel__snapper {
+  .carousel__snapperq {
     position: absolute;
     top: 0;
     left: 0;
@@ -127,30 +127,30 @@
   }
   
   @media (hover: hover) {
-    .carousel__snapper {
+    .carousel__snapperq {
       animation-name: tonext, snap;
       animation-timing-function: ease;
       animation-duration: 4s;
       animation-iteration-count: infinite;
     }
   
-    .carousel__slide:last-child .carousel__snapper {
+    .carousel__slideq:last-child .carousel__snapperq {
       animation-name: tostart, snap;
     }
   }
   
   @media (prefers-reduced-motion: reduce) {
-    .carousel__snapper {
+    .carousel__snapperq {
       animation-name: none;
     }
   }
   
-  .carousel:hover .carousel__snapper,
-  .carousel:focus-within .carousel__snapper {
+  .carouselq:hover .carousel__snapperq,
+  .carouselq:focus-within .carousel__snapperq {
     animation-name: none;
   }
   
-  .carousel__navigation {
+  .carousel__navigationq {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -158,12 +158,12 @@
     text-align: center;
   }
   
-  .carousel__navigation-list,
-  .carousel__navigation-item {
+  .carousel__navigation-listq,
+  .carousel__navigation-itemq {
     display: inline-block;
   }
   
-  .carousel__navigation-button {
+  .carousel__navigation-buttonq {
     display: inline-block;
     width: 1.5rem;
     height: 1.5rem;
@@ -175,10 +175,10 @@
     transition: transform 0.1s;
   }
   
-  .carousel::before,
-  .carousel::after,
-  .carousel__prev,
-  .carousel__next {
+  .carouselq::before,
+  .carouselq::after,
+  .carousel__prevq,
+  .carousel__nextq {
     position: absolute;
     top: 0;
     margin-top: 37.5%;
@@ -190,18 +190,18 @@
     outline: 0;
   }
   
-  .carousel::before,
-  .carousel__prev {
+  .carouselq::before,
+  .carousel__prevq {
     left: -1rem;
   }
   
-  .carousel::after,
-  .carousel__next {
+  .carouselq::after,
+  .carousel__nextq {
     right: -1rem;
   }
   
-  .carousel::before,
-  .carousel::after {
+  .carouselq::before,
+  .carouselq::after {
     content: '';
     z-index: 1;
     background-color: rgb(0, 12, 112);
@@ -216,11 +216,11 @@
   }
   
   
-  .carousel::before {
+  .carouselq::before {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='0,50 80,100 80,0' fill='%23fff'/%3E%3C/svg%3E");
   }
   
-  .carousel::after {
+  .carouselq::after {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='100,50 20,100 20,0' fill='%23fff'/%3E%3C/svg%3E");
   }
   
