@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Usuario} from '../usuario';
-import {ContactosService } from '../usuario.service';
+import {Usuario} from '../entities/usuario';
+import {ContactosService } from '../services/usuario.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
 import { DetallesGerenteComponent } from '../detalles-gerente/detalles-gerente.component';

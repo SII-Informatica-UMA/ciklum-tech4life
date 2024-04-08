@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InformacionComponent } from '../informacion/informacion.component';
-import { ContactosService } from '../usuario.service';
-import { Usuario } from '../usuario';
+import { ContactosService } from '../services/usuario.service';
+import { Usuario } from '../entities/usuario';
 import { CarruselComponent } from '../carrusel/carrusel.component';
 import { InformacionCentroComponent } from '../informacion-centro/informacion-centro.component';
 

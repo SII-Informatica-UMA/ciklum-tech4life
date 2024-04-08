@@ -4,10 +4,10 @@
 */
 import { Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common'
-import { Centro } from '../centro';
-import { CentrosService } from '../centro.service';
-import { Usuario } from '../usuario';
-import { ContactosService } from '../usuario.service';
+import { Centro } from '../entities/centro';
+import { CentrosService } from '../services/centro.service';
+import { Usuario } from '../entities/usuario';
+import { ContactosService } from '../services/usuario.service';
 import { CommonModule } from '@angular/common';
 
 // Aquí hay que importar todos los componentes que vaya a usar este componente.

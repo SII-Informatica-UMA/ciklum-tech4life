@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Centro } from '../centro';
-import { CentrosService } from '../centro.service';
+import { Centro } from '../entities/centro';
+import { CentrosService } from '../services/centro.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import  {Centro}from '../centro'
+import  {Centro}from '../entities/centro'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 //SI DA ERROR EL IMPORT DE ARRIBA EJECUTAR:
 //npm install @ng-bootstrap/ng-bootstrap

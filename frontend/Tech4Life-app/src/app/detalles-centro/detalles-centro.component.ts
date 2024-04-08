@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Centro } from '../centro';
+import { Centro } from '../entities/centro';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioCentroComponent } from '../formulario-centro/formulario-centro.component';
-import { CentrosService } from '../centro.service';
+import { CentrosService } from '../services/centro.service';
 
 @Component({
   selector: 'app-detalles-centro',

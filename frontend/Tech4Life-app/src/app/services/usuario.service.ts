@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Usuario } from './usuario';
-import { Centro } from './centro';
+import { Usuario } from '../entities/usuario';
+import { Centro } from '../entities/centro';
 
 @Injectable({
   providedIn: 'root'
