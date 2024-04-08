@@ -1,25 +1,25 @@
 <html>
-<header class="header">
-    <nav class="nav">
-        <div class="logo" id="menu">
+<header class="headerq">
+    <nav class="navq">
+        <div class="logoq" id="menuq">
             <img [src]="logo" alt="Logo Tech4Life">
         </div>
-      <ul class="nav-menu">
-        <li class="nav-menu-item">
-          <a href="#" class="nav-menu-link nav-link" (click)="abrirMenu()">Menú Principal</a>
+      <ul class="nav-menuq">
+        <li class="nav-menu-itemq">
+          <a href="#" class="nav-menu-linkq nav-linkq" (click)="abrirMenu()">Menú Principal</a>
         </li>
-        <li class="nav-menu-item">
-          <a href="#" class="nav-menu-link nav-link" (click)="abrirInfoCentro()">Informacion Centros</a>
+        <li class="nav-menu-itemq">
+          <a href="#" class="nav-menu-linkq nav-linkq" (click)="abrirInfoCentro()">Informacion Centros</a>
         </li>
-        <li class="nav-menu-item">
-          <a href="#" class="nav-menu-link nav-link">Mensajeria</a>
+        <li class="nav-menu-itemq">
+          <a href="#" class="nav-menu-linkq nav-linkq">Mensajeria</a>
         </li>
-        <li class="nav-menu-item">
-            <a href="#" class="nav-menu-link nav-link dropdown-toggle" id="name" (click)="isDropdownOpen=!isDropdownOpen" [class.active]="isDropdownOpen">{{ usuario?.nombre }}</a>  
-            <ul class="dropdown-menu" *ngIf="isDropdownOpen">  
-            <li><a href="#" class="nav-menu-link nav-link">{{ usuario?.nombre }}</a></li>
-            <li><a href="#" class="nav-menu-link nav-link">{{mostrarRol()}}</a></li>
-            <li><a href="#" class="nav-menu-link nav-link">CerrarSesion</a></li>
+        <li class="nav-menu-itemq">
+            <a href="#" class="nav-menu-linkq nav-linkq dropdown-toggleq" id="name" (click)="isDropdownOpen=!isDropdownOpen" [class.active]="isDropdownOpen">{{ usuario?.nombre }}</a>  
+            <ul class="dropdown-menuq" *ngIf="isDropdownOpen">  
+            <li><a href="#" class="nav-menu-linkq nav-linkq">{{ usuario?.nombre }}</a></li>
+            <li><a href="#" class="nav-menu-linkq nav-linkq">{{mostrarRol()}}</a></li>
+            <li><a href="#" class="nav-menu-linkq nav-linkq">CerrarSesion</a></li>
           </ul>
         </li>
       </ul>
