@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BandejaEntradaComponent } from './bandeja-entrada.component';
+import { CorreoMenuComponent } from './correo-menu.component';
 
-describe('BandejaEntradaComponent', () => {
-  let component: BandejaEntradaComponent;
-  let fixture: ComponentFixture<BandejaEntradaComponent>;
+describe('CorreoMenuComponent', () => {
+  let component: CorreoMenuComponent;
+  let fixture: ComponentFixture<CorreoMenuComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BandejaEntradaComponent]
+      imports: [CorreoMenuComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(BandejaEntradaComponent);
+    fixture = TestBed.createComponent(CorreoMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

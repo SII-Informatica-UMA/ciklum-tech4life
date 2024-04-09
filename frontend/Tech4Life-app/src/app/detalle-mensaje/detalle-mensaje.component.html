@@ -1,0 +1,29 @@
+<body>
+  <div class="container">
+      <div class="row">
+        <h2 >Asunto: {{mensaje?.asunto}}</h2>
+      </div>
+    
+    <div class="row">
+      <label class="col-md-3" for="asunto">Remitente:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{mensaje?.remitente}}</span>
+    </div>
+    <div class="row">
+      <label class="col-md-3" for="asunto">Destinatario:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{mensaje?.destinatario}}</span>
+    </div>
+    <div class="row">
+      <label class="col-md-3" for="asunto">Fecha y hora:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{mensaje?.fechaHora}}</span>
+    </div>
+    <div class="row">
+      <label class="col-md-3" for="asunto">Contenido del mensaje:</label>
+      <span class="col-md-9 offset-2 offset-md-0">{{mensaje?.contenido}}</span>
+    </div>
+    <div class="row">
+      <button class="col-auto btn btn-outline-primary" (click)="eliminarMensaje()">Eliminar <i class="bi bi-trash-fill"></i></button>
+      <div class="col-1"></div>
+    </div>
+  </div>
+</body>
+  
