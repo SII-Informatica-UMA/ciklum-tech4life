@@ -1,3 +1,8 @@
+.container{
+  height: 400px;
+  overflow-y: auto;
+}
+
 .detalle-mensaje {
   float: left;
   width: 25%;

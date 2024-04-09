@@ -37,7 +37,7 @@ export class MensajeService {
       remitente: "Juan",
       destinatario: "Ana",
       asunto: "Solicitud de información",
-      contenido: "Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?",
+      contenido: "Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?Hola Ana, ¿podrías proporcionarme más información sobre el proyecto?",
       fechaHora: new Date(),
     },
     {

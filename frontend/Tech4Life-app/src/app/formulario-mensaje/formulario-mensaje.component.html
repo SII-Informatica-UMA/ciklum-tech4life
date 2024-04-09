@@ -7,12 +7,13 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-            <label for="nombre">Destinatario</label>
+            <label for="destinatario">Destinatario</label>
             <input class="form-control" id="destinatario" [(ngModel)]="mensaje.destinatario" placeholder="destinatario">
-            <label for="direccion">Asunto:</label>
+            <label for="asunto">Asunto:</label>
             <input class="form-control" id="asunto" [(ngModel)]="mensaje.asunto" placeholder="asunto">
-            <label for="gerente">Contenido:</label>
-            <input class="form-control" id="contenido" [(ngModel)]="mensaje.contenido" placeholder="contenido">
+            <label for="contenido">Contenido:</label>
+            <textarea type="text-area" class="form-control" id="contenido" [(ngModel)]="mensaje.contenido" placeholder="contenido">
+            </textarea>
         </div>
       </div>
       <div class="modal-footer">
