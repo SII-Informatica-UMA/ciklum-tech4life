@@ -12,7 +12,7 @@
           <a href="#" class="nav-menu-linkq nav-linkq" (click)="abrirInfoCentro()">Informacion Centros</a>
         </li>
         <li class="nav-menu-itemq">
-          <a href="#" class="nav-menu-linkq nav-linkq">Mensajeria</a>
+          <a href="#" class="nav-menu-linkq nav-linkq" (click)="abrirCorreo()">Mensajeria</a>
         </li>
         <li class="nav-menu-itemq">
             <a href="#" class="nav-menu-linkq nav-linkq dropdown-toggleq" id="name" (click)="isDropdownOpen=!isDropdownOpen" [class.active]="isDropdownOpen">{{ usuario?.nombre }}</a>  
@@ -31,5 +31,8 @@
     <div *ngIf="isInfoCentro"> 
       <app-informacion-centro></app-informacion-centro>
       </div>
+      <div *ngIf="isCorreo"> 
+        <app-correo-menu></app-correo-menu>
+        </div>
   <app-informacion></app-informacion>
 </html>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Mensaje } from './mensaje';
-import { Usuario } from './usuario';
+import { Mensaje } from '../entities/mensaje';
+import { Usuario } from '../entities/usuario';
 import { ContactosService } from './usuario.service';
 
 @Injectable({

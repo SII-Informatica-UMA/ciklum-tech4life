@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { Mensaje } from '../mensaje';
+import { Mensaje } from '../entities/mensaje';
 import { CommonModule } from '@angular/common'; 
 import { FormularioMensajeComponent } from '../formulario-mensaje/formulario-mensaje.component';
-import { MensajeService } from '../mensaje.service';
+import { MensajeService } from '../services/mensaje.service';
 import { DetalleMensajeComponent } from '../detalle-mensaje/detalle-mensaje.component';
 import { FormsModule } from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { CorreoBandejaEntradaComponent } from '../correo-bandeja-entrada/correo-bandeja-entrada.component';
 import { CorreoBandejaSalidaComponent } from '../correo-bandeja-salida/correo-bandeja-salida.component';
-import { ContactosService } from '../usuario.service';
+import { ContactosService } from '../services/usuario.service';
 
 @Component({
     selector: 'app-correo-menu',
@@ -49,11 +49,7 @@ export class CorreoMenuComponent {
       ref.result.then((mensaje: Mensaje) => {
         this.mensajeService.redactar(mensaje);
         this.mensajes = this.mensajeService.getMensajesSalida(this.mensajes, this.usuarioLoginNombre);
-        this.OrdenarPorFecha();
       }, (reason) => {});
-  }
-  OrdenarPorFecha(): void {
-    this.mensajes.sort((a, b) => b.fechaHora.getTime() - a.fechaHora.getTime());  
   }
 }
 

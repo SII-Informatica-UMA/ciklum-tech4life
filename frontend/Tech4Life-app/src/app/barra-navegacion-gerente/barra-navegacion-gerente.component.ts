@@ -6,11 +6,12 @@ import { ContactosService } from '../services/usuario.service';
 import { Usuario } from '../entities/usuario';
 import { CarruselComponent } from '../carrusel/carrusel.component';
 import { InformacionCentroComponent } from '../informacion-centro/informacion-centro.component';
+import { CorreoMenuComponent } from '../correo-menu/correo-menu.component';
 
 @Component({
   selector: 'app-barra-navegacion-gerente',
   standalone: true,
-  imports: [CommonModule, FormsModule, InformacionComponent, CarruselComponent, InformacionCentroComponent],
+  imports: [CommonModule, FormsModule, InformacionComponent, CarruselComponent, InformacionCentroComponent, CorreoMenuComponent],
   templateUrl: './barra-navegacion-gerente.component.html',
   styleUrl: './barra-navegacion-gerente.component.css'
 })
@@ -26,9 +27,11 @@ mostrarRol() {
 }
   isMenu = true;
   isInfoCentro = false;
+  isCorreo = false;
   cerrarVentanas(){
   this.isMenu=false;
   this.isInfoCentro=false;  
+  this.isCorreo=false;
   }
 abrirMenu() {
   this.cerrarVentanas();
@@ -37,6 +40,11 @@ abrirMenu() {
 abrirInfoCentro(){
   this.cerrarVentanas();
   this.isInfoCentro=true;
+}
+
+abrirCorreo(){
+  this.cerrarVentanas();
+  this.isCorreo=true;
 }
   logo = './assets/logoT4L.png'
   isDropdownOpen = false;

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Mensaje } from '../mensaje';
+import { Mensaje } from '../entities/mensaje';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 

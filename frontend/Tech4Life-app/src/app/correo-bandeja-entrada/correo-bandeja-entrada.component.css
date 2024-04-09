@@ -1,6 +1,6 @@
 body {
   font-family: Helvetica;
-  color: black;
+  color: rgb(1, 52, 155);
   background-color: rgb(169, 204, 227);
   width: 100%; 
 }
@@ -16,6 +16,10 @@ body {
 .list-group-item.active {
   background-color: #007bff;
   color: white;
+}
+
+.container {
+  float: right;
 }
 
  

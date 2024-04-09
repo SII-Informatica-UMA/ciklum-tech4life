@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { Mensaje } from '../mensaje';
-import { MensajeService } from '../mensaje.service';
+import { Mensaje } from '../entities/mensaje';
+import { MensajeService } from '../services/mensaje.service';
 import { DetalleMensajeComponent } from "../detalle-mensaje/detalle-mensaje.component";
 import { CommonModule } from '@angular/common';
-import { ContactosService } from '../usuario.service';
+import { ContactosService } from '../services/usuario.service';
 
 @Component({
     selector: 'app-correo-bandeja-entrada',

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Mensaje } from '../mensaje';
-import { MensajeService } from '../mensaje.service';
+import { Mensaje } from '../entities/mensaje';
+import { MensajeService } from '../services/mensaje.service';
 @Component({
   selector: 'app-detalle-mensaje',
   standalone: true,
