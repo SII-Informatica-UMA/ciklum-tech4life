@@ -38,11 +38,6 @@ h1{
   border-radius: 4cm;
 }
 
-.nav-menu-linkq::before {
-  content: "\2192"; /* Código para la flecha hacia la derecha */
-  margin-right: 5px;
-}
-
 .btn-redactar {
   margin-top: 20px;
 }

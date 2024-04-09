@@ -6,6 +6,7 @@
 .detalle-mensaje {
   float: left;
   width: 25%;
+  position: relative;
 }
 
 .detalle-mensaje h2 {
@@ -26,6 +27,8 @@
   border: 1px solid #007bff;
   border-radius: 5px;
   padding: 5px 10px;
+  position: absolute;
+  bottom: 10px;
 }
 
 .detalle-mensaje button:hover {
