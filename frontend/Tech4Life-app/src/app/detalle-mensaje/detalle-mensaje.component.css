@@ -1,0 +1,34 @@
+.container{
+  height: 400px;
+  overflow-y: auto;
+}
+
+.detalle-mensaje {
+  float: left;
+  width: 25%;
+}
+
+.detalle-mensaje h2 {
+  color: black;
+}
+
+.detalle-mensaje label {
+  color: black;
+}
+
+.detalle-mensaje span {
+  color: black;
+}
+
+.detalle-mensaje button {
+  background-color: white;
+  color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.detalle-mensaje button:hover {
+  background-color: #007bff;
+  color: white;
+}

@@ -1,0 +1,32 @@
+<body>
+  <div class="container">
+    <h1>Buzón</h1>
+    <div class="btn-redactar">
+      <button type="button" class="write-button" (click)="redactar()">
+        <span>Redactar </span>
+        <i class="bi bi-pencil-square"></i>
+      </button>
+    </div>
+    <ul class="nav-menuq">
+      <li class="nav-menu-itemq">
+        <a href="#" class="nav-menu-linkq nav-linkq" (click)="abrirEntrada()">Bandeja de entrada</a>
+      </li>
+      <li class="nav-menu-itemq">
+        <a href="#" class="nav-menu-linkq nav-linkq" (click)="abrirSalida()">Bandeja de salida</a>
+      </li>
+    </ul>
+  </div>
+  
+  <div class = bandeja>
+    <div *ngIf="isAbrirEntrada"> 
+      <app-correo-bandeja-entrada></app-correo-bandeja-entrada>
+    </div>
+    <div *ngIf="isAbrirSalida"> 
+        <app-correo-bandeja-salida></app-correo-bandeja-salida>
+    </div>
+  </div>
+  
+</body>
+  
+
+

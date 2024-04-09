@@ -1,0 +1,22 @@
+<body>
+  <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <h1>Buzón de salida</h1>
+          <div class="list-group">
+            <button *ngFor="let mensaje of mensajes"
+              class="list-group-item list-group-item-action"
+              (click)="elegirMensaje(mensaje)"
+              [class.active]="mensaje === mensajeSeleccionado">{{mensaje.destinatario}}</button>
+          </div>
+          <br>
+        </div>
+        <div class="col-md-6" *ngIf="mensajeSeleccionado">
+          <app-detalle-mensaje [mensaje]="mensajeSeleccionado"
+            (mensajeEliminado)="eliminarMensaje($event)"></app-detalle-mensaje>
+        </div>
+      </div>
+    </div>
+</body>
+
+

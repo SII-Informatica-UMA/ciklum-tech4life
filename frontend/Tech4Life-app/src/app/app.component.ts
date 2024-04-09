@@ -18,6 +18,9 @@ import { BarraNavegacionComponent } from './barra-navegacion/barra-navegacion.co
 import { CarruselComponent } from './carrusel/carrusel.component';
 import { InformacionComponent } from './informacion/informacion.component';
 import { BarraNavegacionGerenteComponent } from './barra-navegacion-gerente/barra-navegacion-gerente.component';
+import { CorreoBandejaEntradaComponent } from './correo-bandeja-entrada/correo-bandeja-entrada.component';
+import { CorreoBandejaSalidaComponent } from './correo-bandeja-salida/correo-bandeja-salida.component';
+import { CorreoMenuComponent } from './correo-menu/correo-menu.component';
 
 
 // Aquí hay que importar todos los componentes de la aplicación.
@@ -29,7 +32,7 @@ import { InformacionCentroComponent } from './informacion-centro/informacion-cen
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
     // En imports hay que poner los todos los componentes de la aplicación
-    imports: [RouterOutlet, InformacionCentroComponent,ListaCentrosComponent,ListaGerentesComponent,BarraNavegacionComponent,CarruselComponent,InformacionComponent,BarraNavegacionGerenteComponent] 
+    imports: [RouterOutlet, InformacionCentroComponent,ListaCentrosComponent,ListaGerentesComponent,BarraNavegacionComponent,CarruselComponent,InformacionComponent,BarraNavegacionGerenteComponent, CorreoBandejaEntradaComponent, CorreoBandejaSalidaComponent , CorreoMenuComponent] 
   })
 
 export class AppComponent {

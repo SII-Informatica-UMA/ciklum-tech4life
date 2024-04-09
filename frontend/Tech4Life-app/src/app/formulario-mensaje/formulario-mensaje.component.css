@@ -1,0 +1,37 @@
+.modal-content{
+  width: 800px;
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+}
+
+.formulario-mensaje .modal-title {
+  color: black;
+}
+
+.formulario-mensaje .form-group label {
+  color: black;
+}
+
+.formulario-mensaje .form-control {
+  border-color: #007bff;
+}
+#contenido{
+  height: 50;
+  overflow-y: auto;
+}
+
+.formulario-mensaje .send-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.formulario-mensaje .send-button:hover {
+  background-color: #0056b3;
+}

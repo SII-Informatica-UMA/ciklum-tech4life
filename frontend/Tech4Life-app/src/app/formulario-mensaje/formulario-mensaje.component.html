@@ -1,0 +1,28 @@
+<body>
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-left" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Crear nuevo mensaje</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre mensaje')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="destinatario">Destinatario</label>
+            <input class="form-control" id="destinatario" [(ngModel)]="mensaje.destinatario" placeholder="destinatario">
+            <label for="asunto">Asunto:</label>
+            <input class="form-control" id="asunto" [(ngModel)]="mensaje.asunto" placeholder="asunto">
+            <label for="contenido">Contenido:</label>
+            <textarea type="text-area" class="form-control" id="contenido" [(ngModel)]="mensaje.contenido" placeholder="contenido">
+            </textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="send-button" (click)="enviarMensaje()">
+          <span>Enviar </span>
+          <i class="bi bi-send"></i>
+        </button>
+      </div>
+    </div>
+  </div> 
+</body>
+

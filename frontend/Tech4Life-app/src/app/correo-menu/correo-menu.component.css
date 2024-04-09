@@ -1,0 +1,56 @@
+body {
+  font-family: Helvetica;
+  color: black;
+  background-color: rgb(169, 204, 227);
+  height: 100vh; 
+  width: 100%; 
+}
+.correo-menu {
+  float: left;
+  width: 25%;
+}
+
+.nav-menuq {
+  list-style-type: none;
+  padding: 0;
+}
+
+.nav-menu-itemq {
+  margin-bottom: 10px;
+}
+
+.nav-menu-linkq {
+  text-decoration: none;
+  color: black;
+}
+
+.nav-menu-linkq:hover {
+  text-decoration: underline;
+}
+
+.nav-menu-linkq::before {
+  content: "\2192"; /* Código para la flecha hacia la derecha */
+  margin-right: 5px;
+}
+
+.btn-redactar {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.write-button {
+  background-color: white;
+  color: rgb(1, 52, 155);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.write-button:hover {
+  background-color: rgb(1, 52, 155);
+  color: white;
+}
+
+.write-button span {
+  margin-right: 5px;
+}
