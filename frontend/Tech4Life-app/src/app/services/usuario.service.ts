@@ -78,7 +78,7 @@ export class ContactosService {
 
   private login:Usuario = {
     id: 34522,
-    nombre: "Juan",
+    nombre: "Lola",
     apellido1: "Diaz",
     apellido2: "Ruiz",
     email:"correo" ,
