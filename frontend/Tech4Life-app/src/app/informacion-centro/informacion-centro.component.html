@@ -23,22 +23,24 @@
     <div *ngIf="centros.length > 0">
         <div class="container1">
             <h4> {{usuarioLoginNombre}}, se muestran a continuación información de los centros que gestionas:</h4>
-            <hr>
-            <div *ngFor="let centro of centros"> <!-- Esto es un bucle que itera por la lista de objetos Centro -->
-            
-                <div class="row">
-                    <label class="destacado">Nombre del centro: </label>
-                    <span class="resp">{{centro.nombre}}</span>
-                </div>
-                <div class="row">
-                    <label class="destacado">Dirección: </label>
-                    <span class="resp">{{centro.direccion}}</span>
-                </div>
-                <div class="row">
-                    <label class="destacado">Gerente: </label>
-                    <span class="resp">{{centro.gerente}}</span>
-                </div>
+            <div class="subContainer1">
                 <hr>
+                <div *ngFor="let centro of centros"> <!-- Esto es un bucle que itera por la lista de objetos Centro -->
+                
+                    <div class="row">
+                        <label class="destacado">Nombre del centro: </label>
+                        <span class="resp">{{centro.nombre}}</span>
+                    </div>
+                    <div class="row">
+                        <label class="destacado">Dirección: </label>
+                        <span class="resp">{{centro.direccion}}</span>
+                    </div>
+                    <div class="row">
+                        <label class="destacado">Gerente: </label>
+                        <span class="resp">{{centro.gerente}}</span>
+                    </div>
+                    <hr>
+                </div>
             </div>
         </div>
     </div>
