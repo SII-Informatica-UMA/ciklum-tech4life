@@ -31,6 +31,14 @@
   bottom: 10px;
 }
 
+.container-button{
+  display: flex; 
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
 .detalle-mensaje button:hover {
   background-color: #007bff;
   color: white;
