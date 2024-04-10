@@ -94,13 +94,16 @@ export class UsuariosService {
 
 import { Injectable } from "@angular/core";
 import { Login, UsuarioSesion, Rol, RolCentro } from "../entities/login";
-import { Observable, of, forkJoin, concatMap, lastValueFrom } from "rxjs";
-import {map} from 'rxjs/operators';
+import { Observable, of, forkJoin, concatMap, lastValueFrom, throwError } from "rxjs";
 import * as jose from 'jose';
+import { map, pluck, first, catchError, filter } from 'rxjs/operators';
+
 
 import { Usuario } from "../entities/usuario";
 import { BackendFakeService } from "./backend.fake.service";
 import { BackendService } from "./backend.service";
+import { usuarios } from "./usuarios.db.service";
+import { Gerente } from "../entities/gerente";
 
 @Injectable({
   providedIn: 'root'
@@ -108,12 +111,12 @@ import { BackendService } from "./backend.service";
 export class UsuariosService {
   _rolCentro?: RolCentro;
 
-  constructor(private backend: BackendFakeService) {}
+  constructor(private backend: BackendService) { }
 
   doLogin(login: Login): Observable<UsuarioSesion> {
     let jwtObs = this.backend.login(login.email, login.password);
-    let usuarioObs = jwtObs.pipe(concatMap(jwt=>this.backend.getUsuario(this.getUsuarioIdFromJwt(jwt))));
-    let join = forkJoin({jwt: jwtObs, usuario: usuarioObs});
+    let usuarioObs = jwtObs.pipe(concatMap(jwt => this.backend.getUsuario(this.getUsuarioIdFromJwt(jwt))));
+    let join = forkJoin({ jwt: jwtObs, usuario: usuarioObs });
     let usuarioSesion = join.pipe(map(obj => {
       return {
         id: obj.usuario.id,
@@ -121,21 +124,21 @@ export class UsuariosService {
         apellido1: obj.usuario.apellido1,
         apellido2: obj.usuario.apellido2,
         email: obj.usuario.email,
-        roles: obj.usuario.administrador?[{rol: Rol.ADMINISTRADOR}]:[],
+        roles: obj.usuario.administrador ? [{ rol: Rol.ADMINISTRADOR }] : [],
         jwt: obj.jwt
       };
     }));
     return usuarioSesion
-    .pipe(concatMap(usuarioSesion=>this.completarConRoles(usuarioSesion)))
-    .pipe(map(usuarioSesion=>{
-      localStorage.setItem('usuario', JSON.stringify(usuarioSesion));
-      if (usuarioSesion.roles.length > 0) {
-        this.rolCentro = usuarioSesion.roles[0];
-      } else {
-        this.rolCentro = undefined;
-      }
-      return usuarioSesion;
-    }));
+      .pipe(concatMap(usuarioSesion => this.completarConRoles(usuarioSesion)))
+      .pipe(map(usuarioSesion => {
+        localStorage.setItem('usuario', JSON.stringify(usuarioSesion));
+        if (usuarioSesion.roles.length > 0) {
+          this.rolCentro = usuarioSesion.roles[0];
+        } else {
+          this.rolCentro = undefined;
+        }
+        return usuarioSesion;
+      }));
 
   }
 
@@ -146,7 +149,7 @@ export class UsuariosService {
 
   private getUsuarioIdFromJwt(jwt: string): number {
     let payload = jose.decodeJwt(jwt);
-    console.log("Payload: "+JSON.stringify(payload));
+    console.log("Payload: " + JSON.stringify(payload));
     let id = payload.sub;
     if (id == undefined) {
       return 0;
@@ -177,7 +180,7 @@ export class UsuariosService {
   }
 
   doCambiarContrasenia(password: string, token: string): Promise<void> {
-    return lastValueFrom(this.backend.resetPassword(token, password),{defaultValue:undefined});
+    return lastValueFrom(this.backend.resetPassword(token, password), { defaultValue: undefined });
   }
 
   getUsuarios(): Observable<Usuario[]> {
@@ -195,10 +198,34 @@ export class UsuariosService {
   aniadirUsuario(usuario: Usuario): Observable<Usuario> {
     return this.backend.postUsuario(usuario);
   }
+<<<<<<< Updated upstream
   getGerente(id: number): Observable<Gerente> | undefined{
 
+=======
+  /*getGerente(id: number) : Observable<Gerente>{
+    const gerenteUsuario = this.backend.getUsuario(id);
+    for (let id in usuarios) {
+      if (id == gerenteUsuario.id){
+        const aux = id;
+      } 
+      return this.backend.getGerente(parseInt (id));
+>>>>>>> Stashed changes
   }
 
+}*/
 
-
+  getGerente(id: number): Observable<Gerente> {
+    // 1. Leverage RxJS for asynchronous operations:
+    return this.backend.getUsuario(id).pipe(
+      // 2. Use the `filter` operator to efficiently find the matching Gerente:
+      filter(usuario => usuario.id === id),
+      // 3. Handle the case where no match is found (optional):
+      catchError(() => {
+        // Throw a custom error or return an empty Observable
+        return throwError(() => new Error('Gerente not found'));
+      }),
+      // 4. Map to the Gerente object (assuming 'getUsuario' returns a Gerente):
+      map(usuario => (usuario as unknown as Gerente))
+    );
+  }
 }
