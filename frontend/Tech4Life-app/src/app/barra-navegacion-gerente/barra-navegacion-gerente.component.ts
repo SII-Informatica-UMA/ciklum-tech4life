@@ -7,6 +7,8 @@ import { Usuario } from '../entities/usuario';
 import { CarruselComponent } from '../carrusel/carrusel.component';
 import { InformacionCentroComponent } from '../informacion-centro/informacion-centro.component';
 import { CorreoMenuComponent } from '../correo-menu/correo-menu.component';
+import { UsuarioSesion } from '../entities/login';
+import { Rol } from '../entities/login';
 
 @Component({
   selector: 'app-barra-navegacion-gerente',
@@ -16,15 +18,14 @@ import { CorreoMenuComponent } from '../correo-menu/correo-menu.component';
   styleUrl: './barra-navegacion-gerente.component.css'
 })
 export class BarraNavegacionGerenteComponent {
-  mostrarRol() {
-    const Adm = "Administrador";
-    const Usr = "Usuario";
-    if (this.usuario?.administrador == true) {
-      return Adm;
-    } else {
-      return Usr;
-    }
+  private get rol() {
+    return this.usuariosService.rolCentro;
   }
+
+  mostrarRol() {
+    return this.rol?.rol == Rol.GERENTE;
+  }
+  
   isMenu = true;
   isInfoCentro = false;
   isCorreo = false;
@@ -49,11 +50,11 @@ export class BarraNavegacionGerenteComponent {
 
   logo = './assets/logoT4L.png'
   isDropdownOpen = false;
-  usuario: Usuario | undefined;
+  usuario: UsuarioSesion | undefined;
 
   constructor(private usuariosService: UsuariosService) { }
 
   ngOnInit(): void {
-    this.usuario = this.usuariosService.getLogin();
+    this.usuario = this.usuariosService.getUsuarioSesion();
   }
 }

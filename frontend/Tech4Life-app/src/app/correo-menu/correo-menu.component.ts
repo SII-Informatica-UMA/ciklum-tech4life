@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { CorreoBandejaEntradaComponent } from '../correo-bandeja-entrada/correo-bandeja-entrada.component';
 import { CorreoBandejaSalidaComponent } from '../correo-bandeja-salida/correo-bandeja-salida.component';
-import { ContactosService } from '../services/usuario.service';
+import { UsuariosService } from '../services/usuario.service';
 
 @Component({
     selector: 'app-correo-menu',
@@ -24,7 +24,7 @@ export class CorreoMenuComponent {
   isAbrirEntrada = false;
   isAbrirSalida = false;
 
-  constructor(private mensajeService: MensajeService, private contactosService: ContactosService, private modalService: NgbModal) { }
+  constructor(private mensajeService: MensajeService, private usuariosService: UsuariosService, private modalService: NgbModal) { }
   
   //usuarioLoginNombre = this.contactosService.getUsuarioLoginNombre();
   usuarioLoginNombre = 'Juan';

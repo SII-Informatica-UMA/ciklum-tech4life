@@ -3,7 +3,7 @@ import { Mensaje } from '../entities/mensaje';
 import { MensajeService } from '../services/mensaje.service';
 import { DetalleMensajeComponent } from "../detalle-mensaje/detalle-mensaje.component";
 import { CommonModule } from '@angular/common';
-import { ContactosService } from '../services/usuario.service';
+import { UsuariosService } from '../services/usuario.service';
 
 @Component({
     selector: 'app-correo-bandeja-entrada',
@@ -17,7 +17,7 @@ export class CorreoBandejaEntradaComponent {
   mensajes: Mensaje[] = [];
   mensajeSeleccionado?: Mensaje; // Suponiendo que tienes una variable para el mensaje seleccionado
 
-  constructor(private MensajeService: MensajeService, private contactosService: ContactosService) { }
+  constructor(private MensajeService: MensajeService, private usuariosService: UsuariosService) { }
 
   //usuarioLoginNombre = this.contactosService.getUsuarioLoginNombre();
   usuarioLoginNombre = 'Juan';

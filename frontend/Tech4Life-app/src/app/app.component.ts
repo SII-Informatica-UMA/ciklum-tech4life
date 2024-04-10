@@ -22,7 +22,7 @@ import { CorreoBandejaEntradaComponent } from './correo-bandeja-entrada/correo-b
 import { CorreoBandejaSalidaComponent } from './correo-bandeja-salida/correo-bandeja-salida.component';
 import { CorreoMenuComponent } from './correo-menu/correo-menu.component';
 import { CommonModule, TitleCasePipe } from '@angular/common';
-import { UsuariosService } from './services/usuarios.service';
+import { UsuariosService } from './services/usuario.service';
 
 
 // Aquí hay que importar todos los componentes de la aplicación.
@@ -31,7 +31,7 @@ import { InformacionCentroComponent } from './informacion-centro/informacion-cen
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, InformacionCentroComponent,ListaCentrosComponent,ListaGerentesComponent,BarraNavegacionComponent,CarruselComponent,InformacionComponent,BarraNavegacionGerenteComponent, CorreoBandejaEntradaComponent, CorreoBandejaSalidaComponent , CorreoMenuComponent,RouterOutlet, CommonModule, FormsModule, TitleCasePipe],
+  imports: [RouterOutlet, UsuariosService, InformacionCentroComponent,ListaCentrosComponent,ListaGerentesComponent,BarraNavegacionComponent,CarruselComponent,InformacionComponent,BarraNavegacionGerenteComponent, CorreoBandejaEntradaComponent, CorreoBandejaSalidaComponent , CorreoMenuComponent, CommonModule, FormsModule, TitleCasePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

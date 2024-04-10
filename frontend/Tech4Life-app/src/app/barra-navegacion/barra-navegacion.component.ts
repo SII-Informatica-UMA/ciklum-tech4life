@@ -10,6 +10,9 @@ import { ListaCentrosComponent } from '../lista-centros/lista-centros.component'
 import { CarruselComponent } from '../carrusel/carrusel.component';
 import { UsuarioSesion } from '../entities/login';
 import { ListadoUsuarioComponent } from '../listado-usuario/listado-usuario.component';
+import { Rol } from '../entities/login';
+
+
 
 @Component({
   selector: 'app-barra-navegacion',
@@ -19,43 +22,39 @@ import { ListadoUsuarioComponent } from '../listado-usuario/listado-usuario.comp
   styleUrl: './barra-navegacion.component.css'
 })
 export class BarraNavegacionComponent {
-  constructor(private usuariosService: UsuariosService) {}
+  constructor(private usuariosService: UsuariosService) { }
   isGestionGerentes = false;
   isGestionCentros = false;
   isMenu = true;
-  abrirMenu(){
+  abrirMenu() {
     this.cerrarVentanas();
-    this.isMenu=true;
+    this.isMenu = true;
   }
-  cerrarVentanas(){
+  cerrarVentanas() {
     this.isGestionGerentes = false;
     this.isGestionCentros = false;
-    this.isMenu=false;
+    this.isMenu = false;
   }
-  abrirGerentes(){
+  abrirGerentes() {
     this.cerrarVentanas();
-    this.isGestionGerentes=true;
+    this.isGestionGerentes = true;
   }
-  abrirCentros(){
+  abrirCentros() {
     this.cerrarVentanas();
-    this.isGestionCentros=true;
+    this.isGestionCentros = true;
   }
-
-logo = './assets/logoT4L.png'
-isDropdownOpen = false;
-usuario: Usuario | undefined;
-ngOnInit(): void {
-  this.usuario = this.usuariosService.getUsuarioSesion();
-}
-mostrarRol (){
-  const Adm = "Administrador";
-  const Usr = "Usuario";
-  if (this.usuario?.isAdministrador()){
-    return Adm;
-  } else {
-    return Usr;
+  private get rol() {
+    return this.usuariosService.rolCentro;
   }
-}
+  logo = './assets/logoT4L.png'
+  isDropdownOpen = false;
+  usuario: UsuarioSesion | undefined;
+  ngOnInit(): void {
+    this.usuario = this.usuariosService.getUsuarioSesion();
+  }
+  mostrarRol() {
+    return this.rol?.rol == Rol.ADMINISTRADOR;
+  }
 }
 
 

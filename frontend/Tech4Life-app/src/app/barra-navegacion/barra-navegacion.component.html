@@ -18,7 +18,7 @@
           <a href="#" class="nav-menu-linkq nav-linkq dropdown-toggleq" id="name" (click)="isDropdownOpen=!isDropdownOpen" [class.active]="isDropdownOpen">{{ usuario?.nombre }}</a>  
           <ul class="dropdown-menuq" *ngIf="isDropdownOpen">  
             <li><a href="#" class="nav-menu-linkq nav-linkq">{{ usuario?.nombre }}</a></li>
-            <li><a href="#" class="nav-menu-linkq nav-linkq">{{usuario.rol}}</a></li>
+            <li><a href="#" class="nav-menu-linkq nav-linkq">{{mostrarRol()}}</a></li>
             <li><a href="#" class="nav-menu-linkq nav-linkq">CerrarSesion</a></li>
           </ul>
         </li>

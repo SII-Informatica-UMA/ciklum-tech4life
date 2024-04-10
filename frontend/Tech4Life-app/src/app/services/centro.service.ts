@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import {Centro} from '../entities/centro';
+import { Gerente } from '../entities/gerente';
+import { BackendService } from './backend.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,25 +17,14 @@ export class CentrosService {
         {id: 5, nombre: "campygym",direccion: "Verdansk",gerente: "Lola", idUsuario: 34522}
   ];
 
-  constructor() { }
+  constructor(private backend: BackendService) { }
 
   getCentros(): Centro [] {
     return this.centros;
   }
   // Devuelve los centros asociados a un usuario a partir de la id de dicho usuario
-  getCentrosUsuario(id: number): Centro [] {
-    
-    // Tendrá que recorrer la lista de centros y 
-
-    // Definir una lista vacía
-    let listaResultado: Centro[] = [];
-
-    // Usar un bucle for para agregar elementos a la lista
-    for (let i = 0; i < this.centros.length; i++) {
-      // Comparamos la id que se nos pasa como parámetro con la id del usuario asignado al centro
-      if (id == this.centros[i].idUsuario) listaResultado.push(this.centros[i]);
-    }
-    return listaResultado ;
+  getCentrosUsuario(gerente: Gerente): Observable<Centro []> | undefined {
+    return this.backend.getCentro(gerente);
   }
 
   addCentro(centro: Centro) {

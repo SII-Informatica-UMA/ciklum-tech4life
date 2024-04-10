@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Usuario } from '../entities/usuario';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
-import { ContactosService } from '../services/usuario.service';
+import { UsuariosService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-detalles-gerente',
@@ -20,7 +20,7 @@ export class DetallesGerenteComponent {
     @Output() contactoEditado = new EventEmitter<Usuario>();
     @Output() contactoEliminado = new EventEmitter<number>();
     @Output() cerrarDetalles = new EventEmitter<void>();
-    constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
+    constructor(private usuariosService: UsuariosService, private modalService: NgbModal) { }
     cerrar() {
       this.cerrarDetalles.emit();
     }
