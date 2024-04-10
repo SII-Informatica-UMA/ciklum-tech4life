@@ -67,7 +67,7 @@ export class BackendService {
     }
 
     putCentro(centro: Centro): Observable<Centro> {
-        return this.httpClient.put<Centro>(BACKEND_URI + '/centro/' + centro.id, centro);
+        return this.httpClient.put<Centro>(BACKEND_URI + '/centro/' + centro.idCentro, centro);
     }
 
     deleteCentro(id: number): Observable<void> {
@@ -79,11 +79,11 @@ export class BackendService {
     }
 
     deleteGerenteCentro(gerente:Gerente, centro:Centro): Observable<void>{
-        return this.httpClient.delete<void>(BACKEND_URI + '/centro/' + centro.id + '/gerente') ;
+        return this.httpClient.delete<void>(BACKEND_URI + '/centro/' + centro.idCentro + '/gerente') ;
     }
 
     getMensajeCentro(centro:Centro): Observable<[Mensaje]>{
-        return this.httpClient.get<[Mensaje]>(BACKEND_URI + '/mensaje/centro/' + centro.id) ;
+        return this.httpClient.get<[Mensaje]>(BACKEND_URI + '/mensaje/centro/' + centro.idCentro) ;
     }
 
     postMensajeCentro(centro:Centro, mensaje:Mensaje): Observable<Mensaje>{

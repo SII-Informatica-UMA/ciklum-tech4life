@@ -19,11 +19,11 @@ export class CentrosService {
 
   constructor(private backend: BackendService) { }
 
-  getCentros(): Centro [] {
+  /*getCentros(): Centro [] {
     return this.centros;
-  }
+  }*/
   // Devuelve los centros asociados a un usuario a partir de la id de dicho usuario
-  getCentrosUsuario(gerente: Gerente): Observable<Centro []> | undefined {
+  getCentrosUsuario(gerente: Gerente): Observable<Centro []>{
     return this.backend.getCentro(gerente);
   }
 

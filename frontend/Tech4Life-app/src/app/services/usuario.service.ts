@@ -198,10 +198,7 @@ export class UsuariosService {
   aniadirUsuario(usuario: Usuario): Observable<Usuario> {
     return this.backend.postUsuario(usuario);
   }
-<<<<<<< Updated upstream
-  getGerente(id: number): Observable<Gerente> | undefined{
 
-=======
   /*getGerente(id: number) : Observable<Gerente>{
     const gerenteUsuario = this.backend.getUsuario(id);
     for (let id in usuarios) {
@@ -209,12 +206,11 @@ export class UsuariosService {
         const aux = id;
       } 
       return this.backend.getGerente(parseInt (id));
->>>>>>> Stashed changes
   }
 
 }*/
 
-  getGerente(id: number): Observable<Gerente> {
+  getGerente(id: number): Observable<Gerente>{
     // 1. Leverage RxJS for asynchronous operations:
     return this.backend.getUsuario(id).pipe(
       // 2. Use the `filter` operator to efficiently find the matching Gerente:

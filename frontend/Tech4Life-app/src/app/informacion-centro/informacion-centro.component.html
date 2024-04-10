@@ -20,9 +20,9 @@
 <body>
     <h1>INFORMACIÓN DE LOS CENTROS</h1>
     <!-- Si la lista tiene elementos-->
-    <div *ngIf="centros.length > 0">
+    <div *ngIf="centros!.length > 0">
         <div class="container1">
-            <h4> {{usuario?.nombre}}, se muestran a continuación información de los centros que gestionas:</h4>
+            <h4> {{usuario.nombre}}, se muestran a continuación información de los centros que gestionas:</h4>
             <div class="subContainer1">
                 <hr>
                 <div *ngFor="let centro of centros"> <!-- Esto es un bucle que itera por la lista de objetos Centro -->
@@ -37,7 +37,7 @@
                     </div>
                     <div class="row">
                         <label class="destacado">Gerente: </label>
-                        <span class="resp">{{centro.gerente}}</span>
+                        <span class="resp">{{usuario.nombre}}</span>
                     </div>
                     <hr>
                 </div>
@@ -45,8 +45,8 @@
         </div>
     </div>
     <!-- Si la lista es vacía -->
-    <div *ngIf="centros.length <= 0">
-        <h4> {{usuario?.nombre}}, no gestionas ningún centro actualmente </h4>
+    <div *ngIf="centros!.length <= 0">
+        <h4> {{usuario.nombre}}, no gestionas ningún centro actualmente </h4>
     </div>
     
     <div class="container2">
