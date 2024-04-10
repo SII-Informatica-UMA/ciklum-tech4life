@@ -53,7 +53,11 @@ export class BarraNavegacionComponent {
     this.usuario = this.usuariosService.getUsuarioSesion();
   }
   mostrarRol() {
-    return this.rol?.rol == Rol.ADMINISTRADOR;
+    if (this.rol?.rol == Rol.ADMINISTRADOR){
+      return "Administrador";
+    } else {
+      return "Error";
+    }
   }
 }
 

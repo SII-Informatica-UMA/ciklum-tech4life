@@ -23,7 +23,11 @@ export class BarraNavegacionGerenteComponent {
   }
 
   mostrarRol() {
-    return this.rol?.rol == Rol.GERENTE;
+    if (this.rol?.rol == Rol.GERENTE){
+      return "Gerente";
+    } else {
+      return "Error";
+    }
   }
   
   isMenu = true;

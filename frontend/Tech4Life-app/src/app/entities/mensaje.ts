@@ -1,6 +1,6 @@
 import { Destinatario } from "./destinatario";
 
-/*
+
 export interface Mensaje {
   asunto: string;
   destinatarios: [Destinatario] ;
@@ -8,8 +8,8 @@ export interface Mensaje {
   copiaOculta: [Destinatario] ;
   contenido:string ;
   idMensaje:number ;
-} */
-
+}
+/*
 export interface Mensaje{
   id:number;
   remitente: string;
@@ -17,4 +17,4 @@ export interface Mensaje{
   asunto: string;
   contenido: string;
   fechaHora: Date;
-}
+}*/
