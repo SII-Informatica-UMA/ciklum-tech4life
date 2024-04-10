@@ -195,8 +195,8 @@ export class UsuariosService {
   aniadirUsuario(usuario: Usuario): Observable<Usuario> {
     return this.backend.postUsuario(usuario);
   }
-  getGerente(id: number) Observable<Gerente>{
-    
+  getGerente(id: number): Observable<Gerente> | undefined{
+
   }
 
 
