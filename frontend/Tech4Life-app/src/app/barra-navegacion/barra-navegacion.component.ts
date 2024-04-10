@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InformacionComponent } from '../informacion/informacion.component';
-import { ContactosService } from '../services/usuario.service';
+import { UsuariosService } from '../services/usuario.service';
 import { Usuario } from '../entities/usuario';
 import { ListaGerentesComponent } from '../lista-gerentes/lista-gerentes.component';
 import { Router } from '@angular/router';

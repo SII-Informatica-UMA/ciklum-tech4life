@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { UsuariosService } from '../services/usuarios.service';
+import { UsuariosService } from '../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';

@@ -6,7 +6,7 @@ import { Centro } from '../entities/centro';
   providedIn: 'root'
 })
 
-export class ContactosService {
+export class UsuariosService {
   private contactos: Usuario [] = [
     {
       id: 1, nombre: "pepe", apellido1: "huelva",

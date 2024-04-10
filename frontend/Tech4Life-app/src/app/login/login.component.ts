@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Login } from '../entities/login';
-import { UsuariosService } from '../services/usuarios.service';
+import { UsuariosService } from '../services/usuario.service';
 import { Router } from '@angular/router';
 
 @Component({
