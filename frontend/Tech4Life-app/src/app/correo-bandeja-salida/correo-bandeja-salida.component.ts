@@ -42,7 +42,7 @@ export class CorreoBandejaSalidaComponent {
         return this.mensajeService.getMensajesCentro(centro.centros); 
       })
     ).subscribe(mensajes => {
-      // Filtrar mensajes donde el usuario está en la lista de destinatarios
+      // Filtrar mensajes donde el usuario es un remitente
       const mensajesEntrada = mensajes.filter(
         mensaje => mensaje.remitente.some(
           remitente => remitente.id === this.usuario.id
@@ -74,7 +74,7 @@ export class CorreoBandejaSalidaComponent {
         return this.mensajeService.getMensajesCentro(centro.centros); 
       })
     ).subscribe(mensajes => {
-      // Filtrar mensajes donde el usuario está en la lista de destinatarios
+      // Filtrar mensajes donde el usuario es un remitente
       const mensajesEntrada = mensajes.filter(
         mensaje => mensaje.remitente.some(
           remitente => remitente.id === this.usuario.id

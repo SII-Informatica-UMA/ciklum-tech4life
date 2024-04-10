@@ -10,7 +10,22 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MensajeService {
-  private mensajes: Mensaje[] = [
+
+  constructor(private backend: BackendService) { }
+  
+  getMensajesCentro(centro: Centro): Observable<Mensaje[]>{
+    return this.backend.getMensajeCentro(centro);
+  }
+
+  getAsunto(mensaje:Mensaje){
+    return mensaje.asunto;
+  }
+
+  eliminarMensaje(id: number): Observable<void>{
+    return this.backend.deleteMensaje(id);
+  }
+}
+  /*private mensajes: Mensaje[] = [
     {
       id: 1,
       remitente: "Ana",
@@ -91,33 +106,4 @@ export class MensajeService {
       contenido: "¡Hola Sandra! ¡Feliz cumpleaños! Que tengas un día maravilloso.",
       fechaHora: new Date(),
     }
-];
-  constructor(private backend: BackendService) { }
-  
-  getMensajesCentro(centro: Centro): Observable<Mensaje[]>{
-    return this.backend.getMensajeCentro(centro);
-  }
-  getMensajes(): Mensaje [] {
-    return this.mensajes;
-  }
-
-  getMensajesEntrada(mensajes: Mensaje[], nombreUsuario : string): Mensaje[]{ //es el usuario quien recibe el mensaje
-    return mensajes.filter(mensaje => mensaje.destinatario === nombreUsuario);
-  }
-  getMensajesSalida(mensajes: Mensaje[], nombreUsuario : string): Mensaje[]{   //es el usuario quien envia el mensaje
-    return mensajes.filter(mensaje => mensaje.remitente === nombreUsuario);
-  }
-
-  getAsunto(mensaje:Mensaje){
-    return mensaje.asunto;
-  }
-
-  redactar(mensaje: Mensaje) {
-    mensaje.id = Math.max(...this.mensajes.map(c => c.id)) + 1;
-    this.mensajes.push(mensaje);
-  }
-
-  eliminarMensaje(id: number): Observable<void>{
-    return this.backend.deleteMensaje(id);
-  }
-}
+];*/

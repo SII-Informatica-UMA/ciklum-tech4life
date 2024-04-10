@@ -33,7 +33,7 @@ export class InformacionCentroComponent {
 
 
   ngOnInit() {
-    this.usuariosService.getGerente(this.usuario.id).pipe(
+    this.usuariosService.getGerente(this.usuario.id).pipe(    //se consigue el observable de gerente
    
       catchError(error => {
        

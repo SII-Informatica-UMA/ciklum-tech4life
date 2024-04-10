@@ -28,6 +28,7 @@ export class CorreoMenuComponent {
   usuario!: UsuarioSesion;
   centro: Centro[] | undefined;
   listaMensajes: Mensaje[] = [];
+  idGerente: number | undefined;
 
   constructor(private mensajeService: MensajeService, private usuariosService: UsuariosService, private modalService: NgbModal) { }
 
@@ -47,14 +48,23 @@ export class CorreoMenuComponent {
   }
 
   //ref.componentInstance.mensaje = {id: 0, remitente: this.usuarioLoginNombre, destinatario: '', asunto: '', contenido: '', fechaHora: new Date()};
+  gerenteID(id:number): number | undefined{
+    const gerenteId = this.usuariosService.getGerente(this.usuario.id).subscribe(gerente => {
+      if (gerente) {
+        this.idGerente = gerente.id;
+      }
+    });
+    return this.idGerente;
+  }
+  
 
   redactar(): void {
     this.cerrarVentanas();
     let ref = this.modalService.open(FormularioMensajeComponent);
     ref.componentInstance.accion = "Añadir";
-    ref.componentInstance.mensaje = {asunto: '', destinatario:'' , copia: '', copiaOculta: '', remitente: , contenido: ''};
+    ref.componentInstance.mensaje = {asunto: '', destinatario:'' , copia: '', copiaOculta: '', remitente: [{id: this.gerenteID(this.usuario.id) , tipo: 'GERENTE',},], contenido: ''};
     ref.result.then((mensaje: Mensaje) => {
-      this.mensajeService.redactar(mensaje);
+      //this.mensajeService.redactar(mensaje);
       this.usuariosService.getGerente(this.usuario.id).pipe(
         catchError(error => {
           console.error('Error fetching Gerente:', error);
@@ -70,7 +80,7 @@ export class CorreoMenuComponent {
           return this.mensajeService.getMensajesCentro(centro.centros);
         })
       ).subscribe(mensajes => {
-        // Filtrar mensajes donde el usuario está en la lista de destinatarios
+        // Filtrar mensajes donde el usuario es un remitente
         const mensajesEntrada = mensajes.filter(
           mensaje => mensaje.remitente.some(
             remitente => remitente.id === this.usuario.id
