@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Mensaje } from '../entities/mensaje';
 import { Usuario } from '../entities/usuario';
-import { ContactosService } from './usuario.service';
+import { UsuariosService } from './usuario.service';
+import { BackendService } from './backend.service';
+import { Centro } from '../entities/centro';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -89,8 +92,11 @@ export class MensajeService {
       fechaHora: new Date(),
     }
 ];
-  constructor() { }
-
+  constructor(private backend: BackendService) { }
+  
+  getMensajesCentro(centro: Centro): Observable<Mensaje[]>{
+    return this.backend.getMensajeCentro(centro);
+  }
   getMensajes(): Mensaje [] {
     return this.mensajes;
   }
@@ -111,8 +117,7 @@ export class MensajeService {
     this.mensajes.push(mensaje);
   }
 
-  eliminarMensaje(id: number) {
-    let indice = this.mensajes.findIndex(c => c.id == id);
-    this.mensajes.splice(indice, 1);
+  eliminarMensaje(id: number): Observable<void>{
+    return this.backend.deleteMensaje(id);
   }
 }

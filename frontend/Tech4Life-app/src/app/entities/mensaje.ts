@@ -6,6 +6,7 @@ export interface Mensaje {
   destinatarios: [Destinatario] ;
   copia: [Destinatario] ;
   copiaOculta: [Destinatario] ;
+  remitente:[Destinatario];
   contenido:string ;
   idMensaje:number ;
 }
