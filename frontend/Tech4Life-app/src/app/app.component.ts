@@ -4,7 +4,7 @@
 */
 
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ListaCentrosComponent } from "./lista-centros/lista-centros.component";
 import { ListaGerentesComponent } from './lista-gerentes/lista-gerentes.component';
 import { DetallesCentroComponent } from './detalles-centro/detalles-centro.component';
@@ -21,21 +21,56 @@ import { BarraNavegacionGerenteComponent } from './barra-navegacion-gerente/barr
 import { CorreoBandejaEntradaComponent } from './correo-bandeja-entrada/correo-bandeja-entrada.component';
 import { CorreoBandejaSalidaComponent } from './correo-bandeja-salida/correo-bandeja-salida.component';
 import { CorreoMenuComponent } from './correo-menu/correo-menu.component';
+import { CommonModule, TitleCasePipe } from '@angular/common';
+import { UsuariosService } from './services/usuarios.service';
 
 
 // Aquí hay que importar todos los componentes de la aplicación.
 import { InformacionCentroComponent } from './informacion-centro/informacion-centro.component';
 
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.css',
-    // En imports hay que poner los todos los componentes de la aplicación
-    imports: [RouterOutlet, InformacionCentroComponent,ListaCentrosComponent,ListaGerentesComponent,BarraNavegacionComponent,CarruselComponent,InformacionComponent,BarraNavegacionGerenteComponent, CorreoBandejaEntradaComponent, CorreoBandejaSalidaComponent , CorreoMenuComponent] 
-  })
-
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, InformacionCentroComponent,ListaCentrosComponent,ListaGerentesComponent,BarraNavegacionComponent,CarruselComponent,InformacionComponent,BarraNavegacionGerenteComponent, CorreoBandejaEntradaComponent, CorreoBandejaSalidaComponent , CorreoMenuComponent,RouterOutlet, CommonModule, FormsModule, TitleCasePipe],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
 export class AppComponent {
-  title = 'Tech4Life-app';
-}
+  _rolIndex: number = 0
 
+  constructor(private usuarioService: UsuariosService, private router: Router) {
+    this.actualizarRol()
+  }
+
+  get rolIndex() {
+    return this._rolIndex;
+  }
+
+  set rolIndex(i: number) {
+    this._rolIndex = i;
+    this.actualizarRol();
+  }
+
+  actualizarRol() {
+    let u = this.usuarioSesion;
+    if (u) {
+      this.usuarioService.rolCentro = u.roles[this.rolIndex];
+    } else {
+      this.usuarioService.rolCentro = undefined;
+    }
+  }
+
+  get rol() {
+    return this.usuarioService.rolCentro;
+  }
+
+  get usuarioSesion() {
+    return this.usuarioService.getUsuarioSesion();
+  }
+
+  logout() {
+    this.usuarioService.doLogout();
+    this.actualizarRol();
+    this.router.navigateByUrl('/login');
+  }
+}
