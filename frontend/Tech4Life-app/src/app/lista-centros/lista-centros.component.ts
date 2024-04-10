@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Centro } from '../entities/centro';
-import { CentrosService } from '../services/centro.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DetallesCentroComponent } from '../detalles-centro/detalles-centro.component';
 import { FormularioCentroComponent } from '../formulario-centro/formulario-centro.component';
+import { CentrosService } from '../services/centro.service';
+import { map } from 'rxjs';
 
 @Component({
     selector: 'app-lista-centros',
@@ -20,17 +21,23 @@ export class ListaCentrosComponent implements OnInit {
   throw new Error('Method not implemented.');
   }
     contactoAEliminar?: Centro;
-    contactos:Centro [] = [];
+    centro:Centro [] = [];
+    
     contactoElegido?: Centro;
     term: string = ''; // término de búsqueda
-    constructor(private contactosService: CentrosService, private modalService: NgbModal) { }
+    constructor(private centroService: CentrosService, private modalService: NgbModal) { }
   
     //actualiza en tiempo real
     ngOnInit(): void {
-      this.contactos = this.contactosService.getCentros();
+      
+      this.centroService.getCentro()
+      .pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+      )
+      .subscribe(centros => this.centro = centros);
       this.OrdenarPorNombre();
     }
-    
+ 
     //cerrar paneles cuando se abre otro:
     cerrarPaneles(): void {
        this.contactoElegido = undefined;
@@ -58,9 +65,13 @@ export class ListaCentrosComponent implements OnInit {
       ref.componentInstance.accion = "Añadir";
       ref.componentInstance.contacto = {id: 0, nombre: '', direccion: ''};
       ref.result.then((contacto: Centro) => {
-        this.contactosService.addCentro(contacto);
-        this.contactos = this.contactosService.getCentros();
-        this.OrdenarPorNombre();
+        this.centroService.addCentro(contacto);
+        this.centroService.getCentro()
+      .pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+      )
+      .subscribe(centros => this.centro = centros);
+      this.OrdenarPorNombre();
       }, (reason) => {});
       
     }
@@ -68,16 +79,24 @@ export class ListaCentrosComponent implements OnInit {
     //edita centro
     contactoEditado(contacto: Centro): void {
      
-      this.contactosService.editarCentro(contacto);
-      this.contactos = this.contactosService.getCentros();
-      this.contactoElegido = this.contactos.find(c => c.id == contacto.id);
+      this.centroService.editarCentro(contacto);
+      this.centroService.getCentro()
+      .pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+      )
+      .subscribe(centros => this.centro = centros);
+      this.contactoElegido = this.centro.find(c => c.idCentro == contacto.idCentro);
      
     }
   
     //Elimina centro
     eliminarContacto(id: number): void {
-      this.contactosService.eliminarCentro(id);
-      this.contactos = this.contactosService.getCentros();
+      this.centroService.eliminarCentro(id);
+      this.centroService.getCentro()
+      .pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+      )
+      .subscribe(centros => this.centro = centros);
       this.contactoAEliminar = undefined;
     }
     mostrarConfirmacion(contacto: any) {
@@ -94,32 +113,48 @@ export class ListaCentrosComponent implements OnInit {
       ref.componentInstance.contacto = {}; 
       ref.result.then((contactoEditado: Centro) => {
         // Actualizar los datos del contacto editado en la lista de contactos
-        this.contactosService.editarCentro(contactoEditado)
+        this.centroService.editarCentro(contactoEditado)
         this.OrdenarPorNombre();
       }, (reason) => { });
     }
   
   //ordena los centros por nombres
     OrdenarPorNombre(): void {
-      this.contactos = this.contactosService.getCentros().sort((a, b) => a.nombre.localeCompare(b.nombre));
+      this.centroService.getCentro()
+      .pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+      )
+      .subscribe(centros => this.centro = centros.sort((a, b) => a.nombre.localeCompare(b.nombre)));
     }
   
      // Barra de búsqueda
      searchContact() {
       this.cerrarPaneles()
       if (!this.term.trim()) {
-        this.contactos = this.contactosService.getCentros();
+        this.centroService.getCentro()
+      .pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+      )
+      .subscribe(centros => this.centro = centros);
       } else {
-        this.contactos = this.contactosService.getCentros().filter(contacto =>
-          contacto.nombre.toLowerCase().includes(this.term.toLowerCase())
-        );
+        this.centroService.getCentro()
+      .pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+      )
+      .subscribe(centros => this.centro = centros.filter(contacto =>
+        contacto.nombre.toLowerCase().includes(this.term.toLowerCase())
+      ));
       }
     }
   //limpia la busqueda , devuelve a estado inicial
     clearSearch() {
 
       this.term = '';
-      this.contactos = this.contactosService.getCentros();
+      this.centroService.getCentro()
+      .pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+      )
+      .subscribe(centros => this.centro = centros);
     }
   //cuando se pulsa enter se activa el buscar centro
     onEnter(event: KeyboardEvent) {

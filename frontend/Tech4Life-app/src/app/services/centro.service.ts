@@ -24,21 +24,21 @@ export class CentrosService {
   }*/
   // Devuelve los centros asociados a un usuario a partir de la id de dicho usuario
   getCentrosUsuario(gerente: Gerente): Observable<Centro []>{
-    return this.backend.getCentro(gerente);
+    return this.backend.getCentroDelGerente(gerente);
   }
 
   addCentro(centro: Centro) {
-    centro.id = Math.max(...this.centros.map(c => c.id)) + 1;
-    this.centros.push(centro);
+    return this.backend.postCentro(centro);
   }
 
   editarCentro(centro: Centro) {
-    let indice = this.centros.findIndex(c => c.id == centro.id);
-    this.centros[indice] = centro;
+   return this.backend.putCentro(centro);
   }
 
   eliminarCentro(id: number) {
-    let indice = this.centros.findIndex(c => c.id == id);
-    this.centros.splice(indice, 1);
+    return this.backend.deleteCentro(id);
+  }
+  getCentro(){
+    return this.backend.getCentro();
   }
 }

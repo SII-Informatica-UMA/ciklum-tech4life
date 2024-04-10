@@ -62,9 +62,10 @@ export class BackendService {
         return this.httpClient.delete<void>(BACKEND_URI + '/gerente/' + id);
     }
 
-    getCentro(gerente:Gerente): Observable<[Centro]> {
-        return this.httpClient.get<[Centro]>(BACKEND_URI + '/centro/' + gerente);
+    getCentro(): Observable<[Centro]> {
+        return this.httpClient.get<[Centro]>(BACKEND_URI + '/centro' );
     }
+
 
     putCentro(centro: Centro): Observable<Centro> {
         return this.httpClient.put<Centro>(BACKEND_URI + '/centro/' + centro.idCentro, centro);

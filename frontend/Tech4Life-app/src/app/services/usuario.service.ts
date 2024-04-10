@@ -110,7 +110,7 @@ import { Gerente } from "../entities/gerente";
 })
 export class UsuariosService {
   _rolCentro?: RolCentro;
-
+  user :Usuario[];
   constructor(private backend: BackendService) { }
 
   doLogin(login: Login): Observable<UsuarioSesion> {
@@ -224,4 +224,48 @@ export class UsuariosService {
       map(usuario => (usuario as unknown as Gerente))
     );
   }
+  getGerenteUser(id:number): Observable<Usuario>{
+    // 1. Leverage RxJS for asynchronous operations:
+    return this.backend.getGerente(id).pipe(
+      // 2. Use the `filter` operator to efficiently find the matching Gerente:
+      filter(gerente => gerente.id === id),
+      // 3. Handle the case where no match is found (optional):
+      catchError(() => {
+        // Throw a custom error or return an empty Observable
+        return throwError(() => new Error('Gerente not found'));
+      }),
+      // 4. Map to the Gerente object (assuming 'getUsuario' returns a Gerente):
+      map(gerente => (gerente as unknown as Usuario))
+    );
+  }
+///-----------------------------------*******
+  getUsersGerentes(gerentes:Gerente[]):Usuario[]{
+    
+    for(let i in gerentes){
+      this.getGerenteUser(gerentes[i].idUsuario)
+      .subscribe((usuario: Usuario) => {
+          this.user.push(usuario);
+      });
+    }
+
+    return this.user;
+  }
+
+  getGerentes():Observable<Gerente[]>{
+    return this.backend.getGerentes();
+  }
+
+  aniadirGerentes(gerente:Gerente):Observable<Gerente>{
+    return this.backend.postGerente(gerente);
+  }
+
+  editarGerente(gerente:Gerente):Observable<Gerente>{
+    return this.backend.putGerente(gerente);
+  }
+
+  eliminarGerente(id:number):Observable<void>{
+      return this.backend.deleteGerente(id);
+  }
+
+
 }

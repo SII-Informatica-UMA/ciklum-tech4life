@@ -6,6 +6,8 @@ import { FormularioGerenteComponent } from '../formulario-gerente/formulario-ger
 import { DetallesGerenteComponent } from '../detalles-gerente/detalles-gerente.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { map } from 'rxjs';
+import { Gerente } from '../entities/gerente';
 
 @Component({
   selector: 'app-lista-gerentes',
@@ -20,15 +22,24 @@ export class ListaGerentesComponent implements OnInit {
   throw new Error('Method not implemented.');
   }
   
-    contactos: Usuario [] = [];
-    contactoElegido?: Usuario;
+    contactos ?:Usuario[];
+    gerentes :Gerente[];
+    contactoElegido?:Usuario;
     contactoAEliminar?: Usuario;
+
     term: string = ''; // término de búsqueda
     constructor(private usuariosService: UsuariosService, private modalService: NgbModal) { }
   
     //actualiza en tiempo real
     ngOnInit(): void {
-      this.contactos = this.usuariosService.getContactos();
+      this.usuariosService.getGerentes()
+        .pipe(
+            map(gerentes => gerentes as Gerente[]) 
+        )
+        .subscribe(gerentes => this.gerentes = gerentes);
+
+      this.contactos=this.usuariosService.getUsersGerentes(this.gerentes);
+      
       this.OrdenarPorNombre();
     }
     
@@ -58,9 +69,15 @@ export class ListaGerentesComponent implements OnInit {
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Añadir";
       ref.componentInstance.contacto = {id: 0, nombre: '', apellido: ''};
-      ref.result.then((contacto: Usuario) => {
-        this.contactosService.addContacto(contacto);
-        this.contactos = this.contactosService.getContactos();
+      ref.result.then((contacto: Gerente) => {
+        this.usuariosService.aniadirGerentes(contacto);
+        this.usuariosService.getGerentes()
+        .pipe(
+            map(gerentes => gerentes as Gerente[]) 
+        )
+        .subscribe(gerentes => this.gerentes = gerentes);
+
+      this.contactos=this.usuariosService.getUsersGerentes(this.gerentes);
         this.OrdenarPorNombre();
       }, (reason) => {});
       
@@ -68,16 +85,27 @@ export class ListaGerentesComponent implements OnInit {
   
     //edita gerente
     contactoEditado(contacto: Usuario): void {
-      this.contactosService.editarContacto(contacto);
-      this.contactos = this.contactosService.getContactos();
+      this.usuariosService.editarUsuario(contacto);
+      this.usuariosService.getGerentes()
+        .pipe(
+            map(gerentes => gerentes as Gerente[]) 
+        )
+        .subscribe(gerentes => this.gerentes = gerentes);
+
+     
+      this.contactos=this.usuariosService.getUsersGerentes(this.gerentes);
       this.contactoElegido = this.contactos.find(c => c.id == contacto.id);
      
     }
   
     //Elimina gerente
     eliminarContacto(id: number): void {
-      this.contactosService.eliminarContacto(id);
-      this.contactos = this.contactosService.getContactos();
+      this.usuariosService.eliminarGerente(id);
+      this.usuariosService.getGerentes()
+      .pipe(
+          map(contactos => contactos as Gerente[]) 
+      )
+      .subscribe(contactos => this.contactos = contactos);
       this.contactoAEliminar = undefined;
     }
     
@@ -88,21 +116,28 @@ export class ListaGerentesComponent implements OnInit {
     }
   //Editar cada fila:
   
-    editarContacto(contacto: Usuario): void {
+    editarContacto(contacto: Gerente): void {
       this.cerrarPaneles();
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {}; 
-      ref.result.then((contactoEditado: Usuario) => {
+      ref.result.then((contactoEditado: Gerente) => {
         // Actualizar los datos del contacto editado en la lista de contactos
-        this.contactosService.editarContacto(contactoEditado)
+        this.usuariosService.editarGerente(contactoEditado)
         this.OrdenarPorNombre();
       }, (reason) => { });
     }
   
   //ordena los centros por nombres
     OrdenarPorNombre(): void {
-      this.contactos = this.contactosService.getContactos().sort((a, b) => a.nombre.localeCompare(b.nombre));
+      this.usuariosService.getGerentes()
+      .pipe(
+          map(contactos => contactos as Gerente[]) 
+      )
+      .subscribe(contactos => this.contactos = contactos.sort((a, b) => a.nombre.localeCompare(b.nombre)));
+      
+      
+      
     }
   
      // Barra de búsqueda

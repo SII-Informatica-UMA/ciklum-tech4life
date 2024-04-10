@@ -28,7 +28,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let contacto of contactos">
+              <tr *ngFor="let contacto of centro">
                 <td>{{contacto.nombre}}</td>
                 <td>{{contacto.direccion}}</td>
                 <td></td>
@@ -59,7 +59,7 @@
           <div class="card-body p-4">
             <p>¿Eliminar Centro?</p>
             <div class="d-flex justify-content-around">
-              <button (click)="eliminarContacto(contactoAEliminar.id)">Sí</button>
+              <button (click)="eliminarContacto(contactoAEliminar.idCentro)">Sí</button>
               <button (click)="cerrarDetalles()">No</button>
             </div>
           </div>
