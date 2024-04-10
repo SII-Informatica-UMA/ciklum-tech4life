@@ -8,16 +8,18 @@ import { ListaGerentesComponent } from '../lista-gerentes/lista-gerentes.compone
 import { Router } from '@angular/router';
 import { ListaCentrosComponent } from '../lista-centros/lista-centros.component';
 import { CarruselComponent } from '../carrusel/carrusel.component';
+import { UsuarioSesion } from '../entities/login';
+import { ListadoUsuarioComponent } from '../listado-usuario/listado-usuario.component';
 
 @Component({
   selector: 'app-barra-navegacion',
   standalone: true,
-  imports: [CommonModule, FormsModule, InformacionComponent, ListaGerentesComponent, ListaCentrosComponent, CarruselComponent],
+  imports: [CommonModule, FormsModule, InformacionComponent, ListaGerentesComponent, ListaCentrosComponent, CarruselComponent, ListadoUsuarioComponent],
   templateUrl: './barra-navegacion.component.html',
   styleUrl: './barra-navegacion.component.css'
 })
 export class BarraNavegacionComponent {
-  constructor(private contactosService: ContactosService) {}
+  constructor(private usuariosService: UsuariosService) {}
   isGestionGerentes = false;
   isGestionCentros = false;
   isMenu = true;
@@ -43,12 +45,12 @@ logo = './assets/logoT4L.png'
 isDropdownOpen = false;
 usuario: Usuario | undefined;
 ngOnInit(): void {
-  this.usuario = this.contactosService.getLogin();
+  this.usuario = this.usuariosService.getUsuarioSesion();
 }
 mostrarRol (){
   const Adm = "Administrador";
   const Usr = "Usuario";
-  if (this.usuario?.administrador==true){
+  if (this.usuario?.isAdministrador()){
     return Adm;
   } else {
     return Usr;

@@ -1,6 +1,6 @@
 import { UsuarioSesion } from './../entities/login';
 import { Component } from '@angular/core';
-import { UsuariosService } from '../services/usuarios.service';
+import { UsuariosService } from '../services/usuario.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { Usuario, UsuarioImpl } from '../entities/usuario';

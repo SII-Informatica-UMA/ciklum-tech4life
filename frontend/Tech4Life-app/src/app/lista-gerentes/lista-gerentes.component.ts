@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Usuario} from '../entities/usuario';
-import {ContactosService } from '../services/usuario.service';
+import { UsuariosService } from '../services/usuario.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
 import { DetallesGerenteComponent } from '../detalles-gerente/detalles-gerente.component';
@@ -24,11 +24,11 @@ export class ListaGerentesComponent implements OnInit {
     contactoElegido?: Usuario;
     contactoAEliminar?: Usuario;
     term: string = ''; // término de búsqueda
-    constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
+    constructor(private usuariosService: UsuariosService, private modalService: NgbModal) { }
   
     //actualiza en tiempo real
     ngOnInit(): void {
-      this.contactos = this.contactosService.getContactos();
+      this.contactos = this.usuariosService.getContactos();
       this.OrdenarPorNombre();
     }
     
