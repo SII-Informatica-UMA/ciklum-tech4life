@@ -110,7 +110,7 @@ import { Gerente } from "../entities/gerente";
 })
 export class UsuariosService {
   _rolCentro?: RolCentro;
-  user :Usuario[];
+  user?:Usuario[];
   constructor(private backend: BackendService) { }
 
   doLogin(login: Login): Observable<UsuarioSesion> {

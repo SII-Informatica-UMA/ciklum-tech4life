@@ -23,7 +23,7 @@ export class ListaGerentesComponent implements OnInit {
   }
   
     contactos ?:Usuario[];
-    gerentes :Gerente[];
+    gerentes ?:Gerente[];
     contactoElegido?:Usuario;
     contactoAEliminar?: Usuario;
 

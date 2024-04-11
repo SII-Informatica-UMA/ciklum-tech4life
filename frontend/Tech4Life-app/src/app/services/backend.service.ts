@@ -99,8 +99,8 @@ export class BackendService {
         return this.httpClient.post<Gerente>(BACKEND_URI + '/gerente/', gerente) ;
     }
 
-    getCentroDelGerente(gerente:Gerente): Observable<Centro> {
-        return this.httpClient.get<Centro>(BACKEND_URI + '/centro/' + gerente);
+    getCentroDelGerente(gerente:Gerente): Observable<Centro[]> {
+        return this.httpClient.get<Centro[]>(BACKEND_URI + '/centro/' + gerente);
     }
 
     postCentro(centro:Centro): Observable<Centro> {
