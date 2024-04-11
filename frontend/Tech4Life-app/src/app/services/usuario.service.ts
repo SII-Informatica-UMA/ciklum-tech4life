@@ -239,16 +239,16 @@ export class UsuariosService {
     );
   }
 ///-----------------------------------*******
-  getUsersGerentes(gerentes:Gerente[]):Usuario[]{
+  getUsersGerentes(gerentes:Gerente[]):Observable<Usuario[]>{
     
-    for(let i in gerentes){
-      this.getGerenteUser(gerentes[i].idUsuario)
-      .subscribe((usuario: Usuario) => {
-          this.user.push(usuario);
-      });
-    }
+    const observables: Observable<Usuario>[] = [];
+  
+  for (let i in gerentes) {
+    observables.push(this.getGerenteUser(gerentes[i].idUsuario));
+  }
 
-    return this.user;
+  return forkJoin(observables);
+
   }
 
   getGerentes():Observable<Gerente[]>{

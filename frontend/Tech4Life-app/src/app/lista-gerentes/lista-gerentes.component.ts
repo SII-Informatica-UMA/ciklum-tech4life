@@ -22,8 +22,8 @@ export class ListaGerentesComponent implements OnInit {
   throw new Error('Method not implemented.');
   }
   
-    contactos ?:Usuario[];
-    gerentes ?:Gerente[];
+    contactos!:Usuario[];
+    gerentes!:Gerente[];
     contactoElegido?:Usuario;
     contactoAEliminar?: Usuario;
 
@@ -38,7 +38,11 @@ export class ListaGerentesComponent implements OnInit {
         )
         .subscribe(gerentes => this.gerentes = gerentes);
 
-      this.contactos=this.usuariosService.getUsersGerentes(this.gerentes);
+     this.usuariosService.getUsersGerentes(this.gerentes).pipe(
+        map(gerentes => gerentes as Usuario[]) 
+    )
+    .subscribe(gerentes => this.contactos = gerentes);
+;
       
       this.OrdenarPorNombre();
     }
@@ -79,7 +83,10 @@ export class ListaGerentesComponent implements OnInit {
         )
         .subscribe(gerentes => this.gerentes = gerentes);
 
-      this.contactos=this.usuariosService.getUsersGerentes(this.gerentes);
+     this.usuariosService.getUsersGerentes(this.gerentes).pipe(
+        map(contactos => contactos as Usuario[]) 
+    )
+    .subscribe(contactos=> this.contactos= contactos);
         this.OrdenarPorNombre();
       }, (reason) => {});
       
@@ -95,7 +102,10 @@ export class ListaGerentesComponent implements OnInit {
         .subscribe(gerentes => this.gerentes = gerentes);
 
      
-      this.contactos=this.usuariosService.getUsersGerentes(this.gerentes);
+        this.usuariosService.getUsersGerentes(this.gerentes).pipe(
+          map(contactos => contactos as Usuario[]) 
+      )
+      .subscribe(contactos=> this.contactos= contactos);
       this.contactoElegido = this.contactos.find(c => c.id == contacto.id);
      
     }
@@ -149,17 +159,25 @@ export class ListaGerentesComponent implements OnInit {
      searchContact() {
       this.cerrarPaneles();
       if (!this.term.trim()) {
-        this.contactos = this.usuariosService.getUsersGerentes(this.gerentes);
-      } else {
-        this.contactos = this.usuariosService.getUsersGerentes(this.gerentes).filter(contacto =>
-          contacto.nombre.toLowerCase().includes(this.term.toLowerCase())
-        );
+        this.usuariosService.getUsersGerentes(this.gerentes).pipe(
+          map(contactos => contactos as Usuario[]) 
+      )
+      .subscribe(contactos=> this.contactos= contactos);
+      this.usuariosService.getUsersGerentes(this.gerentes).pipe(
+        map(contactos => contactos as Usuario[]) 
+    )
+    .subscribe(contactos=> this.contactos= contactos.filter(contacto =>
+      contacto.nombre.toLowerCase().includes(this.term.toLowerCase())));
+       
       }
     }
   //limpia la busqueda , devuelve a estado inicial
     clearSearch() {
       this.term = '';
-      this.contactos = this.usuariosService.getUsersGerentes(this.gerentes);
+      this.usuariosService.getUsersGerentes(this.gerentes).pipe(
+        map(contactos => contactos as Usuario[]) 
+    )
+    .subscribe(contactos=> this.contactos= contactos);
     }
   //cuando se pulsa enter se activa el buscar gerente
     onEnter(event: KeyboardEvent) {
