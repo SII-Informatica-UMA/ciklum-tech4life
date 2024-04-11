@@ -29,7 +29,6 @@ export class FormularioGerenteComponent {
   };
 
   gerente: Gerente ={
-    centros: '',
     idUsuario: 0,
     empresa: '',
     id: 0
