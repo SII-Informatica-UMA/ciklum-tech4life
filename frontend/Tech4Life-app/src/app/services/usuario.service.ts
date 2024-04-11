@@ -6,7 +6,7 @@ import { map, pluck, first, catchError, filter } from 'rxjs/operators';
 
 
 import { Usuario } from "../entities/usuario";
-import { BackendFakeService } from "./backend.fake.service";
+
 import { BackendService } from "./backend.service";
 import { usuarios } from "./usuarios.db.service";
 import { Gerente } from "../entities/gerente";

@@ -3,6 +3,8 @@ import {Centro} from '../entities/centro';
 import { Gerente } from '../entities/gerente';
 import { BackendService } from './backend.service';
 import { Observable } from 'rxjs';
+import { UsuariosService } from './usuario.service';
+import { UsuarioSesion } from '../entities/login';
 
 @Injectable({
   providedIn: 'root'

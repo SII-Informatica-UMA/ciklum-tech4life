@@ -9,7 +9,7 @@ import { Gerente } from "../entities/gerente";
 import { Centro } from "../entities/centro";
 
 // Este servicio imita al backend pero utiliza localStorage para almacenar los datos
-
+/*
 const usuariosC: Usuario [] = [
   {
     id: 1,
@@ -237,3 +237,4 @@ export class BackendFakeService {
   }
 
 }
+*/

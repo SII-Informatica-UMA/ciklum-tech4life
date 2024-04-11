@@ -33,29 +33,32 @@ export class InformacionCentroComponent {
 
 
   ngOnInit() {
+    // Dado un usuarioSesion me devuelve una lista de centros
     this.usuariosService.getGerente(this.usuario.id).pipe(    //se consigue el observable de gerente
-   
+
       catchError(error => {
-       
+
         console.error('Error fetching Gerente:', error);
-        return throwError(() => new Error('Error fetching Gerente')); 
+        return throwError(() => new Error('Error fetching Gerente'));
       }),
-      
+
       map(gerente => {
         if (gerente) {
-          
-          this.centros = gerente.centros; 
-      
+
+          this.centrosService.getCentrosUsuario(gerente).pipe(
+            map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+          )
+            .subscribe(centros => this.centros = centros);
         }
-        return gerente; 
+        return gerente;
       })
-      
+
     ).subscribe();
   }
   centroImagen = 'assets/gimnasio.png';
 }
 
-  
+
 // En usuarioLoginID guardamos la id del usuario que se ha loggueado en la aplicación
 // usuarioLoginID = this.usuariosService.getUsuarioLoginID();
 
