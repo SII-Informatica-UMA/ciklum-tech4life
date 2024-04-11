@@ -21,11 +21,11 @@ export class CorreoBandejaEntradaComponent {
   mensajes: Mensaje[] = [];
   mensajeSeleccionado?: Mensaje; // Suponiendo que tienes una variable para el mensaje seleccionado
 
-  constructor(private mensajeService: MensajeService, private usuariosService: UsuariosService, private centroService : CentrosService) { }
+  constructor(private mensajeService: MensajeService, private usuariosService: UsuariosService, private centrosService : CentrosService) { }
 
   //usuarioLoginNombre = this.contactosService.getUsuarioLoginNombre();
   usuario!: UsuarioSesion;
-  centro: Centro[] | undefined;
+  centros: Centro[] | undefined;
 ngOnInit(): void {
   this.usuariosService.getGerente(this.usuario.id).pipe(
     catchError(error => {
@@ -34,12 +34,15 @@ ngOnInit(): void {
     }),
     map(gerente => {
       if (gerente) {
-        this.centro = gerente.centros;
+        this.centrosService.getCentrosUsuario(gerente).pipe(
+          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
+        )
+          .subscribe(centros => this.centros = centros);
       }
       return gerente;
     }),
     switchMap(centro => {
-      return this.mensajeService.getMensajesCentro(centro.centros); 
+      return this.mensajeService.getMensajesCentro(centro); 
     })
   ).subscribe(mensajes => {
     // Filtrar mensajes donde el usuario está en la lista de destinatarios
