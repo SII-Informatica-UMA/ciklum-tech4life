@@ -5,6 +5,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 //npm install @ng-bootstrap/ng-bootstrap
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Gerente } from '../entities/gerente';
 
 @Component({
   selector: 'app-formulario-gerente',
@@ -27,10 +28,22 @@ export class FormularioGerenteComponent {
     administrador: false
   };
 
+  gerente: Gerente ={
+    centros: '',
+    idUsuario: 0,
+    empresa: '',
+    id: 0
+
+  }
+
   constructor(public modal: NgbActiveModal) { }
 
   guardarContacto(): void {
     this.modal.close(this.contacto);
+  }
+
+  guardarGerente(): void {
+    this.modal.close(this.gerente);
   }
 
 }

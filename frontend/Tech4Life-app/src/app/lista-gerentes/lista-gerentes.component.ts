@@ -69,6 +69,8 @@ export class ListaGerentesComponent implements OnInit {
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Añadir";
       ref.componentInstance.contacto = {id: 0, nombre: '', apellido: ''};
+      ref.componentInstance.gerente = { empresa:''}
+
       ref.result.then((contacto: Gerente) => {
         this.usuariosService.aniadirGerentes(contacto);
         this.usuariosService.getGerentes()
@@ -103,9 +105,9 @@ export class ListaGerentesComponent implements OnInit {
       this.usuariosService.eliminarGerente(id);
       this.usuariosService.getGerentes()
       .pipe(
-          map(contactos => contactos as Gerente[]) 
+          map(gerentes => gerentes as Gerente[]) 
       )
-      .subscribe(contactos => this.contactos = contactos);
+      .subscribe(gerentes => this.gerentes = gerentes);
       this.contactoAEliminar = undefined;
     }
     
@@ -121,6 +123,11 @@ export class ListaGerentesComponent implements OnInit {
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {}; 
+      ref.result.then((contactoEditado: Usuario) => {
+        // Actualizar los datos del contacto editado en la lista de contactos
+        this.usuariosService.editarUsuario(contactoEditado)
+      }, (reason) => { });
+      ref.componentInstance.gerente={};
       ref.result.then((contactoEditado: Gerente) => {
         // Actualizar los datos del contacto editado en la lista de contactos
         this.usuariosService.editarGerente(contactoEditado)
@@ -128,15 +135,13 @@ export class ListaGerentesComponent implements OnInit {
       }, (reason) => { });
     }
   
-  //ordena los centros por nombres
+  //ordena los centros por nombres de empresas
     OrdenarPorNombre(): void {
       this.usuariosService.getGerentes()
       .pipe(
-          map(contactos => contactos as Gerente[]) 
+          map(gerentes => gerentes as Gerente[]) 
       )
-      .subscribe(contactos => this.contactos = contactos.sort((a, b) => a.nombre.localeCompare(b.nombre)));
-      
-      
+      .subscribe(gerentes=> this.gerentes = gerentes.sort((a, b) => a.empresa.localeCompare(b.empresa)));
       
     }
   
@@ -144,9 +149,9 @@ export class ListaGerentesComponent implements OnInit {
      searchContact() {
       this.cerrarPaneles();
       if (!this.term.trim()) {
-        this.contactos = this.contactosService.getContactos();
+        this.contactos = this.usuariosService.getUsersGerentes(this.gerentes);
       } else {
-        this.contactos = this.contactosService.getContactos().filter(contacto =>
+        this.contactos = this.usuariosService.getUsersGerentes(this.gerentes).filter(contacto =>
           contacto.nombre.toLowerCase().includes(this.term.toLowerCase())
         );
       }
@@ -154,7 +159,7 @@ export class ListaGerentesComponent implements OnInit {
   //limpia la busqueda , devuelve a estado inicial
     clearSearch() {
       this.term = '';
-      this.contactos = this.contactosService.getContactos();
+      this.contactos = this.usuariosService.getUsersGerentes(this.gerentes);
     }
   //cuando se pulsa enter se activa el buscar gerente
     onEnter(event: KeyboardEvent) {

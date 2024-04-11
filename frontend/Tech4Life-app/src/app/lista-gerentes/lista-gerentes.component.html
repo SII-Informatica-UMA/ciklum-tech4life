@@ -21,16 +21,18 @@
               <thead>
                 <tr>
                   <th>Nombre del Gerente</th>
-                  <th>Apellidos</th>
-                  <th></th>
+                  <th>Apellido1</th>
+                  <th>Apellido2</th>
+                  <th>Centro</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let contacto of contactos">
+                <tr *ngFor="let contacto of contactos;let i = index">
                   <td>{{contacto.nombre}}</td>
                   <td>{{contacto.apellido1}}</td>
-                  <td></td>
+                  <td>{{contacto.apellido2}}</td>
+                  <td>{{gerentes[i].empresa}}</td>
                   <td>
                     <button type="button" (click)="elegirContacto(contacto)" [class.active]="contacto === contactoElegido">
                       <i class="bi bi-pencil-fill"></i>
