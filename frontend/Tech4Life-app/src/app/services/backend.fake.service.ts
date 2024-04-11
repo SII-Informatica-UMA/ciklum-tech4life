@@ -5,6 +5,8 @@ import { SECRET_JWT } from "../config/config";
 import { from } from "rxjs";
 import * as jose from 'jose';
 import { FRONTEND_URI } from "../config/config";
+import { Gerente } from "../entities/gerente";
+import { Centro } from "../entities/centro";
 
 // Este servicio imita al backend pero utiliza localStorage para almacenar los datos
 
@@ -29,12 +31,46 @@ const usuariosC: Usuario [] = [
   },
 ];
 
+const centrosC: Centro[]= [
+  {
+    idCentro: 1,
+    nombre: 'HacendadoFit Málaga',
+    direccion: 'Calle'
+  },
+  {
+    idCentro:2,
+    nombre: 'Gimasio Aldi',
+    direccion: 'Calle2'
+  },
+  {
+    idCentro: 3,
+    nombre: 'HacendadoFit Marbella',
+    direccion: 'Calle3'
+  }
+];
+
+const GerentesC: Gerente[]=[
+  {
+    idUsuario: 3,
+    empresa: 'empresa1',
+    id: 1,
+  },
+  {
+    idUsuario: 4,
+    empresa: 'empresa2',
+    id: 2,
+  },
+];
+
 @Injectable({
   providedIn: 'root'
 })
 export class BackendFakeService {
+
   private usuarios: Usuario [];
   private forgottenPasswordTokens;
+  private centros: Centro[];
+  private gerentes: Gerente[];
 
   constructor() {
     let _usuarios = localStorage.getItem('usuarios');
@@ -50,6 +86,21 @@ export class BackendFakeService {
     } else {
       this.forgottenPasswordTokens = new Map();
     }
+
+    let _centros = localStorage.getItem('centros');
+    if (_centros) {
+      this.centros = JSON.parse(_centros);
+    } else {
+      this.centros = [...centrosC];
+    }
+
+    let _gerentes = localStorage.getItem('gerentes');
+    if (_gerentes) {
+      this.gerentes = JSON.parse(_gerentes);
+    } else {
+      this.gerentes = [...GerentesC];
+    }
+
   }
 
   getUsuarios(): Observable<Usuario[]> {
@@ -175,6 +226,14 @@ export class BackendFakeService {
 
   private generarCadena(): string {
     return Math.random().toString(36).substring(2);
+  }
+
+  getCentroDelGerente(gerente: Gerente): Observable<Centro[]> {
+    return gerente.centros;
+  }
+
+  postCentro(centro: Centro){
+    this.centros.push(centro);
   }
 
 }
