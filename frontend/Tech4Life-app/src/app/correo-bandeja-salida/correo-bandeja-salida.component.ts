@@ -7,6 +7,7 @@ import { UsuariosService } from '../services/usuario.service';
 import { UsuarioSesion } from '../entities/login';
 import { Centro } from '../entities/centro';
 import { catchError, map, switchMap, throwError } from 'rxjs';
+import { CentrosService } from '../services/centro.service';
 
 @Component({
     selector: 'app-correo-bandeja-salida',
@@ -20,7 +21,7 @@ export class CorreoBandejaSalidaComponent {
   mensajes: Mensaje[] = []; // Suponiendo que tienes una lista de mensajes definida
   mensajeSeleccionado?: Mensaje; // Suponiendo que tienes una variable para el mensaje seleccionado
 
-  constructor(private mensajeService: MensajeService, private usuariosService: UsuariosService) { }
+  constructor(private mensajeService: MensajeService, private usuariosService: UsuariosService, private centroService: CentrosService) { }
 
   //usuarioLoginNombre = this.contactosService.getUsuarioLoginNombre();
   usuario!: UsuarioSesion;
@@ -34,21 +35,26 @@ export class CorreoBandejaSalidaComponent {
       }),
       map(gerente => {
         if (gerente) {
-          this.centro = gerente.centros;
+          this.centroService.getCentrosUsuario(gerente).pipe(
+            map(centros => centros as Centro[]) // Convierte el Observable en un array
+          ).subscribe(centros => {
+            centros.forEach(centro => {
+              this.mensajeService.getMensajesCentro(centro).subscribe(mensajes => {
+                // Filtrar mensajes donde el usuario es el remitente
+                const mensajesSalida = mensajes.filter(
+                  mensaje => mensaje.remitente.id === this.usuario.id
+                );
+                //const mensajeSalida = mensajesSalida[0];
+                this.listaMensajes.push(...mensajesSalida);
+              });
+            });
+          });
         }
         return gerente;
       }),
-      switchMap(centro => {
-        return this.mensajeService.getMensajesCentro(centro.centros); 
-      })
-    ).subscribe(mensajes => {
-      // Filtrar mensajes donde el usuario es un remitente
-      const mensajesEntrada = mensajes.filter(
-        mensaje => mensaje.remitente.id === this.usuario.id
-      );
-      this.listaMensajes.push(...mensajesEntrada);
-    });
+    ).subscribe();
   }
+  
 
   elegirMensaje(mensaje: Mensaje): void {
     this.mensajeSeleccionado = mensaje;
@@ -64,20 +70,24 @@ export class CorreoBandejaSalidaComponent {
       }),
       map(gerente => {
         if (gerente) {
-          this.centro = gerente.centros;
+          this.centroService.getCentrosUsuario(gerente).pipe(
+            map(centros => centros as Centro[]) // Convierte el Observable en un array
+          ).subscribe(centros => {
+            centros.forEach(centro => {
+              this.mensajeService.getMensajesCentro(centro).subscribe(mensajes => {
+                // Filtrar mensajes donde el usuario es el remitente
+                const mensajesSalida = mensajes.filter(
+                  mensaje => mensaje.remitente.id === this.usuario.id
+                );
+                //const mensajeSalida = mensajesSalida[0];
+                this.listaMensajes.push(...mensajesSalida);
+              });
+            });
+          });
         }
         return gerente;
       }),
-      switchMap(centro => {
-        return this.mensajeService.getMensajesCentro(centro.centros); 
-      })
-    ).subscribe(mensajes => {
-      // Filtrar mensajes donde el usuario es un remitente
-      const mensajesEntrada = mensajes.filter(
-        mensaje => mensaje.remitente.id === this.usuario.id
-      );
-      this.listaMensajes.push(...mensajesEntrada);
-    });
+    ).subscribe();
   
     this.mensajeSeleccionado = undefined;
   }

@@ -26,6 +26,7 @@ export class CorreoBandejaEntradaComponent {
   //usuarioLoginNombre = this.contactosService.getUsuarioLoginNombre();
   usuario!: UsuarioSesion;
   centros: Centro[] | undefined;
+
 ngOnInit(): void {
   this.usuariosService.getGerente(this.usuario.id).pipe(
     catchError(error => {
@@ -35,24 +36,24 @@ ngOnInit(): void {
     map(gerente => {
       if (gerente) {
         this.centrosService.getCentrosUsuario(gerente).pipe(
-          map(centros => centros as Centro[]) // Utiliza map para convertir el Observable en un array
-        )
-          .subscribe(centros => this.centros = centros);
+          map(centros => centros as Centro[]) // Convierte el Observable en un array
+        ).subscribe(centros => {
+          centros.forEach(centro => {
+            this.mensajeService.getMensajesCentro(centro).subscribe(mensajes => {
+              // Filtrar mensajes donde el usuario está en la lista de destinatarios
+              const mensajesEntrada = mensajes.filter(
+                mensaje => mensaje.destinatarios.some(
+                  destinatario => destinatario.id === this.usuario.id
+                )
+              );
+              this.listaMensajes.push(...mensajesEntrada);
+            });
+          });
+        });
       }
       return gerente;
     }),
-    switchMap(centro => {
-      return this.mensajeService.getMensajesCentro(centro); 
-    })
-  ).subscribe(mensajes => {
-    // Filtrar mensajes donde el usuario está en la lista de destinatarios
-    const mensajesEntrada = mensajes.filter(
-      mensaje => mensaje.destinatarios.some(
-        destinatario => destinatario.id === this.usuario.id
-      )
-    );
-    this.listaMensajes.push(...mensajesEntrada);
-  });
+  ).subscribe();
 }
 
 
@@ -70,22 +71,25 @@ ngOnInit(): void {
       }),
       map(gerente => {
         if (gerente) {
-          this.centro = gerente.centros;
+          this.centrosService.getCentrosUsuario(gerente).pipe(
+            map(centros => centros as Centro[]) // Convierte el Observable en un array
+          ).subscribe(centros => {
+            centros.forEach(centro => {
+              this.mensajeService.getMensajesCentro(centro).subscribe(mensajes => {
+                // Filtrar mensajes donde el usuario está en la lista de destinatarios
+                const mensajesEntrada = mensajes.filter(
+                  mensaje => mensaje.destinatarios.some(
+                    destinatario => destinatario.id === this.usuario.id
+                  )
+                );
+                this.listaMensajes.push(...mensajesEntrada);
+              });
+            });
+          });
         }
         return gerente;
       }),
-      switchMap(centro => {
-        return this.mensajeService.getMensajesCentro(centro.centros); 
-      })
-    ).subscribe(mensajes => {
-      // Filtrar mensajes donde el usuario está en la lista de destinatarios
-      const mensajesEntrada = mensajes.filter(
-        mensaje => mensaje.destinatarios.some(
-          destinatario => destinatario.id === this.usuario.id
-        )
-      );
-      this.listaMensajes.push(...mensajesEntrada);
-    });
+    ).subscribe();
   
     this.mensajeSeleccionado = undefined;
   }

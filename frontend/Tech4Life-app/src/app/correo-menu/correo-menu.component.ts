@@ -12,6 +12,7 @@ import { UsuariosService } from '../services/usuario.service';
 import { UsuarioSesion } from '../entities/login';
 import { catchError, map, switchMap, throwError } from 'rxjs';
 import { Centro } from '../entities/centro';
+import { CentrosService } from '../services/centro.service';
 
 @Component({
   selector: 'app-correo-menu',
@@ -30,7 +31,7 @@ export class CorreoMenuComponent {
   listaMensajes: Mensaje[] = [];
   idGerente: number | undefined;
 
-  constructor(private mensajeService: MensajeService, private usuariosService: UsuariosService, private modalService: NgbModal) { }
+  constructor(private mensajeService: MensajeService, private usuariosService: UsuariosService, private modalService: NgbModal, private centroService: CentrosService) { }
 
   
 
@@ -72,20 +73,24 @@ export class CorreoMenuComponent {
         }),
         map(gerente => {
           if (gerente) {
-            this.centro = gerente.centros;
+            this.centroService.getCentrosUsuario(gerente).pipe(
+              map(centros => centros as Centro[]) // Convierte el Observable en un array
+            ).subscribe(centros => {
+              centros.forEach(centro => {
+                this.mensajeService.getMensajesCentro(centro).subscribe(mensajes => {
+                  // Filtrar mensajes donde el usuario es el remitente
+                  const mensajesSalida = mensajes.filter(
+                    mensaje => mensaje.remitente.id === this.usuario.id
+                  );
+                  //const mensajeSalida = mensajesSalida[0];
+                  this.listaMensajes.push(...mensajesSalida);
+                });
+              });
+            });
           }
           return gerente;
         }),
-        switchMap(centro => {
-          return this.mensajeService.getMensajesCentro(centro.centros);
-        })
-      ).subscribe(mensajes => {
-        // Filtrar mensajes donde el usuario es un remitente
-        const mensajesEntrada = mensajes.filter(
-          mensaje => mensaje.remitente.id === this.usuario.id
-        );
-        this.listaMensajes.push(...mensajesEntrada);
-      });
+      ).subscribe();
     })
   }
 }
