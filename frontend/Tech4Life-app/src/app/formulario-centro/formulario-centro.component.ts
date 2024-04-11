@@ -18,7 +18,7 @@ export class FormularioCentroComponent {
 
   accion?: "Añadir" | "Editar";
   contacto: Centro = {
-  id: 0, nombre: '', direccion: ''
+  idCentro: 0, nombre: '', direccion: ''
   };
 
   constructor(public modal: NgbActiveModal) { }

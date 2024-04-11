@@ -34,7 +34,7 @@ export class DetallesCentroComponent {
     }
   
     eliminarContacto(): void {
-      this.contactoEliminado.emit(this.contacto?.id);
+      this.contactoEliminado.emit(this.contacto?.idCentro);
     }
   }
   
