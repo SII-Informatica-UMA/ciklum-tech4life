@@ -5,6 +5,7 @@
 
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ListaCentrosComponent } from "./lista-centros/lista-centros.component";
 import { ListaGerentesComponent } from './lista-gerentes/lista-gerentes.component';
 import { DetallesCentroComponent } from './detalles-centro/detalles-centro.component';
@@ -31,7 +32,7 @@ import { InformacionCentroComponent } from './informacion-centro/informacion-cen
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, UsuariosService, InformacionCentroComponent,ListaCentrosComponent,ListaGerentesComponent,BarraNavegacionComponent,CarruselComponent,InformacionComponent,BarraNavegacionGerenteComponent, CorreoBandejaEntradaComponent, CorreoBandejaSalidaComponent , CorreoMenuComponent, CommonModule, FormsModule, TitleCasePipe],
+  imports: [RouterOutlet, RouterModule, InformacionCentroComponent,ListaCentrosComponent,ListaGerentesComponent,BarraNavegacionComponent,CarruselComponent,InformacionComponent,BarraNavegacionGerenteComponent, CorreoBandejaEntradaComponent, CorreoBandejaSalidaComponent , CorreoMenuComponent, CommonModule, FormsModule, TitleCasePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
