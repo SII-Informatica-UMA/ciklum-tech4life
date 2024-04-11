@@ -6,6 +6,7 @@ import { FormularioGerenteComponent } from '../formulario-gerente/formulario-ger
 import { DetallesGerenteComponent } from '../detalles-gerente/detalles-gerente.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Gerente } from '../entities/gerente';
 
 @Component({
   selector: 'app-lista-gerentes',
@@ -20,15 +21,15 @@ export class ListaGerentesComponent implements OnInit {
   throw new Error('Method not implemented.');
   }
   
-    contactos: Usuario [] = [];
-    contactoElegido?: Usuario;
-    contactoAEliminar?: Usuario;
+    contactos: Gerente [] = [];
+    contactoElegido?: Gerente;
+    contactoAEliminar?: Gerente;
     term: string = ''; // término de búsqueda
     constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
   
     //actualiza en tiempo real
     ngOnInit(): void {
-      this.contactos = this.contactosService.getContactos();
+      this.contactos = this.contactosService.getGerentes();
       this.OrdenarPorNombre();
     }
     
@@ -38,7 +39,7 @@ export class ListaGerentesComponent implements OnInit {
       this.contactoAEliminar = undefined;
     }
     //elige contacto
-    elegirContacto(contacto: Usuario): void {
+    elegirContacto(contacto: Gerente): void {
       this.cerrarPaneles();
       this.contactoElegido = contacto;
       
@@ -60,7 +61,7 @@ export class ListaGerentesComponent implements OnInit {
       ref.componentInstance.contacto = {id: 0, nombre: '', apellido: ''};
       ref.result.then((contacto: Usuario) => {
         this.contactosService.addContacto(contacto);
-        this.contactos = this.contactosService.getContactos();
+        this.contactos = this.contactosService.getGerentes();
         this.OrdenarPorNombre();
       }, (reason) => {});
       
@@ -69,7 +70,7 @@ export class ListaGerentesComponent implements OnInit {
     //edita gerente
     contactoEditado(contacto: Usuario): void {
       this.contactosService.editarContacto(contacto);
-      this.contactos = this.contactosService.getContactos();
+      this.contactos = this.contactosService.getGerentes();
       this.contactoElegido = this.contactos.find(c => c.id == contacto.id);
      
     }
@@ -77,7 +78,7 @@ export class ListaGerentesComponent implements OnInit {
     //Elimina gerente
     eliminarContacto(id: number): void {
       this.contactosService.eliminarContacto(id);
-      this.contactos = this.contactosService.getContactos();
+      this.contactos = this.contactosService.getGerentes();
       this.contactoAEliminar = undefined;
     }
     
@@ -102,16 +103,16 @@ export class ListaGerentesComponent implements OnInit {
   
   //ordena los centros por nombres
     OrdenarPorNombre(): void {
-      this.contactos = this.contactosService.getContactos().sort((a, b) => a.nombre.localeCompare(b.nombre));
+      this.contactos = this.contactosService.getGerentes().sort((a, b) => a.nombre.localeCompare(b.nombre));
     }
   
      // Barra de búsqueda
      searchContact() {
       this.cerrarPaneles();
       if (!this.term.trim()) {
-        this.contactos = this.contactosService.getContactos();
+        this.contactos = this.contactosService.getGerentes();
       } else {
-        this.contactos = this.contactosService.getContactos().filter(contacto =>
+        this.contactos = this.contactosService.getGerentes().filter(contacto =>
           contacto.nombre.toLowerCase().includes(this.term.toLowerCase())
         );
       }
@@ -119,7 +120,7 @@ export class ListaGerentesComponent implements OnInit {
   //limpia la busqueda , devuelve a estado inicial
     clearSearch() {
       this.term = '';
-      this.contactos = this.contactosService.getContactos();
+      this.contactos = this.contactosService.getGerentes();
     }
   //cuando se pulsa enter se activa el buscar gerente
     onEnter(event: KeyboardEvent) {

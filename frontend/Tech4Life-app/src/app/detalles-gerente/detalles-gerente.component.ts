@@ -3,6 +3,7 @@ import { Usuario } from '../entities/usuario';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormularioGerenteComponent } from '../formulario-gerente/formulario-gerente.component';
 import { ContactosService } from '../services/usuario.service';
+import { Gerente } from '../entities/gerente';
 
 @Component({
   selector: 'app-detalles-gerente',
@@ -16,8 +17,8 @@ export class DetallesGerenteComponent {
   CerrarDetalles():void {
     this.mostrarDetalles = false;
   }
-    @Input() contacto?: Usuario;
-    @Output() contactoEditado = new EventEmitter<Usuario>();
+    @Input() contacto?: Gerente;
+    @Output() contactoEditado = new EventEmitter<Gerente>();
     @Output() contactoEliminado = new EventEmitter<number>();
     @Output() cerrarDetalles = new EventEmitter<void>();
     constructor(private contactosService: ContactosService, private modalService: NgbModal) { }
@@ -28,7 +29,7 @@ export class DetallesGerenteComponent {
       let ref = this.modalService.open(FormularioGerenteComponent);
       ref.componentInstance.accion = "Editar";
       ref.componentInstance.contacto = {...this.contacto};
-      ref.result.then((contacto: Usuario) => {
+      ref.result.then((contacto: Gerente) => {
         this.contactoEditado.emit(contacto);
       }, (reason) => {});
     }

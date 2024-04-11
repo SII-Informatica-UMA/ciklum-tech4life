@@ -1,15 +1,19 @@
 <div class="modal-dialog modal-dialog-centered modal-lg modal-left" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">{{accion}} Centro</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{accion}} Gerente</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cierre usuario')"></button>
       </div>
       <div class="modal-body">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
             <input class="form-control" id="nombre" [(ngModel)]="contacto.nombre" placeholder="nombre">
-            <label for="direccion">Apellido:</label>
+            <label for="direccion">Apellido1:</label>
             <input class="form-control" id="apellido" [(ngModel)]="contacto.apellido1" placeholder="apellido">
+            <label for="direccion">Apellido2:</label>
+            <input class="form-control" id="apellido2" [(ngModel)]="contacto.apellido2" placeholder="apellido2">
+            <label for="direccion">Centro:</label>
+            <input class="form-control" id="centro" [(ngModel)]="contacto.empresa" placeholder="centro">
             
         </div>
       </div>
