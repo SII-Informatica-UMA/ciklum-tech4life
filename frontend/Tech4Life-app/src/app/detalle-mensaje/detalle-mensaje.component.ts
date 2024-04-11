@@ -14,7 +14,7 @@ export class DetalleMensajeComponent {
 
   constructor (private mensajeService : MensajeService){}
   eliminarMensaje(): void {
-    this.mensajeEliminado.emit(this.mensaje?.id);
+    this.mensajeEliminado.emit(this.mensaje?.idMensaje);
   }
 
 }

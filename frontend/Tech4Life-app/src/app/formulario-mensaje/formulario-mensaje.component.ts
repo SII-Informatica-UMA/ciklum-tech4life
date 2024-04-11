@@ -3,6 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Mensaje } from '../entities/mensaje';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Destinatario } from '../entities/destinatario';
 
 @Component({
   selector: 'app-formulario-mensaje',
@@ -12,12 +13,17 @@ import { CommonModule } from '@angular/common';
   styleUrl: './formulario-mensaje.component.css'
 })
 export class FormularioMensajeComponent {
-  mensaje: Mensaje = {
-    id: 0, remitente: '', destinatario: '', asunto: '', contenido: '', fechaHora: new Date()
-  };
- 
-
+  destinatario!:[Destinatario] ;
+  remitente!:Destinatario;
+  
   constructor(public modal: NgbActiveModal) { }
+  mensaje: Mensaje = {
+    idMensaje: 0, remitente: this.remitente, destinatarios: this.destinatario, asunto: '', contenido: ''
+    ,copia: this.destinatario, copiaOculta: this.destinatario
+  };
+
+
+  
 
   enviarMensaje(): void {
     this.modal.close(this.mensaje);

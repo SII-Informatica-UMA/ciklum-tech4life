@@ -82,9 +82,7 @@ export class CorreoMenuComponent {
       ).subscribe(mensajes => {
         // Filtrar mensajes donde el usuario es un remitente
         const mensajesEntrada = mensajes.filter(
-          mensaje => mensaje.remitente.some(
-            remitente => remitente.id === this.usuario.id
-          )
+          mensaje => mensaje.remitente.id === this.usuario.id
         );
         this.listaMensajes.push(...mensajesEntrada);
       });
