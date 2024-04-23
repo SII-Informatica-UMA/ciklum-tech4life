@@ -12,24 +12,17 @@ import java.util.Set;
 @Getter
 @Entity
 public class Mensaje {
-
-    /* Duda: El conjunto de destinatarios se modela así??
-        Con el @Embeddable y el @ElementCollection
-    * */
-
-    @Embeddable // This class can be separate
-    public static class Destinatario {
-        private Integer id ;
-        private enum tipo {
-            CENTRO, ENTRENADOR, CLIENTE
-        } ;
-    }
-
     @Id @GeneratedValue
     private Integer idMensaje ;
     private String asunto ;
-    @ElementCollection
-    private Set<Destinatario> destinatarios;
+    @OneToMany(mappedBy = "Destinatario")
+    private List<Destinatario> destinatarios;
+    @OneToMany(mappedBy = "Destinatario")
+    private List<Destinatario> copia;
+    @OneToMany(mappedBy = "Destinatario")
+    private List<Destinatario> copiaOculta;
+    private Destinatario remitente;
+    private String contenido ;
 }
 
 
