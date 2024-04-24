@@ -2,6 +2,7 @@ package TECH4LIFE.entidadesJPA.entities;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,8 @@ public class Gerente {
     private Integer id ;
     private Integer idUsuario ;
     private String empresa ;
+    @OneToOne
+    private Centro centro;
 
     @Override
     public boolean equals(Object o) {
