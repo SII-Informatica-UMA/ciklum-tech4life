@@ -10,10 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
-
+/*
     @Query("select m from Mensaje m where m.remitente = :remite") 
     List<Mensaje> BandejaSalida(@Param("remite") Destinatario remite);
-    @Query("select m from Mensaje m where m.destinatario = :destino") 
+    @Query("select m from Mensaje m where m.destinatarios = :destino")
     List<Mensaje> BandejaEntrada(@Param("destino") Destinatario destino);
 
+ */
 }

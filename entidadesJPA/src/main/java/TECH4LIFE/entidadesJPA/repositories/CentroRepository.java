@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface CentroRepository extends JpaRepository <Centro, Integer> {
    
-    @Query("select g from Gerente where g.Centro.id= :id") 
+    @Query("select g from Gerente g  where g.centro.idCentro= :id")
     Gerente FindGerenteByCentro(@Param("id") Integer id);
 
     

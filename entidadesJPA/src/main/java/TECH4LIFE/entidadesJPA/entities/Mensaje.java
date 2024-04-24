@@ -10,6 +10,7 @@ import java.util.Set;
 @Getter
 @Entity
 public class Mensaje {
+
     @Embeddable // This class can be separate
     public static class Destinatario {
         private Integer id ;
