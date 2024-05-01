@@ -23,6 +23,7 @@ public class ControladorGerente {
 
     public ControladorGerente(LogicaGerente servicioGerente){
         servicio = servicioGerente;
+    
     }
 
     //GET Lista Gerentes
@@ -92,7 +93,7 @@ public class ControladorGerente {
     public ResponseEntity<GerenteDTO> addGerente(@RequestBody GerenteNuevoDTO gerente, UriComponentsBuilder builder ){
 
         try{
-            Gerente nuevoGerente = servicio.addGerente(gerente);
+            Gerente nuevoGerente = servicio.addGerente(Mapper.toGerente(gerente));
             URI uri= builder
                 .path("/gerente")
                 .path(String.format("/%d", nuevoGerente.getId()))
@@ -105,11 +106,48 @@ public class ControladorGerente {
        }catch(GerenteExistente e){
             // [403] Acceso no autorizado
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-       
        }
 
 
     }
 
+
+    //GET Permite consultar el gerente de un centro.
+    @GetMapping("{id}")
+    public ResponseEntity<?> obtenerGerentedeCentro(@PathVariable(name="id") Integer id){
+        //ERROR BAD REQUEST NO ESTA,NOSE Q ES :D
+        try{
+            Optional<Gerente> gerenteOptional = servicio.getGerentedeCentro(id);
+            if(gerenteOptional.isPresent()){ 
+            
+                GerenteDTO gerenteDTO = Mapper.toGerenteDTO(gerenteOptional.get());
+                //Todo bien 200
+                return ResponseEntity.ok(gerenteDTO);
+            } else {
+                //No encontrado 404
+                return ResponseEntity.notFound().build();
+            }
+        }catch(UsuarioNoAutorizado e){
+            //No autorizado 403
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }     
+    }
+
+    //PUT  Permite añadir una asociación entre un centro y un gerente.
+    @PutMapping("{id}")
+    public ResponseEntity asociacionCentroGerente(@PathVariable(name="id") Integer id, @RequestBody GerenteNuevoDTO gerente){
+
+        try{
+            servicio.asociacionGerenteCentro(id, Mapper.toGerente(gerente));
+           // [200] El gerente se ha actualizado
+            return ResponseEntity.ok().build();
+        }catch (GerenteNoExistente e){
+            // [404] Gerente no existente
+            return ResponseEntity.notFound().build();
+        }catch (GerenteExistente e){
+            // [403] Acceso no autorizado
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 
 }

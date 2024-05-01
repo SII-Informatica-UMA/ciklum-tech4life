@@ -20,6 +20,8 @@ public class LogicaGerente {
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
         return repo.findAll();
+
+       
     }
     //Devuelve un gerente por id
     public Optional<Gerente> getGerente(Integer id) {
@@ -37,6 +39,7 @@ public class LogicaGerente {
        
         Gerente gerenteAModificar = gerenteExistente.get();
         gerenteAModificar.setEmpresa(gerente.getEmpresa());
+        
         gerenteAModificar.setIdUsuario(gerente.getIdUsuario());
         if(repo.findById(gerenteAModificar.getIdUsuario()).isPresent()){
             throw new GerenteExistente();
@@ -57,20 +60,53 @@ public class LogicaGerente {
     }
 
     //Añadir un Gerente
-    public Gerente addGerente(GerenteNuevoDTO gerente) {
-       
+    public Gerente addGerente(Gerente gerente) {
+        
         if(repo.findById(gerente.getIdUsuario()).isPresent()){
             throw new GerenteExistente();
         }
+        return repo.save(gerente);
+    }
 
-        Gerente nuevoGerente= new Gerente();
-        nuevoGerente.setEmpresa(gerente.getEmpresa());
-        nuevoGerente.setIdUsuario(gerente.getIdUsuario());
-        return repo.save(nuevoGerente);
+    //GET consultar el gerente de un centro
+    public Optional<Gerente> getGerentedeCentro(Integer id) {
+        List<Gerente> gerentes = repo.findAll();
+        Integer idGerente= null;
+        boolean ok=true;
+        for(int i=0;i<gerentes.size() && ok;i++){
+            if(gerentes.get(i).getCentro().getIdCentro()==id){
+                idGerente = gerentes.get(i).getId();
+                ok=false;
+            }
+        }
+        //da null si no está el gerente o si no existe el centro
+        return repo.findById(idGerente);
+    }
+
+
+    //PUT asociar centro a un gerente
+    public void asociacionGerenteCentro(Integer id, Gerente gerente) {
+        //HAY QUE MANEJAR LA EXCEPCION DE USUARIONOAUTORIZADO
+        Optional<Gerente> gerenteExistente = repo.findById(gerente.getId());
+
+        if( gerenteExistente.isEmpty()){
+            throw new GerenteNoExistente();
+        }
+       
+        
+        Gerente gerenteAModificar = gerenteExistente.get();
+        gerenteAModificar.setEmpresa(gerente.getEmpresa());
+        
+        gerenteAModificar.setIdUsuario(gerente.getIdUsuario());
+        if(repo.findById(gerenteAModificar.getIdUsuario()).isPresent()){
+            throw new GerenteExistente();
+        }
+       
+        repo.save(gerenteAModificar);
+
     
     }
 
-   
 
 
 
