@@ -86,7 +86,7 @@ public class LogicaCentro {
         // TO DO
 
         if (){
-            throw new UnidadExistenteException() ;
+            throw new CentroExistente() ;
         }
 
         Integer idCentro = centroEntity.getIdCentro();
@@ -94,5 +94,23 @@ public class LogicaCentro {
         centroRepo.save(centroEntity) ;
         CentroDTO centro = Mapper.toCentroDTO(centroEntity) ;
         return centro ;
+    }
+
+    /*
+     *   PUTS
+     *   ----
+     */
+
+    public Centro modificarCentro(Centro centro) throws CentroNoExistente , CentroExistente{
+        if (centroRepo.existsById(centro.getIdCentro())) {
+            centroRepo.save(centro);
+            if (){
+                throw new CentroExistente() ;
+            } else {
+                return centro;
+            }
+        } else {
+            throw new CentroNoExistente();
+        }
     }
 }

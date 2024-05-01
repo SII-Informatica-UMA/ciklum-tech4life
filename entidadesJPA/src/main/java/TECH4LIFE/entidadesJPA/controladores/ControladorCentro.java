@@ -27,6 +27,14 @@ public class ControladorCentro {
     // A continuación los gets, posts, puts y deletes que tenga Centro
 
     /*
+    *   Métodos que faltan y no sabemos si van en ControladorCentro o ControladorGerente
+    *
+    *   -> 
+    *
+    *
+    * */
+
+    /*
     *   GETS
     *   ----
     */
@@ -69,7 +77,7 @@ public class ControladorCentro {
     // Elimina un centro por la id
     @DeleteMapping("{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<List<CentroDTO>> eliminarUnidad(@PathVariable(name="id") Long id) {
+    public ResponseEntity<List<CentroDTO>> eliminarCentro(@PathVariable(name="id") Integer id) {
         try {
             return ResponseEntity.ok(servicio.eliminarCentro(id).stream()
                     .map(Mapper::toCentroDTO)
@@ -101,5 +109,11 @@ public class ControladorCentro {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
+    /*
+     *   PUTS
+     *   ----
+     */
+
 
 }
