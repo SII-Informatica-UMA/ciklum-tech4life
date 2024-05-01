@@ -27,14 +27,6 @@ public class ControladorCentro {
     // A continuación los gets, posts, puts y deletes que tenga Centro
 
     /*
-    *   Métodos que faltan y no sabemos si van en ControladorCentro o ControladorGerente
-    *
-    *   -> 
-    *
-    *
-    * */
-
-    /*
     *   GETS
     *   ----
     */
@@ -115,5 +107,22 @@ public class ControladorCentro {
      *   ----
      */
 
-
+    @PutMapping("{id}")
+    public ResponseEntity<CentroDTO> editarCentro(@PathVariable(name="id")Integer id, @RequestBody CentroNuevoDTO centro, UriComponentsBuilder builder) {
+        Centro centroEntity = Mapper.toCentro(centro);
+        centroEntity.setIdCentro(id);
+        try {
+            servicio.modificarCentro(centroEntity);
+            URI uri = builder
+                    .path("/centro")
+                    .path(String.format("/%d", centroEntity.getIdCentro()))
+                    .build()
+                    .toUri();
+            return ResponseEntity.created(uri).build();
+        } catch (CentroNoExistente u) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (CentroExistente e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 }
