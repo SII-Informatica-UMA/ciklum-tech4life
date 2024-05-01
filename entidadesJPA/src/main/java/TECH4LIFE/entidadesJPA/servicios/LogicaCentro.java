@@ -31,16 +31,16 @@ public class LogicaCentro {
         // TO DO -> DUDA: ¿Cómo sé si no hay centros? -> imagino que será algo relacionado con le findAll
         // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
         // TO DO -> DUDA: ¿Cómo sé si hay BadRequest?
-        return centroRepo.findAll();
-    }
 
-    // Obtener la lista de todos los centros asociados a un gerente
-    public List<Centro> getTodosCentrosByIdgerente(Integer id) throws GerenteNoExistente, UsuarioNoAutorizado {
-        // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-        // TO DO -> DUDA: ¿Cómo sé si hay BadRequest?
-       // TO DO
-
-       return centroRepo.findAllById() ;
+        if (centroRepo.findAll().isEmpty()){
+            throw new CentroNoExistente();
+        } else if (usuario no autorizado){
+            throw new UsuarioNoAutorizado();
+        } else if (bad request){
+            throw new PeticionNoValida();
+        }else {
+            return centroRepo.findAll();
+        }
     }
 
     // Obtener un centro por la id
@@ -48,14 +48,14 @@ public class LogicaCentro {
         // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
         // TO DO -> DUDA: ¿Cómo sé si hay BadRequest?
 
-       try {
-            centroRepo.findById(id).orElseThrow();
-        } catch (Exception NoSuchElementException) {
-            throw new CentroNoExistente();
-        } catch (Exception e) {
-            throw new UsuarioNoAutorizado();
-        }
         return centroRepo.findById(id).get();
+        if(usuario autorizado){
+        if (centroRepo.findById(id).isPresent()){
+            return centroRepo.findById(id).get();
+        } else {
+            throw new CentroNoExistente();
+        }
+        }
     }
 
     /*
