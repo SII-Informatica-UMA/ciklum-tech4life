@@ -5,7 +5,9 @@ import TECH4LIFE.entidadesJPA.entities.Gerente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface GerenteRepository extends JpaRepository<Gerente, Integer> {
  
     @Query("select c from Centro c where c.gerente = :gerente")
