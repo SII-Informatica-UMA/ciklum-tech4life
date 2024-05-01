@@ -10,6 +10,7 @@ import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteNoExistente;
+import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import TECH4LIFE.entidadesJPA.servicios.LogicaGerente;
 import java.net.URI;
 import java.util.List;

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteExistente;
@@ -62,7 +63,7 @@ public class LogicaGerente {
             throw new GerenteExistente();
         }
 
-        Gerente nuevoGerente = new Gerente();
+        Gerente nuevoGerente= new Gerente();
         nuevoGerente.setEmpresa(gerente.getEmpresa());
         nuevoGerente.setIdUsuario(gerente.getIdUsuario());
         return repo.save(nuevoGerente);
