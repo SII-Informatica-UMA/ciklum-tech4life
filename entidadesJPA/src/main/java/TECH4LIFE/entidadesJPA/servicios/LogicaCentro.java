@@ -1,5 +1,7 @@
 package TECH4LIFE.entidadesJPA.servicios;
 
+import TECH4LIFE.entidadesJPA.controladores.Mapper;
+import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.excepciones.*;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
@@ -85,15 +87,19 @@ public class LogicaCentro {
 
         // TO DO
 
-        if (){
+        if (centroRepo.existsById(centroEntity.getIdCentro())){
             throw new CentroExistente() ;
+        } else if (bad request){
+            throw new PeticionNoValida();
+        } else {
+            if(usuario no autorizado){
+                throw new UsuarioNoAutorizado();
+            }
+            centroRepo.save(centroEntity);
+            Integer idCentro = centroEntity.getIdCentro();
+            centroEntity.setIdCentro(idCentro);
+            return Mapper.toCentroDTO(centroEntity);
         }
-
-        Integer idCentro = centroEntity.getIdCentro();
-        centroEntity.setIdCentro(idCentro);
-        centroRepo.save(centroEntity) ;
-        CentroDTO centro = Mapper.toCentroDTO(centroEntity) ;
-        return centro ;
     }
 
     /*
