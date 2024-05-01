@@ -1,7 +1,8 @@
 package TECH4LIFE.entidadesJPA.repositories;
 
+
 import TECH4LIFE.entidadesJPA.entities.Mensaje;
-import TECH4LIFE.entidadesJPA.entities.Mensaje.Destinatario;
+import TECH4LIFE.entidadesJPA.entities.Destinatario;
 
 import java.util.List;
 
