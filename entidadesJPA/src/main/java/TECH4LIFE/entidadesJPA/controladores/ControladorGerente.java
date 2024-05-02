@@ -35,7 +35,7 @@ public class ControladorGerente {
 
     //GET Gerente {idGerente}
     @GetMapping("id")
-    public ResponseEntity<?> obtenerGerentePorId(@PathVariable(name="id") Integer id){
+    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="id") Integer id){
         try{
             Optional<Gerente> gerenteOptional = servicio.getGerente(id);
             if(gerenteOptional.isPresent()){ 
@@ -111,7 +111,8 @@ public class ControladorGerente {
 
     }
 
-
+    /*
+    esto va en centro no tiene mucho sentido aqui
     //GET Permite consultar el gerente de un centro.
     @GetMapping("{id}")
     public ResponseEntity<?> obtenerGerentedeCentro(@PathVariable(name="id") Integer id){
@@ -149,5 +150,7 @@ public class ControladorGerente {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
+    */
 
 }

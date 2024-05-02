@@ -17,6 +17,7 @@ import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 @Transactional
 public class LogicaGerente {
     private GerenteRepository repo;
+    private Centrorepository crep;
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
         return repo.findAll();
@@ -67,20 +68,25 @@ public class LogicaGerente {
         }
         return repo.save(gerente);
     }
+/*
+
+
+Creo que esto es de centro: 
 
     //GET consultar el gerente de un centro
     public Optional<Gerente> getGerentedeCentro(Integer id) {
-        List<Gerente> gerentes = repo.findAll();
-        Integer idGerente= null;
-        boolean ok=true;
-        for(int i=0;i<gerentes.size() && ok;i++){
-            if(gerentes.get(i).getCentro().getIdCentro()==id){
-                idGerente = gerentes.get(i).getId();
-                ok=false;
-            }
+        Optional<Centro> centro = crep.findById(id);
+        if( centro.isEmpty()){
+            throw new CentroNoExiste();
         }
-        //da null si no está el gerente o si no existe el centro
-        return repo.findById(idGerente);
+        
+        Optional<Gerente> gerente= centro.FindGerenteByCentro(id);
+
+        if( gerenteExistente.isEmpty()){
+            throw new GerenteNoExistente();
+        }
+        
+        return gerente;
     }
 
 
@@ -88,14 +94,17 @@ public class LogicaGerente {
     public void asociacionGerenteCentro(Integer id, Gerente gerente) {
         //HAY QUE MANEJAR LA EXCEPCION DE USUARIONOAUTORIZADO
         Optional<Gerente> gerenteExistente = repo.findById(gerente.getId());
-
+        Optional<Centro> centro = crep.findById(id);
+        if( centro.isEmpty()){
+            throw new CentroNoExistente();
+        }
+        
         if( gerenteExistente.isEmpty()){
             throw new GerenteNoExistente();
         }
        
         
-        Gerente gerenteAModificar = gerenteExistente.get();
-        gerenteAModificar.setEmpresa(gerente.getEmpresa());
+        
         
         gerenteAModificar.setIdUsuario(gerente.getIdUsuario());
         if(repo.findById(gerenteAModificar.getIdUsuario()).isPresent()){
@@ -108,7 +117,7 @@ public class LogicaGerente {
     }
 
 
-
+*/
 
 
 }
