@@ -3,8 +3,10 @@ package TECH4LIFE.entidadesJPA.servicios;
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
 import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
+import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.excepciones.*;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,54 +30,86 @@ public class LogicaCentro {
      *   ----
      */
 
-    // Obtener la lista de todos los centros
-    public List<Centro> getTodosCentros() {
-        // TO DO -> DUDA: ¿Cómo sé si no hay centros? -> imagino que será algo relacionado con le findAll
-        // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-        // TO DO -> DUDA: ¿Cómo sé si hay BadRequest?
+    // Obtener un centro concreto (por la id) (CREO que lo hace un usuario Administrador)
+    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    @RolesAllowed("Administrador")
+    public Centro getCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        if (centroRepo.findAll().isEmpty()){
-            throw new CentroNoExistente();
-        } else if (usuario no autorizado){
-            throw new UsuarioNoAutorizado();
-        } else if (bad request){
-            throw new PeticionNoValida();
-        }else {
-            return centroRepo.findAll();
-        }
+        if (id == null || id < 0) throw new PeticionNoValida();
+
+        Optional<Centro> centro = centroRepo.findById(id);
+
+        if (centro.isEmpty()) throw new CentroNoExistente();
+
+        return centro.get();
     }
 
-    // Obtener un centro por la id
-    public Centro getCentroById(Integer id) throws CentroNoExistente, UsuarioNoAutorizado {
-        // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-        // TO DO -> DUDA: ¿Cómo sé si hay BadRequest?
+    // Permite consultar el gerente de un centro (por la id del centro) (CREO que lo hace un usuario Administrador)
+    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    @RolesAllowed("Administrador")
+    public Gerente getGerenteCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        return centroRepo.findById(id).get();
-        if(usuario autorizado){
-        if (centroRepo.findById(id).isPresent()){
-            return centroRepo.findById(id).get();
-        } else {
-            throw new CentroNoExistente();
-        }
-        }
+        if (id == null || id < 0) throw new PeticionNoValida();
+
+        Gerente gerente = centroRepo.FindGerenteByCentro(id) ;
+
+        if (gerente == null) throw new CentroNoExistente();
+
+        return gerente;
     }
+
+    // Obtener la lista de todos los centros (Lo puede hacer usuario Administrador o Gerente)
+    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    @RolesAllowed({"Administrador","Gerente"})
+    public List<Centro> getTodosCentros() throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+
+        // NO HAY PARÁMETRO DE ENTRADA PARA QUE PUDIERA SER UNA PETICIÓN NO VÁLIDA
+        //if (id == null || id < 0) throw new PeticionNoValida();
+
+        List<Centro> centros = centroRepo.findAll() ;
+
+        if (centros.isEmpty()) throw new CentroNoExistente();
+
+        return centros;
+    }
+
+    // Obtener la lista de todos los centros asociados a un gerente ESTE MÉTODO NO SE ESPECIFICA EN OPENAPI
+    // TO DO -> SEGÚN LA TUTORÍA UN GERENTE NO PUEDE TENER ASOCIADO MÁS DE UN CENTRO
 
     /*
      *   DELETES
      *   -------
      */
 
-    public List<Centro> eliminarCentro(Integer id) throws CentroNoExistente, UsuarioNoAutorizado {
-        // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    // Elimina un centro (por la id) (CREO que lo hace un usuario Administrador)
+    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    @RolesAllowed("Administrador")
+    public void eliminarCentro(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        // TO DO -> DUDA: ¿Cómo sé si hay BadRequest?
+        if (id == null || id < 0) throw new PeticionNoValida();
 
-        if (centroRepo.existsById(id)){
-            centroRepo.deleteById(id);
-            return getTodosCentros();
-        } else {
-            throw new CentroNoExistente() ;
-        }
+        Optional<Centro> centro = centroRepo.findById(id);
+
+        if (centro.isEmpty()) throw new CentroNoExistente();
+
+        centroRepo.deleteById(id);
+    }
+
+    // Permite eliminar una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
+    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    // TO DO -> El final del método no estoy seguro si es correcto
+    @RolesAllowed("Administrador")
+    public void eliminarGerenteCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+
+        if (id == null || id < 0) throw new PeticionNoValida();
+
+        Optional<Centro> centro = centroRepo.findById(id);
+
+        if (centro.isEmpty()) throw new CentroNoExistente();
+
+        // NO ESTOY SEGURO SI ESTO ES CORRECTO
+        centro.get().setGerente(null); // Elimino asociación (poniendo a null el atributo gerente de Centro)
+        centroRepo.save(centro.get()); // Guardo
     }
 
     /*
@@ -83,23 +117,18 @@ public class LogicaCentro {
      *   -----
      */
 
-    public CentroDTO postCentro(Centro centroEntity) throws CentroExistente {
+    // Permite crear un centro nuevo a un administrador (Lo hace un usuario Administrador)
+    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    @RolesAllowed("Administrador")
+    public Centro postCentro(Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroExistente {
 
-        // TO DO
+        if (centroEntity == null) throw new PeticionNoValida();
 
-        if (centroRepo.existsById(centroEntity.getIdCentro())){
-            throw new CentroExistente() ;
-        } else if (bad request){
-            throw new PeticionNoValida();
-        } else {
-            if(usuario no autorizado){
-                throw new UsuarioNoAutorizado();
-            }
-            centroRepo.save(centroEntity);
-            Integer idCentro = centroEntity.getIdCentro();
-            centroEntity.setIdCentro(idCentro);
-            return Mapper.toCentroDTO(centroEntity);
-        }
+        Optional<Centro> centro = centroRepo.findById(centroEntity.getIdCentro());
+
+        if (centro.isPresent()) throw new CentroExistente();
+
+        return centroRepo.save(centroEntity);
     }
 
     /*
@@ -107,16 +136,54 @@ public class LogicaCentro {
      *   ----
      */
 
-    public Centro modificarCentro(Centro centro) throws CentroNoExistente , CentroExistente{
-        if (centroRepo.existsById(centro.getIdCentro())) {
-            centroRepo.save(centro);
-            if (){
-                throw new CentroExistente() ;
-            } else {
-                return centro;
-            }
-        } else {
-            throw new CentroNoExistente();
-        }
+    // Actualiza un centro (por la id) (CREO que lo hace un usuario Administrador)
+    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    // TO DO -> El final del método no estoy seguro si es correcto
+    // TO DO -> ¿Necesaria la excepción que señalo?
+    @RolesAllowed("Administrador")
+    public void modificarCentro(Integer id, Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+
+        if (id == null || id < 0 || centroEntity == null) throw new PeticionNoValida();
+
+        Optional<Centro> centro = centroRepo.findById(id);
+
+        if (centro.isEmpty()) throw new CentroNoExistente();
+
+        // NO ESTOY SEGURO SI ESTO ES CORRECTO
+        Centro centroAmodificar = centro.get() ;
+        centroAmodificar.setIdCentro(centroEntity.getIdCentro());
+        centroAmodificar.setNombre(centroEntity.getNombre());
+        centroAmodificar.setDireccion(centroEntity.getDireccion());
+        centroAmodificar.setGerente(centroEntity.getGerente());
+
+        // ¿Necesaria esta excepción?
+        //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
+
+        centroRepo.save(centroAmodificar) ;
     }
+
+    // Permite añadir una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
+    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
+    // TO DO -> El final del método no estoy seguro si es correcto
+    // TO DO -> ¿Necesaria la excepción que señalo?
+    @RolesAllowed("Administrador")
+    public Centro modificarGerenteCentroById (Integer id, Gerente gerenteEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+
+        if (id == null || id < 0 || gerenteEntity == null) throw new PeticionNoValida();
+
+        Optional<Centro> centro = centroRepo.findById(id);
+
+        if (centro.isEmpty()) throw new CentroNoExistente();
+
+        // NO ESTOY SEGURO SI ESTO ES CORRECTO
+        Centro centroAmodificar = centro.get() ;
+        centroAmodificar.setGerente(gerenteEntity);
+
+        // ¿Necesaria esta excepción?
+        //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
+
+        centroRepo.save(centroAmodificar) ;
+        return centroAmodificar;
+    }
+
 }
