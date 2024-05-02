@@ -101,7 +101,7 @@ public class ControladorMensaje {
         try{
             //CODE 200: Devuelve la lista de mensajes de cierto centro
             Mensaje mensajeEliminado = servicio.eliminarMensaje(idMensaje);
-            return ResponseEntity.ok(mensaje);
+            return ResponseEntity.ok(mensajeEliminado);
         } catch(UsuarioNoAutorizado e){
             //CODE 403: Acceso no autorizado
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
