@@ -51,15 +51,20 @@ public class EntidadesJpaApplicationTests {
 		mensajeRepository.deleteAll();
 	}
 
-	// Estoy trasteando
-
-	// Me interesa los métodos uri, get, post, delete de la prepráctica y de la última práctica -> COPIAR
-
-	// Hay que meter en el pom el jacoco este para generar el html con la cobertura de código
-	// Jacoco algunas veces falla y en vez de generar un .exec genera un .exe
-	// Solución: añadir la c, y hacer maven report o algo de eso.
-	// OJO porque para que salga el informe de jacoco no se puede ejecutar desde intellij
-	// hay que ejecutarlo haciendo mvn test
+	/*
+	*  ANOTACIONES IMPORTANTES SOBRE LAS PRUEBAS JUNIT
+	* ---------------------------------------------------
+	*
+	* 	- Añadir jacoco como plugin al pom.xml del proyecto Maven (Ya lo he añadido)
+	* 	- Ejecutar desde consola de comandos mvn test o desde intellij -> icono maven -> Lifecycle -> test
+	* 		OJO porque para que salga el informe de jacoco no se puede ejecutar desde intellij
+	* 	- El informe de cobertura de código de jacoco se encuentra
+	* 	  en el siguiente path -> target/site/jacoco/index.html
+	*
+	* 	- Error común: He seguido todos los pasos y no aparece la carpeta site:
+	*     Jacoco algunas veces falla y en vez de generar un .exec genera un .exe o un .ex
+	* 	  Solución: añadir la c, y hacer mvn test de nuevo y debería generar la carpeta test
+	* */
 
 	private URI uri(String scheme, String host, int port, String ...paths) {
 		UriBuilderFactory ubf = new DefaultUriBuilderFactory();
@@ -80,6 +85,28 @@ public class EntidadesJpaApplicationTests {
 		return peticion;
 	}
 
+	private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
+		URI uri = uri(scheme, host,port, path);
+		var peticion = RequestEntity.delete(uri)
+				.build();
+		return peticion;
+	}
+
+	private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
+		URI uri = uri(scheme, host,port, path);
+		var peticion = RequestEntity.post(uri)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(object);
+		return peticion;
+	}
+
+	private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object) {
+		URI uri = uri(scheme, host,port, path);
+		var peticion = RequestEntity.put(uri)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(object);
+		return peticion;
+	}
 
 	@Nested
 	@DisplayName("Cuando no hay centros")
