@@ -3,6 +3,7 @@ package TECH4LIFE.entidadesJPA.servicios;
 import java.util.List;
 import java.util.Optional;
 
+import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,7 @@ import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 @Transactional
 public class LogicaGerente {
     private GerenteRepository repo;
-    private Centrorepository crep;
+    private CentroRepository crep;
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
         return repo.findAll();

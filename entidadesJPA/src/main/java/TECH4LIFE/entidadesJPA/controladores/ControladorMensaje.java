@@ -78,7 +78,7 @@ public class ControladorMensaje {
                                                    @RequestBody MensajeDTO mensajeDTO,
                                                    UriComponentsBuilder uriBuilder) {
 
-        Mensaje mensaje = Mapper.toMensajeDTO(Mensaje.class);   --revisar
+        Mensaje mensaje = Mapper.toMensajeDTO(Mensaje.class);   //revisar
         mensaje.setIdMensaje(null);
         mensaje.setRemitente(idCentro);
 
