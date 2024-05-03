@@ -63,15 +63,16 @@ public class LogicaMensaje {
 //----------------------------------------------------------------------------------------
     //Post un nuevo mensaje
     @RolesAllowed("Gerente")
-    public Integer crearMensaje(Mensaje mensaje) throws MensajeNoExistente, UsuarioNoAutorizado{
-        Mensaje mensajeGuardado = mensajeRepo.save(mensaje);
-        return mensajeGuardado.getIdMensaje();
+    public Mensaje postMensaje(Mensaje mensajeCrear) throws MensajeNoExistente, UsuarioNoAutorizado{
+        if(mensajeCrear == null) throw new MensajeNoExistente();
+
+        return mensajeRepo.save(mensajeCrear);
     }
 
 //----------------------------------------------------------------------------------------
     //Delete un mensaje por su idMensaje
     @RolesAllowed("Gerente")
-    public Mensaje eliminarMensaje(Integer idMensaje) throws MensajeNoExistente, UsuarioNoAutorizado {
+    public void deleteMensaje(Integer idMensaje) throws MensajeNoExistente, UsuarioNoAutorizado {
         Optional<Mensaje> mensaje = mensajeRepo.findById(idMensaje);
 
         if(mensaje.isEmpty()) throw new MensajeNoExistente();

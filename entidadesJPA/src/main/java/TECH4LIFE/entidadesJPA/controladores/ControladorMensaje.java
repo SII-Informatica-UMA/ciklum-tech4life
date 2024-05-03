@@ -5,7 +5,6 @@ import TECH4LIFE.entidadesJPA.dtos.MensajeNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.entities.Mensaje;
 import TECH4LIFE.entidadesJPA.excepciones.MensajeNoExistente;
-import TECH4LIFE.entidadesJPA.excepciones.PeticionNoValida;
 import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import TECH4LIFE.entidadesJPA.servicios.LogicaMensaje;
 import org.springframework.http.HttpStatus;
@@ -73,11 +72,10 @@ public class ControladorMensaje {
 /*
     POST
  */
-    @PostMapping("/{centro}")
-    public ResponseEntity<MensajeDTO> crearMensaje(@PathVariable Centro centro,
-                                                   @RequestBody MensajeDTO mensajeDTO,
-                                                   UriComponentsBuilder uriBuilder) {
+    //Cuando el usuario vaya a enviar un mensaje y se cree un mensaje, se detectará que el remitente es el centro, de modo
+    //que no hay que contemplar esto aquí.
 
+<<<<<<< Updated upstream
         Mensaje mensaje = Mapper.toMensajeDTO(Mensaje.class);   //revisar
         mensaje.setIdMensaje(null);
         mensaje.setRemitente(idCentro);
@@ -90,6 +88,28 @@ public class ControladorMensaje {
                 .toUri();
 
         return ResponseEntity.created(uri).body(Mapper(mensaje, MensajeDTO.class));
+=======
+    /*
+        DUDA: creeis que lo que digo anteriormente es correcto o debería incluir una variable Centro?
+     */
+    @PostMapping
+    public ResponseEntity<MensajeDTO> crearMensaje(@RequestBody MensajeNuevoDTO mensajeNuevoDTO, UriComponentsBuilder builder) {
+        try{
+            //CODE 201: Se crea el mensaje y lo devuelve
+            Mensaje mensaje  = servicio.postMensaje(Mapper.toMensaje(mensajeNuevoDTO));
+            URI uri = builder
+                    .path(String.format("/%d", mensaje.getIdMensaje()))
+                    .build()
+                    .toUri();
+            return ResponseEntity.created(uri).body(Mapper.toMensajeDTO(mensaje));
+        } catch(UsuarioNoAutorizado e){
+            //CODE 403: Acceso no autorizado
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch(MensajeNoExistente e){
+            //CODE 404: El mensaje no existe
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+>>>>>>> Stashed changes
     }
 //------------------------------------------------------------------------------------------
 /*
@@ -100,8 +120,8 @@ public class ControladorMensaje {
     public ResponseEntity<?> eliminarMensaje(@PathVariable(name="idMensaje") Integer idMensaje) {
         try{
             //CODE 200: Devuelve la lista de mensajes de cierto centro
-            Mensaje mensajeEliminado = servicio.eliminarMensaje(idMensaje);
-            return ResponseEntity.ok(mensajeEliminado);
+            servicio.deleteMensaje(idMensaje);
+            return ResponseEntity.ok().build();
         } catch(UsuarioNoAutorizado e){
             //CODE 403: Acceso no autorizado
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
