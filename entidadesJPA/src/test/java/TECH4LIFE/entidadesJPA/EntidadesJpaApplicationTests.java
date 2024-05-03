@@ -53,6 +53,14 @@ public class EntidadesJpaApplicationTests {
 
 	// Estoy trasteando
 
+	// Me interesa los métodos uri, get, post, delete de la prepráctica y de la última práctica -> COPIAR
+
+	// Hay que meter en el pom el jacoco este para generar el html con la cobertura de código
+	// Jacoco algunas veces falla y en vez de generar un .exec genera un .exe
+	// Solución: añadir la c, y hacer maven report o algo de eso.
+	// OJO porque para que salga el informe de jacoco no se puede ejecutar desde intellij
+	// hay que ejecutarlo haciendo mvn test
+
 	private URI uri(String scheme, String host, int port, String ...paths) {
 		UriBuilderFactory ubf = new DefaultUriBuilderFactory();
 		UriBuilder ub = ubf.builder()
