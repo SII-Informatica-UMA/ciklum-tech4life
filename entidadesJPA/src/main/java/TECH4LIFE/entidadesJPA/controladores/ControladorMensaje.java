@@ -74,21 +74,6 @@ public class ControladorMensaje {
  */
     //Cuando el usuario vaya a enviar un mensaje y se cree un mensaje, se detectará que el remitente es el centro, de modo
     //que no hay que contemplar esto aquí.
-
-<<<<<<< Updated upstream
-        Mensaje mensaje = Mapper.toMensajeDTO(Mensaje.class);   //revisar
-        mensaje.setIdMensaje(null);
-        mensaje.setRemitente(idCentro);
-
-        Integer idMensaje = servicio.crearMensaje(mensaje);
-
-        URI uri = uriBuilder
-                .path("/centros/{idCentro}/mensajes/{idMensaje}")
-                .buildAndExpand(idCentro, idMensaje)
-                .toUri();
-
-        return ResponseEntity.created(uri).body(Mapper(mensaje, MensajeDTO.class));
-=======
     /*
         DUDA: creeis que lo que digo anteriormente es correcto o debería incluir una variable Centro?
      */
@@ -109,7 +94,6 @@ public class ControladorMensaje {
             //CODE 404: El mensaje no existe
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
->>>>>>> Stashed changes
     }
 //------------------------------------------------------------------------------------------
 /*

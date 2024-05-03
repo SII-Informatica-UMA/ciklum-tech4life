@@ -29,24 +29,11 @@ public class LogicaMensaje {
     //Get todos los mensajes de un centro
     @RolesAllowed("Gerente")
     public List<MensajeDTO> getMensajesByCentro(Centro centro) throws MensajeNoExistente, UsuarioNoAutorizado {
-       //necesito pasar de centro a remitente
 
+        List<MensajeDTO> mensajesCentro = mensajeRepo.bandejaTodos(centro.getIdCentro());
 
-        /*
-
-        DUDA: como creo un destinatario a partir de un objeto de tipo Centro?
-
-         */
-        Destinatario desCentro = new Destinatario();
-
-        List<MensajeDTO> bandejaEntrada = mensajeRepo.bandejaEntrada(desCentro);
-        List<MensajeDTO> bandejaSalida = mensajeRepo.bandejaSalida(desCentro);
-        List<MensajeDTO> listaMensajes = new ArrayList<>();
-        listaMensajes.addAll(bandejaEntrada);
-        listaMensajes.addAll(bandejaSalida);
-
-        if(listaMensajes.isEmpty()) throw new MensajeNoExistente();
-        return listaMensajes;
+        if(mensajesCentro.isEmpty()) throw new MensajeNoExistente();
+        return mensajesCentro;
     }
 
 //----------------------------------------------------------------------------------------
