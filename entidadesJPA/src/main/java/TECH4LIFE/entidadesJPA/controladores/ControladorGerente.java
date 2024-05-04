@@ -21,6 +21,7 @@ public class ControladorGerente {
     
     private LogicaGerente servicio;
 
+    //Constructor
     public ControladorGerente(LogicaGerente servicioGerente){
         servicio = servicioGerente;
     
@@ -34,8 +35,8 @@ public class ControladorGerente {
     }
 
     //GET Gerente {idGerente}
-    @GetMapping("id")
-    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="id") Integer id){
+    @GetMapping("{idGerente}")
+    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="idGerente") Integer id){
         try{
             Optional<Gerente> gerenteOptional = servicio.getGerente(id);
             if(gerenteOptional.isPresent()){ 
@@ -56,24 +57,22 @@ public class ControladorGerente {
 
     
     //PUT Gerente {idGerente}
-    @PutMapping("{id}")
-    public ResponseEntity modificarGerente(@PathVariable(name="id") Integer id, @RequestBody GerenteNuevoDTO gerente){
+    @PutMapping("{idGerente}")
+    public ResponseEntity modificarGerente(@PathVariable(name="idGerente") Integer id, @RequestBody GerenteNuevoDTO gerente){
 
         try{
-            servicio.modificarGerente(id, gerente);
+            servicio.modificarGerente(id, Mapper.toGerente(gerente));
            // [200] El gerente se ha actualizado
             return ResponseEntity.ok().build();
         }catch (GerenteNoExistente e){
             // [404] Gerente no existente
             return ResponseEntity.notFound().build();
-        }catch (GerenteExistente e){
-            // [403] Acceso no autorizado
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+        // [403] Acceso no autorizado
     }
     //DELETE Gerente {idGerente}
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> eliminarGerentePorId(@PathVariable(name="id") Integer id){
+    @DeleteMapping("{idGerente}")
+    public ResponseEntity<GerenteDTO> eliminarGerentePorId(@PathVariable(name="idGerente") Integer id){
         try{
             servicio.eliminarGerente(id);
              // [200] El gerente se ha borrado con éxito
@@ -87,6 +86,7 @@ public class ControladorGerente {
         
         }
     }
+
     //POST Lista Gerentes
      
     @PostMapping
@@ -99,6 +99,7 @@ public class ControladorGerente {
                 .path(String.format("/%d", nuevoGerente.getId()))
                 .build()
                 .toUri();
+                //Todo bien 200
             return ResponseEntity.created(uri).body(Mapper.toGerenteDTO(nuevoGerente));  
         }catch (GerenteNoExistente e){
             // [404] Not Found
@@ -111,46 +112,5 @@ public class ControladorGerente {
 
     }
 
-    /*
-    esto va en centro no tiene mucho sentido aqui
-    //GET Permite consultar el gerente de un centro.
-    @GetMapping("{id}")
-    public ResponseEntity<?> obtenerGerentedeCentro(@PathVariable(name="id") Integer id){
-        //ERROR BAD REQUEST NO ESTA,NOSE Q ES :D
-        try{
-            Optional<Gerente> gerenteOptional = servicio.getGerentedeCentro(id);
-            if(gerenteOptional.isPresent()){ 
-            
-                GerenteDTO gerenteDTO = Mapper.toGerenteDTO(gerenteOptional.get());
-                //Todo bien 200
-                return ResponseEntity.ok(gerenteDTO);
-            } else {
-                //No encontrado 404
-                return ResponseEntity.notFound().build();
-            }
-        }catch(UsuarioNoAutorizado e){
-            //No autorizado 403
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }     
-    }
-
-    //PUT  Permite añadir una asociación entre un centro y un gerente.
-    @PutMapping("{id}")
-    public ResponseEntity asociacionCentroGerente(@PathVariable(name="id") Integer id, @RequestBody GerenteNuevoDTO gerente){
-
-        try{
-            servicio.asociacionGerenteCentro(id, Mapper.toGerente(gerente));
-           // [200] El gerente se ha actualizado
-            return ResponseEntity.ok().build();
-        }catch (GerenteNoExistente e){
-            // [404] Gerente no existente
-            return ResponseEntity.notFound().build();
-        }catch (GerenteExistente e){
-            // [403] Acceso no autorizado
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
-
-    */
 
 }

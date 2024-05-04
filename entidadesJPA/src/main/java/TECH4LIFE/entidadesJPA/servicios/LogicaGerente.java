@@ -18,12 +18,10 @@ import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 @Transactional
 public class LogicaGerente {
     private GerenteRepository repo;
-    private CentroRepository crep;
+
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
-        return repo.findAll();
-
-       
+        return repo.findAll();  
     }
     //Devuelve un gerente por id
     public Optional<Gerente> getGerente(Integer id) {
@@ -31,7 +29,7 @@ public class LogicaGerente {
     }
 
     //Modificar Gerente
-    public void modificarGerente(Integer id, GerenteNuevoDTO gerente) {
+    public void modificarGerente(Integer id, Gerente gerente) {
         //HAY QUE MANEJAR LA EXCEPCION DE USUARIONOAUTORIZADO
         Optional<Gerente> gerenteExistente = repo.findById(id);
 
@@ -39,15 +37,8 @@ public class LogicaGerente {
             throw new GerenteNoExistente();
         }
        
-        Gerente gerenteAModificar = gerenteExistente.get();
-        gerenteAModificar.setEmpresa(gerente.getEmpresa());
-        
-        gerenteAModificar.setIdUsuario(gerente.getIdUsuario());
-        if(repo.findById(gerenteAModificar.getIdUsuario()).isPresent()){
-            throw new GerenteExistente();
-        }
-       
-        repo.save(gerenteAModificar);
+        gerente.setIdUsuario(id);
+        repo.save(gerente);
     }
 
     //Eliminar un gerente
@@ -64,61 +55,14 @@ public class LogicaGerente {
     //Añadir un Gerente
     public Gerente addGerente(Gerente gerente) {
         
-        if(repo.findById(gerente.getIdUsuario()).isPresent()){
+        if(gerente==null){
+            throw new GerenteNoExistente();
+           
+        }else if(repo.findById(gerente.getIdUsuario()).isPresent()){
             throw new GerenteExistente();
         }
         return repo.save(gerente);
     }
-/*
-
-
-Creo que esto es de centro: 
-
-    //GET consultar el gerente de un centro
-    public Optional<Gerente> getGerentedeCentro(Integer id) {
-        Optional<Centro> centro = crep.findById(id);
-        if( centro.isEmpty()){
-            throw new CentroNoExiste();
-        }
-        
-        Optional<Gerente> gerente= centro.FindGerenteByCentro(id);
-
-        if( gerenteExistente.isEmpty()){
-            throw new GerenteNoExistente();
-        }
-        
-        return gerente;
-    }
-
-
-    //PUT asociar centro a un gerente
-    public void asociacionGerenteCentro(Integer id, Gerente gerente) {
-        //HAY QUE MANEJAR LA EXCEPCION DE USUARIONOAUTORIZADO
-        Optional<Gerente> gerenteExistente = repo.findById(gerente.getId());
-        Optional<Centro> centro = crep.findById(id);
-        if( centro.isEmpty()){
-            throw new CentroNoExistente();
-        }
-        
-        if( gerenteExistente.isEmpty()){
-            throw new GerenteNoExistente();
-        }
-       
-        
-        
-        
-        gerenteAModificar.setIdUsuario(gerente.getIdUsuario());
-        if(repo.findById(gerenteAModificar.getIdUsuario()).isPresent()){
-            throw new GerenteExistente();
-        }
-       
-        repo.save(gerenteAModificar);
-
-    
-    }
-
-
-*/
 
 
 }
