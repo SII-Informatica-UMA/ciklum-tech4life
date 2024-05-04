@@ -37,7 +37,7 @@ public class LogicaGerente {
             throw new GerenteNoExistente();
         }
        
-        gerente.setIdUsuario(id);
+        gerente.setId(id);;
         repo.save(gerente);
     }
 
@@ -58,7 +58,7 @@ public class LogicaGerente {
         if(gerente==null){
             throw new GerenteNoExistente();
            
-        }else if(repo.findById(gerente.getIdUsuario()).isPresent()){
+        }else if(repo.findById(gerente.getId()).isPresent()){
             throw new GerenteExistente();
         }
         return repo.save(gerente);
