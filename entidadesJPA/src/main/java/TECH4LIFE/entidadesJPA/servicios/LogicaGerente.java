@@ -14,6 +14,7 @@ import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.excepciones.CentroNoExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteNoExistente;
+import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 
 @Service
@@ -35,15 +36,15 @@ public class LogicaGerente {
         return gerentes;
     }
     //Devuelve un gerente por id
-    public Optional<Gerente> getGerente(Integer id) {
-        if(id==null){
-            throw new GerenteNoExistente();
+    public Gerente getGerente(Integer id) {
+        if(id==null || id<0){
+            throw new UsuarioNoAutorizado();
         }
         Optional<Gerente> gerente = repo.findById(id);
         if(gerente.isEmpty()){
             throw new GerenteNoExistente();
         }
-        return gerente;
+        return gerente.get();
     }
 
     //Modificar Gerente

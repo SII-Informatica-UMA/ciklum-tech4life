@@ -49,7 +49,7 @@ public class ControladorGerente {
     @GetMapping("/{id}")
     public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="id") Integer id){
         try{  
-            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(id).get());
+            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(id));
                 //Todo bien 200
                 return ResponseEntity.ok(gerenteDTO);
         }catch(UsuarioNoAutorizado e){
