@@ -21,7 +21,7 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
     @Query("select m from Mensaje m join m.destinatarios d where d = :destino")
     List<MensajeDTO> bandejaEntrada(@Param("destino") Destinatario destino);
 
-    @Query("select m from Mensaje m where m.destinatario.id = :idCentro or m.remitente.id = : idCentro")
+    @Query("select m from Mensaje m where m.destinatario.id = :idCentro and m.destinatario.tipo = 'CENTRO' or m.remitente.id = : idCentro and m.destinatario.tipo = 'CENTRO'")
     List<MensajeDTO> bandejaTodos(@Param("idCentro") Integer idCentro);
 
 }
