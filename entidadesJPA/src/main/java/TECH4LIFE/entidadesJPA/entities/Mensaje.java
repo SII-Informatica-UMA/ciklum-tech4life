@@ -28,6 +28,7 @@ public class Mensaje {
     private Set<Destinatario> copia;
     @OneToMany
     private Set<Destinatario> copiaOculta;
+    @OneToOne
     private Destinatario remitente;
     private String contenido;
 }
