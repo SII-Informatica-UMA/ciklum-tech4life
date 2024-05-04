@@ -29,7 +29,7 @@ public class LogicaGerente {
     }
 
     //Modificar Gerente
-    public void modificarGerente(Integer id, GerenteNuevoDTO gerente) {
+    public void modificarGerente(Integer id, Gerente gerente) {
         //HAY QUE MANEJAR LA EXCEPCION DE USUARIONOAUTORIZADO
         Optional<Gerente> gerenteExistente = repo.findById(id);
 
@@ -37,15 +37,8 @@ public class LogicaGerente {
             throw new GerenteNoExistente();
         }
        
-        Gerente gerenteAModificar = gerenteExistente.get();
-        gerenteAModificar.setEmpresa(gerente.getEmpresa());
-        
-        gerenteAModificar.setIdUsuario(gerente.getIdUsuario());
-        if(repo.findById(gerenteAModificar.getIdUsuario()).isPresent()){
-            throw new GerenteExistente();
-        }
-       
-        repo.save(gerenteAModificar);
+        gerente.setIdUsuario(id);
+        repo.save(gerente);
     }
 
     //Eliminar un gerente

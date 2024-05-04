@@ -61,16 +61,14 @@ public class ControladorGerente {
     public ResponseEntity modificarGerente(@PathVariable(name="idGerente") Integer id, @RequestBody GerenteNuevoDTO gerente){
 
         try{
-            servicio.modificarGerente(id, gerente);
+            servicio.modificarGerente(id, mapper.toGerente(gerente));
            // [200] El gerente se ha actualizado
             return ResponseEntity.ok().build();
         }catch (GerenteNoExistente e){
             // [404] Gerente no existente
             return ResponseEntity.notFound().build();
-        }catch (GerenteExistente e){//---->En este caso tiene sentido este error, ignorar?
-            // [403] Acceso no autorizado
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+        // [403] Acceso no autorizado
     }
     //DELETE Gerente {idGerente}
     @DeleteMapping("{idGerente}")
