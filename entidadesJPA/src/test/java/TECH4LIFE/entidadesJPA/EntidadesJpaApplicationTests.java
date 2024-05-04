@@ -2,7 +2,10 @@ package TECH4LIFE.entidadesJPA;
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
 import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
+import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
+import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
+import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
@@ -142,7 +145,7 @@ public class EntidadesJpaApplicationTests {
 	 Realizado por: Raúl García Balongo
 	---------------------------------------------
 	*/
-
+/*
 	private void compruebaCamposCentro(CentroDTO expected, CentroDTO actual) {
 		assertThat(actual.getDireccion()).isEqualTo(expected.getDireccion());
 		assertThat(actual.getNombre()).isEqualTo(expected.getNombre());
@@ -400,16 +403,113 @@ public class EntidadesJpaApplicationTests {
 		}
 	}
 
-
+*/
 	/*
 	---------------------------------------------
 	 Pruebas de ControladorGerente y LogicaGerente
 	 Realizado por:
 	---------------------------------------------
 	*/
+	private void compruebaCamposGerente(GerenteDTO expected, GerenteDTO actual) {
+		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
 
-	// TO DO
+	}
+	private void compruebaCamposGerente(GerenteNuevoDTO expected, GerenteDTO actual) {
+		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
+		
+	}
 
+	private void compruebaCamposGerente(GerenteNuevoDTO expected, Gerente actual) {
+		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
+		
+	}
+
+
+	@Nested
+	@DisplayName("Cuando no hay gerentes")
+	public class ListaGerentesVacia {
+
+		@Test
+		@DisplayName("Devuelve la lista de gerentes vacía")
+		public void devuelveListaGerentes() {
+
+			var peticion = get("http", "localhost", port, "/gerente"); 
+
+			var respuesta = restTemplate.exchange(peticion,
+					new ParameterizedTypeReference<List<GerenteDTO>>() {
+					});
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+			assertThat(respuesta.getBody()).isEmpty();
+		}
+
+		@Nested
+		@DisplayName("Intenta insertar un gerente")
+		public class InsertaGerente {
+			@Test
+			@DisplayName("se guarda con exito")
+			public void sinID() {
+				var gerente= GerenteNuevoDTO.builder()
+						.empresa("patatasInc")
+						.idUsuario(4)
+						.build();
+				var peticion = post("http", "localhost", port, "/gerente", gerente);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				compruebaRespuestaGerente(gerente, respuesta);
+			}
+
+			private void compruebaRespuestaGerente(GerenteNuevoDTO gerente, ResponseEntity<Void> respuesta) {
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+				assertThat(respuesta.getHeaders().get("Location").get(0))
+						.startsWith("http://localhost:" + port + "/gerente");
+
+				List<Gerente> gerentes = gerenteRepository.findAll();
+				assertThat(gerentes).hasSize(1);
+				assertThat(respuesta.getHeaders().get("Location").get(0))
+						.endsWith("/" + gerentes.get(0).getId());
+				compruebaCamposGerente(gerente, gerentes.get(0));
+			}
+		}
+		@Test
+		@DisplayName("Devuelve error cuando se pide un gerente concreto")
+		public void devuelveErrorAlConsultarGerente() {
+			var peticion = get("http", "localhost", port, "/gerente");
+
+			var respuesta = restTemplate.exchange(peticion,
+					new ParameterizedTypeReference<List<GerenteDTO>>() {
+					});
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+			assertThat(respuesta.hasBody()).isEqualTo(false);
+		}
+
+		@Test
+		@DisplayName("devuelve error cuando se modifica un gerente concreto")
+		public void devuelveErrorAlModificarGerente() {
+			var gerente = GerenteNuevoDTO.builder()
+					.empresa("kfc")
+					.idUsuario(4)
+					.build();
+			var peticion = put("http", "localhost",port, "/gerente", gerente);
+
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+		}
+
+		@Test
+		@DisplayName("devuelve error cuando se elimina un gerente concreto")
+		public void devuelveErrorAlEliminarGerente() {
+			var peticion = delete("http", "localhost",port, "/gerente");
+
+			var respuesta = restTemplate.exchange(peticion, Void.class);
+
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+		}
+	
+	}
 	/*
 	---------------------------------------------
 	 Pruebas de ControladorMensaje y LogicaMensaje

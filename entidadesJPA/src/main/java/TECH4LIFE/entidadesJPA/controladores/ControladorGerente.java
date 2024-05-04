@@ -5,11 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Gerente;
+import TECH4LIFE.entidadesJPA.excepciones.CentroNoExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteNoExistente;
+import TECH4LIFE.entidadesJPA.excepciones.PeticionNoValida;
 import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import TECH4LIFE.entidadesJPA.servicios.LogicaGerente;
 import java.net.URI;
@@ -30,12 +33,18 @@ public class ControladorGerente {
     //GET Lista Gerentes
     @GetMapping
     public ResponseEntity<List<GerenteDTO>> listaGerentes(){
+        try {
 
-        return ResponseEntity.ok(servicio.getGerentes().stream().map(Mapper::toGerenteDTO).toList());
+            List<GerenteDTO> gerentes = servicio.getGerentes().stream().map(Mapper::toGerenteDTO).toList();
+            return ResponseEntity.ok(gerentes);
+        } catch (GerenteNoExistente e) {
+             //No encontrado 404
+             return ResponseEntity.notFound().build();
+        }
     }
 
     //GET Gerente {idGerente}
-    @GetMapping("{idGerente}")
+    @GetMapping("/{idGerente}")
     public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="idGerente") Integer id){
         try{
             Optional<Gerente> gerenteOptional = servicio.getGerente(id);
@@ -57,7 +66,7 @@ public class ControladorGerente {
 
     
     //PUT Gerente {idGerente}
-    @PutMapping("{idGerente}")
+    @PutMapping("/{idGerente}")
     public ResponseEntity modificarGerente(@PathVariable(name="idGerente") Integer id, @RequestBody GerenteNuevoDTO gerente){
 
         try{
@@ -71,7 +80,7 @@ public class ControladorGerente {
         // [403] Acceso no autorizado
     }
     //DELETE Gerente {idGerente}
-    @DeleteMapping("{idGerente}")
+    @DeleteMapping("/{idGerente}")
     public ResponseEntity<GerenteDTO> eliminarGerentePorId(@PathVariable(name="idGerente") Integer id){
         try{
             servicio.eliminarGerente(id);
@@ -95,7 +104,6 @@ public class ControladorGerente {
         try{
             Gerente nuevoGerente = servicio.addGerente(Mapper.toGerente(gerente));
             URI uri= builder
-                .path("/gerente")
                 .path(String.format("/%d", nuevoGerente.getId()))
                 .build()
                 .toUri();

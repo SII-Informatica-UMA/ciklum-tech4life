@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
+import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.entities.Gerente;
+import TECH4LIFE.entidadesJPA.excepciones.CentroNoExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteNoExistente;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
@@ -21,7 +23,13 @@ public class LogicaGerente {
 
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
-        return repo.findAll();  
+        
+        List<Gerente> gerentes = repo.findAll() ;
+        if (gerentes.isEmpty()){
+            throw new GerenteNoExistente();
+        } 
+
+        return gerentes;
     }
     //Devuelve un gerente por id
     public Optional<Gerente> getGerente(Integer id) {
@@ -57,8 +65,9 @@ public class LogicaGerente {
         
         if(gerente==null){
             throw new GerenteNoExistente();
-           
-        }else if(repo.findById(gerente.getId()).isPresent()){
+        }
+        Optional<Gerente> gerentecheck = repo.findById(gerente.getId());
+        if(gerentecheck.isPresent()){
             throw new GerenteExistente();
         }
         return repo.save(gerente);
