@@ -149,17 +149,22 @@ public class LogicaCentro {
 
         if (centro.isEmpty()) throw new CentroNoExistente();
 
+        /*
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
         Centro centroAmodificar = centro.get() ;
         centroAmodificar.setIdCentro(centroEntity.getIdCentro());
         centroAmodificar.setNombre(centroEntity.getNombre());
         centroAmodificar.setDireccion(centroEntity.getDireccion());
         centroAmodificar.setGerente(centroEntity.getGerente());
+        */
+
+        centroEntity.setIdCentro(id);
+        centroRepo.save(centroEntity);
 
         // ¿Necesaria esta excepción?
         //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
 
-        centroRepo.save(centroAmodificar) ;
+        //centroRepo.save(centroAmodificar) ;
     }
 
     // Permite añadir una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
