@@ -61,7 +61,7 @@ public class ControladorGerente {
     public ResponseEntity modificarGerente(@PathVariable(name="idGerente") Integer id, @RequestBody GerenteNuevoDTO gerente){
 
         try{
-            servicio.modificarGerente(id, mapper.toGerente(gerente));
+            servicio.modificarGerente(id, Mapper.toGerente(gerente));
            // [200] El gerente se ha actualizado
             return ResponseEntity.ok().build();
         }catch (GerenteNoExistente e){
