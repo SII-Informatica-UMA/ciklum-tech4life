@@ -18,7 +18,7 @@ import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 @Transactional
 public class LogicaGerente {
     private GerenteRepository repo;
-    private CentroRepository crep;
+
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
         return repo.findAll();  
