@@ -20,54 +20,52 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/gerente")
 public class ControladorGerente {
     
     private LogicaGerente servicio;
 
     //Constructor
     public ControladorGerente(LogicaGerente servicioGerente){
-        servicio = servicioGerente;
-    
+        this.servicio = servicioGerente;
     }
 
     //GET Lista Gerentes
     @GetMapping
     public ResponseEntity<List<GerenteDTO>> listaGerentes(){
-        try {
 
+        try {
             List<GerenteDTO> gerentes = servicio.getGerentes().stream().map(Mapper::toGerenteDTO).toList();
             return ResponseEntity.ok(gerentes);
         } catch (GerenteNoExistente e) {
              //No encontrado 404
              return ResponseEntity.notFound().build();
+        }catch(UsuarioNoAutorizado e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
     //GET Gerente {idGerente}
-    @GetMapping("/{idGerente}")
-    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="idGerente") Integer id){
-        try{
-            Optional<Gerente> gerenteOptional = servicio.getGerente(id);
-            if(gerenteOptional.isPresent()){ 
-            
-                GerenteDTO gerenteDTO = Mapper.toGerenteDTO(gerenteOptional.get());
+    @GetMapping("/{id}")
+    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="id") Integer id){
+        try{  
+            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(id).get());
                 //Todo bien 200
                 return ResponseEntity.ok(gerenteDTO);
-            } else {
-                //No encontrado 404
-                return ResponseEntity.notFound().build();
-            }
         }catch(UsuarioNoAutorizado e){
             //No autorizado 403
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }catch(GerenteNoExistente e){
+            //No encontrado 404
+            return ResponseEntity.notFound().build();
         }
            
     }
 
     
     //PUT Gerente {idGerente}
-    @PutMapping("/{idGerente}")
-    public ResponseEntity modificarGerente(@PathVariable(name="idGerente") Integer id, @RequestBody GerenteNuevoDTO gerente){
+    @PutMapping("/{id}")
+    public ResponseEntity<GerenteDTO> modificarGerente(@PathVariable(name="id") Integer id, @RequestBody GerenteNuevoDTO gerente){
 
         try{
             servicio.modificarGerente(id, Mapper.toGerente(gerente));
@@ -80,8 +78,8 @@ public class ControladorGerente {
         // [403] Acceso no autorizado
     }
     //DELETE Gerente {idGerente}
-    @DeleteMapping("/{idGerente}")
-    public ResponseEntity<GerenteDTO> eliminarGerentePorId(@PathVariable(name="idGerente") Integer id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarGerentePorId(@PathVariable(name="id") Integer id){
         try{
             servicio.eliminarGerente(id);
              // [200] El gerente se ha borrado con éxito
@@ -104,9 +102,9 @@ public class ControladorGerente {
         try{
             Gerente nuevoGerente = servicio.addGerente(Mapper.toGerente(gerente));
             URI uri= builder
-                .path(String.format("/%d", nuevoGerente.getId()))
+                .path(String.format("/%d",nuevoGerente.getId()))
                 .build()
-                .toUri();
+                .toUri() ;
                 //Todo bien 200
             return ResponseEntity.created(uri).body(Mapper.toGerenteDTO(nuevoGerente));  
         }catch (GerenteNoExistente e){

@@ -21,6 +21,10 @@ import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 public class LogicaGerente {
     private GerenteRepository repo;
 
+    public LogicaGerente(GerenteRepository gerenterepo){
+        this.repo = gerenterepo;
+    }
+
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
         
@@ -28,12 +32,18 @@ public class LogicaGerente {
         if (gerentes.isEmpty()){
             throw new GerenteNoExistente();
         } 
-
         return gerentes;
     }
     //Devuelve un gerente por id
     public Optional<Gerente> getGerente(Integer id) {
-        return repo.findById(id);
+        if(id==null){
+            throw new GerenteNoExistente();
+        }
+        Optional<Gerente> gerente = repo.findById(id);
+        if(gerente.isEmpty()){
+            throw new GerenteNoExistente();
+        }
+        return gerente;
     }
 
     //Modificar Gerente
