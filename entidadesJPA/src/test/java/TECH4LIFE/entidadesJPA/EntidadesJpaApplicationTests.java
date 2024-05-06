@@ -439,31 +439,25 @@ public class EntidadesJpaApplicationTests {
 	 */
 	private void compruebaCamposGerente(GerenteDTO expected, GerenteDTO actual) {
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
-		assertThat(actual.getIdUsuario()).isEqualTo(expected.getIdUsuario());
-
 	}
 
 	private void compruebaCamposGerente(GerenteNuevoDTO expected, GerenteDTO actual) {
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
-		assertThat(actual.getIdUsuario()).isEqualTo(expected.getIdUsuario());
-
 	}
 
 	private void compruebaCamposGerente(GerenteNuevoDTO expected, Gerente actual) {
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
-		assertThat(actual.getIdUsuario()).isEqualTo(expected.getIdUsuario());
-
 	}
 
 	@Nested
-	@DisplayName("Cuando no hay gerentes")
+	@DisplayName("Cuando no hay Gerentes")
 	public class ListaGerentesVacia {
 
 		@Test
 		@DisplayName("Devuelve la lista de gerentes vacía")
 		public void devuelveListaGerentes() {
 
-			var peticion = get("http", "localhost", port, "/gerente");
+			var peticion = get("http", "localhost", port, "/gerente"); 
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -474,14 +468,13 @@ public class EntidadesJpaApplicationTests {
 		}
 
 		@Nested
-		@DisplayName("Intenta insertar un gerente")
+		@DisplayName("Intenta insertar un Gerente")
 		public class InsertaGerente {
 			@Test
-			@DisplayName("se guarda con exito")
+			@DisplayName("y se guarda con éxito")
 			public void sinID() {
 				var gerente = GerenteNuevoDTO.builder()
-						.empresa("patatasInc")
-						.idUsuario(4)
+						.empresa("kfc")
 						.build();
 				var peticion = post("http", "localhost", port, "/gerente", gerente);
 
@@ -491,7 +484,7 @@ public class EntidadesJpaApplicationTests {
 			}
 
 			private void compruebaRespuestaGerente(GerenteNuevoDTO gerente, ResponseEntity<Void> respuesta) {
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 				assertThat(respuesta.getHeaders().get("Location").get(0))
 						.startsWith("http://localhost:" + port + "/gerente");
 
@@ -504,7 +497,7 @@ public class EntidadesJpaApplicationTests {
 		}
 
 		@Test
-		@DisplayName("Devuelve error cuando se pide un gerente concreto")
+		@DisplayName("Devuelve error cuando se pide un Gerente concreto")
 		public void devuelveErrorAlConsultarGerente() {
 			var peticion = get("http", "localhost", port, "/gerente");
 
@@ -520,10 +513,9 @@ public class EntidadesJpaApplicationTests {
 		@DisplayName("devuelve error cuando se modifica un gerente concreto")
 		public void devuelveErrorAlModificarGerente() {
 			var gerente = GerenteNuevoDTO.builder()
-					.idUsuario(4)
 					.empresa("kfc")
 					.build();
-			var peticion = put("http", "localhost", port, "/gerente", gerente);
+			var peticion = put("http", "localhost",port, "/gerente/2", gerente);
 
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -531,40 +523,39 @@ public class EntidadesJpaApplicationTests {
 		}
 
 		@Test
-		@DisplayName("devuelve error cuando se elimina un gerente concreto")
+		@DisplayName("devuelve error cuando se elimina un Gerente concreto")
 		public void devuelveErrorAlEliminarGerente() {
-			var peticion = delete("http", "localhost", port, "/gerente");
+			var peticion = delete("http", "localhost",port, "/gerente/40");
 
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
-
 	}
 
 	@Nested
-	@DisplayName("Cuando hay gerentes")
-	public class ListaConDatos {
-		private GerenteNuevoDTO daniela = GerenteNuevoDTO.builder()
-				.idUsuario(5)
-				.empresa("kfc")
+	@DisplayName("Cuando hay Gerentes")
+	public class ListaGerentesConDatos {
+
+		private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
+				.empresa("patatas")
 				.build();
 
-		private GerenteNuevoDTO pepi = GerenteNuevoDTO.builder()
-				.idUsuario(5)
-				.empresa("kfc")
+		private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
+				.empresa("brocoli")
 				.build();
+
 
 		@BeforeEach
-		public void introduceDatos() {
-			gerenteRepository.save(Mapper.toGerente(daniela));
-			gerenteRepository.save(Mapper.toGerente(pepi));
+		public void introduceDatosGerente() {
+			gerenteRepository.save(Mapper.toGerente(gerente1));
+			gerenteRepository.save(Mapper.toGerente(gerente2));
 		}
 
 		@Test
-		@DisplayName("devuelve la lista de gerentes correctamente")
-		public void devuelveListaGerentes() {
-			var peticion = get("http", "localhost", port, "/gerente");
+		@DisplayName("Devuelve la lista de Gerentes correctamente")
+		public void devuelveListaGerente() {
+			var peticion = get("http", "localhost", port, "/gerente"); 
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -575,63 +566,61 @@ public class EntidadesJpaApplicationTests {
 		}
 
 		@Nested
-		@DisplayName("intenta insertar un gerente")
-		public class InsertaGerentes {
+		@DisplayName("Intenta insertar un gerente")
+		public class InsertaGerente {
+
 			@Test
-			@DisplayName("y lo consigue")
-			public void diferenteEmail() {
+			@DisplayName("y lo consigue cuando el gerente a insertar no es null")
+			public void gerenteNoNull() {
 				var gerente = GerenteNuevoDTO.builder()
-						.idUsuario(32)
-						.empresa("karlach")
-						.build();
+					.empresa("patatas")
+					.build();
 				var peticion = post("http", "localhost", port, "/gerente", gerente);
-
+				
 				var respuesta = restTemplate.exchange(peticion, Void.class);
-
+				
 				compruebaRespuestaGerente(gerente, respuesta);
 			}
 
 			@Test
-			@DisplayName("pero da error cuando coincide el idusuario con otro")
-			public void mismoidUsuario() {
-				var gerente = GerenteNuevoDTO.builder()
-						.idUsuario(12)
-						.empresa("yeehaw")
-						.build();
-				var peticion = post("http", "localhost", port, "/gerente", gerente);
+			@DisplayName("pero da error cuando el gerente a insertar es null")
+			public void mismoEmail() {
+				GerenteNuevoDTO gerente = null;
+				var peticion = post("http", "localhost", port, "/gerente",gerente);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 				assertThat(respuesta.hasBody()).isFalse();
 			}
 
 			private void compruebaRespuestaGerente(GerenteNuevoDTO gerente, ResponseEntity<Void> respuesta) {
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 				assertThat(respuesta.getHeaders().get("Location").get(0))
-						.startsWith("http://localhost:" + port + "/api/v1/usuario");
-
+					.startsWith("http://localhost:"+port+"/gerente");
+				
 				List<Gerente> gerentes = gerenteRepository.findAll();
 				assertThat(gerentes).hasSize(3);
-
-				Gerente pepi = gerentes.stream()
-						.filter(c -> c.getIdUsuario().equals("12"))
+				
+				Gerente patatas = gerentes.stream()
+						.filter(c->c.getEmpresa().equals("patatas"))
 						.findAny()
 						.get();
-
+				
 				assertThat(respuesta.getHeaders().get("Location").get(0))
-						.endsWith("/" + pepi.getId());
-				compruebaCamposGerente(gerente, pepi);
+					.endsWith("/"+patatas.getId());
+				compruebaCamposGerente(gerente, patatas);
 			}
 		}
 
 		@Nested
-		@DisplayName("al consultar un gerente concreto")
+		@DisplayName("Al consultar un gerente concreto")
 		public class ObtenerGerentes {
+
 			@Test
 			@DisplayName("lo devuelve cuando existe")
-			public void devuelveGerente() {
-				var peticion = get("http", "localhost", port, "/gerente");
+			public void devuelveCentro() {
+				var peticion = get("http", "localhost", port, "/gerente/1");
 
 				var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
 
@@ -642,8 +631,8 @@ public class EntidadesJpaApplicationTests {
 
 			@Test
 			@DisplayName("da error cuando no existe")
-			public void errorCuandoUsuarioNoExiste() {
-				var peticion = get("http", "localhost", port, "/gerente/id");
+			public void errorCuandoGerenteNoExiste() {
+				var peticion = get("http", "localhost", port, "/gerente/40");
 
 				var respuesta = restTemplate.exchange(peticion,
 						new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -655,67 +644,67 @@ public class EntidadesJpaApplicationTests {
 		}
 
 		@Nested
-		@DisplayName("al modificar un gerente")
-		public class ModificarUsuarios {
+		@DisplayName("Al modificar un gerente")
+		public class ModificarGerentes {
+
 			@Test
-			@DisplayName("lo modifica correctamente cuando existe")
+			@DisplayName("Lo modifica correctamente cuando existe")
 			@DirtiesContext
-			public void modificaCorrectamente() {
+			public void modificaCorrectamenteGerente() {
 				var gerente = GerenteNuevoDTO.builder()
-						.idUsuario(132)
-						.empresa("kfc")
+						.empresa("yeehaw")
 						.build();
 
-				var peticion = put("http", "localhost", port, "/gerente/12", gerente);
+				var peticion = put("http", "localhost", port, "/gerente/1", gerente);
 
 				var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-				Gerente gerenteBD = gerenteRepository.findById(12).get();
+				Gerente gerenteBD = gerenteRepository.findById(1).get();
 				compruebaCamposGerente(gerente, gerenteBD);
 			}
 
 			@Test
-			@DisplayName("da error cuando no existe")
+			@DisplayName("Da error cuando no existe")
 			public void errorCuandoNoExiste() {
 				var gerente = GerenteNuevoDTO.builder()
-						.idUsuario(5)
-						.empresa("kfc")
+						.empresa("yeehow")
 						.build();
-				var peticion = put("http", "localhost", port, "gerente/28", gerente);
+				var peticion = put("http", "localhost", port, "/gerente/40", gerente);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 				assertThat(respuesta.hasBody()).isEqualTo(false);
 			}
+		}
 
-			@Nested
-			@DisplayName("al eliminar un gerente")
-			public class EliminarGerente {
-				@Test
-				@DisplayName("lo elimina cuando existe")
-				public void eliminaCorrectamente() {
-					var peticion = delete("http", "localhost", port, "/usuario/1");
+		@Nested
+		@DisplayName("Al eliminar un gerente")
+		public class EliminarGerentes {
+			@Test
+			@DisplayName("Lo elimina cuando existe")
+			public void eliminaCorrectamenteGerente() {
+		
+				var peticion = delete("http", "localhost",port, "/gerente/1");
 
-					var respuesta = restTemplate.exchange(peticion, Void.class);
+				var respuesta = restTemplate.exchange(peticion,Void.class);
 
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-					List<Gerente> gerentes = gerenteRepository.findAll();
-					assertThat(gerentes).hasSize(1);
-					assertThat(gerentes).allMatch(c -> c.getId() != 1);
-				}
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+				List<Gerente> gerentes = gerenteRepository.findAll();
+				assertThat(gerentes).hasSize(1);
+				assertThat(gerentes).allMatch(c->c.getId()!=1);
+			}
 
-				@Test
-				@DisplayName("da error cuando no existe")
-				public void errorCuandoNoExiste() {
-					var peticion = delete("http", "localhost", port, "/gerente/28");
+			@Test
+			@DisplayName("da error cuando no existe")
+			public void errorCuandoNoExisteGerente() {
+				var peticion = delete("http", "localhost",port, "/gerente/40");
 
-					var respuesta = restTemplate.exchange(peticion, Void.class);
+				var respuesta = restTemplate.exchange(peticion,Void.class);
 
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-					assertThat(respuesta.hasBody()).isEqualTo(false);
-				}
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				assertThat(respuesta.hasBody()).isEqualTo(false);
 			}
 		}
 	}

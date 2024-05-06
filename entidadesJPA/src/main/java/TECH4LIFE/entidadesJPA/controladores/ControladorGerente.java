@@ -74,6 +74,8 @@ public class ControladorGerente {
         }catch (GerenteNoExistente e){
             // [404] Gerente no existente
             return ResponseEntity.notFound().build();
+        }catch (UsuarioNoAutorizado e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         // [403] Acceso no autorizado
     }
@@ -110,7 +112,7 @@ public class ControladorGerente {
         }catch (GerenteNoExistente e){
             // [404] Not Found
             return ResponseEntity.notFound().build();
-       }catch(GerenteExistente e){
+       }catch(UsuarioNoAutorizado e){
             // [403] Acceso no autorizado
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
        }
