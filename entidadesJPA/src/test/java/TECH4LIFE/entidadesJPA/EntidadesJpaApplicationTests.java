@@ -434,7 +434,7 @@ public class EntidadesJpaApplicationTests {
 		assertThat(actual.getAsunto()).isEqualTo(expected.getAsunto());
 		assertThat(actual.getContenido()).isEqualTo(expected.getContenido());
 	}
-
+//-------------------------------------------------------------------------------------------
 	@Nested
 	@DisplayName("Cuando no hay mensajes")
 	public class ListaMensajesVacia {
@@ -456,7 +456,7 @@ public class EntidadesJpaApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(respuesta.getBody()).isEmpty();
 		}
-
+//--------------------------------------------------------------------------------------
 		@Nested
 		@DisplayName("Intenta insertar un mensaje")
 		public class InsertaMensaje {
@@ -552,7 +552,7 @@ public class EntidadesJpaApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 		}
 	}
-
+//-----------------------------------------------------------------------------------------
 	@Nested
 	@DisplayName("Cuando hay mensajes")
 	public class ListaMensajeConDatos {
@@ -629,7 +629,7 @@ public class EntidadesJpaApplicationTests {
 			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			assertThat(respuesta.getBody()).hasSize(2);
 		}
-
+//------------------------------------------------------------------------------------
 		@Nested
 		@DisplayName("Intenta insertar un mensaje")
 		public class InsertaMensaje {
@@ -637,7 +637,55 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Cuando se inserta un mensaje correctamente")
 			public void prueba1() {
+				var centro = CentroDTO.builder()
+						.idCentro(12)
+						.nombre("PepeitoFit")
+						.direccion("Calle la gata, 56")
+						.build();
+				// Establecer destinatarios
+				Set<DestinatarioDTO> destinatarios = new HashSet<>();
+				DestinatarioDTO destinatario1 = new DestinatarioDTO();
+				destinatario1.setId(1);
+				destinatario1.setTipo(TipoDestinatario.CENTRO);
+				destinatarios.add(destinatario1);
 
+				// Establecer copias
+				Set<DestinatarioDTO> copias = new HashSet<>();
+				DestinatarioDTO copia1 = new DestinatarioDTO();
+				copia1.setId(2);
+				copia1.setTipo(TipoDestinatario.CENTRO);
+				copias.add(copia1);
+
+				// Establecer copias ocultas
+				Set<DestinatarioDTO> copiasOcultas = new HashSet<>();
+				DestinatarioDTO copiaOculta1 = new DestinatarioDTO();
+				copiaOculta1.setId(3);
+				copiaOculta1.setTipo(TipoDestinatario.CLIENTE);
+				copiasOcultas.add(copiaOculta1);
+
+				// Establecer remitente
+				DestinatarioDTO remitente = new DestinatarioDTO();
+				remitente.setId(4);
+				remitente.setTipo(TipoDestinatario.CLIENTE);
+
+
+				var mensaje = MensajeNuevoDTO.builder()
+						.asunto("Cambio entrenador")
+						.destinatarios(destinatarios)
+						.copia(copias)
+						.copiaOculta(copiasOcultas)
+						.remitente(remitente)
+						.contenido("Buenos días, quiero cambiar de entrenador.")
+						.build();
+
+				var completa = centro.toString() + mensaje; //correcto???
+
+				//el path será /mensaje o /centro/mensaje
+				var peticion = post("http", "localhost", port, "/mensaje", completa);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				compruebaRespuestaMensaje(mensaje, centro, respuesta);
 			}
 
 			@Test
@@ -646,11 +694,20 @@ public class EntidadesJpaApplicationTests {
 				// TO DO
 			}
 
-			private void compruebaRespuesta(CentroNuevoDTO centro, ResponseEntity<Void> respuesta) {
-				// TO DO
-			}
-		}
+	private void compruebaRespuestaMensaje(MensajeNuevoDTO mensaje, CentroDTO centro, ResponseEntity<Void> respuesta) {
+		assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+		assertThat(respuesta.getHeaders().get("Location").get(0))
+				.startsWith("http://localhost:" + port + "/mensaje");
 
+		//creeis que hay que cambiar mensajeRepository para que devuelva List<Mensaje> en lugar de List<MensajeDTO>???
+		List<MensajeDTO> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
+		assertThat(mensajes).hasSize(1);
+		assertThat(respuesta.getHeaders().get("Location").get(0))
+				.endsWith("/" + mensajes.get(0).getIdMensaje());
+		compruebaCamposMensaje(mensaje, mensajes.get(0));
+	}
+		}
+//----------------------------------------------------------------------------------------------
 		@Nested
 		@DisplayName("Al consultar un mensaje concreto")
 		public class ObtenerMensajes {
@@ -680,7 +737,7 @@ public class EntidadesJpaApplicationTests {
 				assertThat(respuesta.hasBody()).isEqualTo(false);
 			}
 		}
-
+//----------------------------------------------------------------------------------------------
 		@Nested
 		@DisplayName("Al eliminar un mensaje")
 		public class EliminarMensaje {
