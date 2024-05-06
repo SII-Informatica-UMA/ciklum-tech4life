@@ -573,29 +573,29 @@ public class EntidadesJpaApplicationTests {
 			@DisplayName("y lo consigue cuando el gerente a insertar no es null")
 			public void gerenteNoNull() {
 				var gerente = GerenteNuevoDTO.builder()
-					.empresa("patatas")
-					.build();
+						.empresa("patatas")
+						.build();
 				var peticion = post("http", "localhost", port, "/gerente", gerente);
-				
+
 				var respuesta = restTemplate.exchange(peticion, Void.class);
-				
+
 				compruebaRespuestaGerente(gerente, respuesta);
 			}
 
 			@Test
 			@DisplayName("pero da error cuando el gerente a insertar es null")
-			public void mismoEmail() {
-				GerenteNuevoDTO gerente = null;
-				var peticion = post("http", "localhost", port, "/gerente",gerente);
+			public void gerenteNull() {
+				GerenteNuevoDTO gerente= null;
+				var peticion = post("http", "localhost", port, "/gerente", gerente);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-				assertThat(respuesta.hasBody()).isFalse();
+				compruebaRespuestaGerente(gerente, respuesta);
 			}
 
 			private void compruebaRespuestaGerente(GerenteNuevoDTO gerente, ResponseEntity<Void> respuesta) {
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 				assertThat(respuesta.getHeaders().get("Location").get(0))
 					.startsWith("http://localhost:"+port+"/gerente");
 				
