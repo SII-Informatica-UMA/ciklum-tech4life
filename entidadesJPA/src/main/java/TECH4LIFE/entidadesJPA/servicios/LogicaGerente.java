@@ -77,7 +77,6 @@ public class LogicaGerente {
         if(gerente==null){
             throw new GerenteNoExistente();
         }
-        Optional<Gerente> gerentecheck = repo.findById(gerente.getId());
         return repo.save(gerente);
     }
 

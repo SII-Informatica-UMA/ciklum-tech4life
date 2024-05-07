@@ -106,7 +106,7 @@ public class ControladorGerente {
             URI uri= builder
                 .path(String.format("/%d",nuevoGerente.getId()))
                 .build()
-                .toUri() ;
+                .toUri();
                 //Todo bien 200
             return ResponseEntity.created(uri).body(Mapper.toGerenteDTO(nuevoGerente));  
         }catch (GerenteNoExistente e){
