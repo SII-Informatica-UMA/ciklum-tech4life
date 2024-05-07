@@ -36,7 +36,7 @@ public class ControladorMensaje {
     public ResponseEntity<List<MensajeDTO>> listaDeMensajes(@PathVariable (name="centro") Centro centro){   //guardo en la variable centro el objeto Centro
         try{
             //CODE 200: Devuelve la lista de mensajes de cierto centro
-            List<MensajeDTO> listaMensajes = servicio.getMensajesByCentro(centro);
+            List<MensajeDTO> listaMensajes = servicio.getMensajesByCentro(centro).stream().map(Mapper::toMensajeDTO).toList();
             return ResponseEntity.ok(listaMensajes);
         } catch(UsuarioNoAutorizado e){
             //CODE 403: Acceso no autorizado
@@ -74,7 +74,7 @@ public class ControladorMensaje {
             //CODE 201: Se crea el mensaje y lo devuelve
             Mensaje mensaje  = servicio.postMensaje(Mapper.toMensaje(mensajeNuevoDTO));
             URI uri = builder
-                    .path(String.format("/%d", centro.getIdCentro(), "/%d", mensaje.getIdMensaje()))
+                    .path(String.format("/%d", mensaje.getIdMensaje(), "/%d", centro.getIdCentro()))
                     .build()
                     .toUri();
             return ResponseEntity.created(uri).body(Mapper.toMensajeDTO(mensaje));
@@ -91,7 +91,7 @@ public class ControladorMensaje {
     DELETE
  */
     //Eliminamos un mensaje por su idMensaje.
-    @DeleteMapping("{idMensaje}")
+    @DeleteMapping("/{idMensaje}")
     public ResponseEntity<?> eliminarMensaje(@PathVariable(name="idMensaje") Integer idMensaje) {
         try{
             //CODE 200: Devuelve la lista de mensajes de cierto centro

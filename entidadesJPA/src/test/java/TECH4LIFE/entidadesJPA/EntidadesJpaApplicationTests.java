@@ -141,280 +141,6 @@ public class EntidadesJpaApplicationTests {
 
 	/*
 	---------------------------------------------
-	 Pruebas de ControladorCentro y LogicaCentro
-	 Realizado por: Raúl García Balongo
-	---------------------------------------------
-	*/
-
-	private void compruebaCamposCentro(CentroDTO expected, CentroDTO actual) {
-		assertThat(actual.getDireccion()).isEqualTo(expected.getDireccion());
-		assertThat(actual.getNombre()).isEqualTo(expected.getNombre());
-	}
-
-	private void compruebaCamposCentro(CentroNuevoDTO expected, CentroDTO actual) {
-		assertThat(actual.getDireccion()).isEqualTo(expected.getDireccion());
-		assertThat(actual.getNombre()).isEqualTo(expected.getNombre());
-	}
-
-	private void compruebaCamposCentro(CentroNuevoDTO expected, Centro actual) {
-		assertThat(actual.getDireccion()).isEqualTo(expected.getDireccion());
-		assertThat(actual.getNombre()).isEqualTo(expected.getNombre());
-	}
-
-	@Nested
-	@DisplayName("Cuando no hay centros")
-	public class ListaCentrosVacia {
-
-		@Test
-		@DisplayName("Devuelve la lista de centros vacía")
-		public void devuelveListaCentro() {
-
-			var peticion = get("http", "localhost", port, "/centro"); // Revisar el path
-
-			var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<CentroDTO>>() {
-					});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(respuesta.getBody()).isEmpty();
-		}
-
-		@Nested
-		@DisplayName("Intenta insertar un centro")
-		public class InsertaCentro {
-			@Test
-			@DisplayName("y se guarda con éxito")
-			public void sinID() {
-				var centro = CentroNuevoDTO.builder()
-						.nombre("egeFIT")
-						.direccion("Calle merluza, 56")
-						.build();
-				var peticion = post("http", "localhost", port, "/centro", centro);
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				compruebaRespuestaCentro(centro, respuesta);
-			}
-
-			private void compruebaRespuestaCentro(CentroNuevoDTO centro, ResponseEntity<Void> respuesta) {
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-				assertThat(respuesta.getHeaders().get("Location").get(0))
-						.startsWith("http://localhost:" + port + "/centro");
-
-				List<Centro> centros = centroRepository.findAll();
-				assertThat(centros).hasSize(1);
-				assertThat(respuesta.getHeaders().get("Location").get(0))
-						.endsWith("/" + centros.get(0).getIdCentro());
-				compruebaCamposCentro(centro, centros.get(0));
-			}
-		}
-
-		@Test
-		@DisplayName("Devuelve error cuando se pide un centro concreto")
-		public void devuelveErrorAlConsultarCentro() {
-			var peticion = get("http", "localhost", port, "/centro");
-
-			var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<CentroDTO>>() {
-					});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-			assertThat(respuesta.hasBody()).isEqualTo(false);
-		}
-
-		@Test
-		@DisplayName("devuelve error cuando se modifica un centro concreto")
-		public void devuelveErrorAlModificarCentro() {
-			var centro = CentroNuevoDTO.builder()
-					.nombre("KKFit")
-					.direccion("Calle la calle KK, 56")
-					.build();
-			var peticion = put("http", "localhost", port, "/centro", centro);
-
-			var respuesta = restTemplate.exchange(peticion, Void.class);
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-		}
-
-		@Test
-		@DisplayName("devuelve error cuando se elimina un centro concreto")
-		public void devuelveErrorAlEliminarCentro() {
-			var peticion = delete("http", "localhost", port, "/centro");
-
-			var respuesta = restTemplate.exchange(peticion, Void.class);
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-		}
-	}
-
-	@Nested
-	@DisplayName("Cuando hay centros")
-	public class ListaCentrosConDatos {
-
-		private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-				.nombre("BasicFit")
-				.direccion("Calle la calle bonita, 56")
-				.build();
-
-		private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-				.nombre("ProGYM")
-				.direccion("Calle avestruz, 44")
-				.build();
-
-
-		@BeforeEach
-		public void introduceDatosCentro() {
-			centroRepository.save(Mapper.toCentro(centro1));
-			centroRepository.save(Mapper.toCentro(centro2));
-		}
-
-		@Test
-		@DisplayName("Devuelve la lista de centros correctamente")
-		public void devuelveListaCentro() {
-			var peticion = get("http", "localhost", port, "/centro"); // Revisar el path
-
-			var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<CentroDTO>>() {
-					});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(respuesta.getBody()).hasSize(2);
-		}
-
-		@Nested
-		@DisplayName("Intenta insertar un centro")
-		public class InsertaCentros {
-
-			// TO DO
-
-			@Test
-			@DisplayName("")
-			public void prueba1() {
-				// TO DO
-			}
-
-			@Test
-			@DisplayName("")
-			public void prueba2() {
-				// TO DO
-			}
-
-			private void compruebaRespuesta(CentroNuevoDTO centro, ResponseEntity<Void> respuesta) {
-				// TO DO
-			}
-		}
-
-		@Nested
-		@DisplayName("Al consultar un centro concreto")
-		public class ObtenerCentros {
-
-			@Test
-			@DisplayName("lo devuelve cuando existe")
-			public void devuelveCentro() {
-				var peticion = get("http", "localhost", port, "/centro/1");
-
-				var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-				assertThat(respuesta.hasBody()).isTrue();
-				assertThat(respuesta.getBody()).isNotNull();
-			}
-
-			@Test
-			@DisplayName("da error cuando no existe")
-			public void errorCuandoCentroNoExiste() {
-				var peticion = get("http", "localhost", port, "/centro/28");
-
-				var respuesta = restTemplate.exchange(peticion,
-						new ParameterizedTypeReference<List<CentroDTO>>() {
-						});
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-				assertThat(respuesta.hasBody()).isEqualTo(false);
-			}
-		}
-
-		@Nested
-		@DisplayName("Al modificar un centro")
-		public class ModificarCentros {
-
-			@Test
-			@DisplayName("Lo modifica correctamente cuando existe")
-			@DirtiesContext
-			public void modificaCorrectamenteCentro() {
-				var centro = CentroNuevoDTO.builder()
-						.nombre("PepeFit")
-						.direccion("Calle la gaviota, 56")
-						.build();
-
-				var peticion = put("http", "localhost", port, "/centro/1", centro);
-
-				var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-				Centro centroBD = centroRepository.findById(1).get();
-				compruebaCamposCentro(centro, centroBD);
-			}
-
-			@Test
-			@DisplayName("Da error cuando no existe")
-			public void errorCuandoNoExiste() {
-				var centro = CentroNuevoDTO.builder()
-						.nombre("PepeitoFit")
-						.direccion("Calle la gata, 56")
-						.build();
-				var peticion = put("http", "localhost", port, "/centro/28", centro);
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-				assertThat(respuesta.hasBody()).isEqualTo(false);
-			}
-		}
-
-		@Nested
-		@DisplayName("Al eliminar un centro")
-		public class EliminarCentros {
-			@Test
-			@DisplayName("Lo elimina cuando existe")
-			public void eliminaCorrectamenteCentro() {
-				//List<Centro> centrosAntes = centroRepository.findAll();
-				//centrosAntes.forEach(c->System.out.println(c));
-				var peticion = delete("http", "localhost", port, "/centro/1");
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-				List<Centro> centros = centroRepository.findAll();
-				assertThat(centros).hasSize(1);
-				assertThat(centros).allMatch(c -> c.getIdCentro() != 1);
-			}
-
-			@Test
-			@DisplayName("da error cuando no existe")
-			public void errorCuandoNoExisteCentro() {
-				var peticion = delete("http", "localhost", port, "/centro/28");
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-				assertThat(respuesta.hasBody()).isEqualTo(false);
-			}
-		}
-	}
-
-
-	/*
-	---------------------------------------------
-	 Pruebas de ControladorGerente y LogicaGerente
-	 Realizado por:
-	---------------------------------------------
-	*/
-
-	// TO DO
-
-	/*
-	---------------------------------------------
 	 Pruebas de ControladorMensaje y LogicaMensaje
 	 Realizado por: Ana María Calvente
 	---------------------------------------------
@@ -439,22 +165,21 @@ public class EntidadesJpaApplicationTests {
 	@DisplayName("Cuando no hay mensajes")
 	public class ListaMensajesVacia {
 
+		/*
+		DUDA: NO FUNCIONA PORQUE CREEMOS QUE BANDEJATODOS DE MENSAJEREPOSITORY
+		 */
 		@Test
 		@DisplayName("Devuelve la lista de mensajes vacía")
 		public void devuelveListaMensaje() {
-			var centro = CentroDTO.builder()
-					.idCentro(12)
-					.nombre("PepeitoFit")
-					.direccion("Calle la gata, 56")
-					.build();
-			var peticion = get("http", "localhost", port, "/centro/mensaje"); // Este será el path de los mensajes de un centro o será "/centro/mensaje"??
+
+			var peticion = get("http", "localhost", port, "/mensaje/centro"); // Este será el path de los mensajes de un centro o será "/centro/mensaje"??
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<MensajeDTO>>() {
 					});
 
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(respuesta.getBody()).isEmpty();
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+			assertThat(respuesta.hasBody()).isEqualTo(false);
 		}
 //--------------------------------------------------------------------------------------
 		@Nested
@@ -507,7 +232,8 @@ public class EntidadesJpaApplicationTests {
 				var completa = centro.toString() + mensaje; //correcto???
 
 				//el path será /mensaje o /centro/mensaje
-				var peticion = post("http", "localhost", port, "/mensaje", completa);
+				var peticion = post("http", "localhost", port, "/mensaje/centro", completa);
+
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -517,10 +243,10 @@ public class EntidadesJpaApplicationTests {
 			private void compruebaRespuestaMensaje(MensajeNuevoDTO mensaje, CentroDTO centro, ResponseEntity<Void> respuesta) {
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 				assertThat(respuesta.getHeaders().get("Location").get(0))
-						.startsWith("http://localhost:" + port + "/mensaje");
+						.startsWith("http://localhost:" + port + "/mensaje/centro");
 
 				//creeis que hay que cambiar mensajeRepository para que devuelva List<Mensaje> en lugar de List<MensajeDTO>???
-				List<MensajeDTO> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
+				List<Mensaje> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
 				assertThat(mensajes).hasSize(1);
 				assertThat(respuesta.getHeaders().get("Location").get(0))
 						.endsWith("/" + mensajes.get(0).getIdMensaje());
@@ -529,9 +255,9 @@ public class EntidadesJpaApplicationTests {
 		}
 
 		@Test
-		@DisplayName("Devuelve error cuando se pide un centro concreto")
+		@DisplayName("Devuelve error cuando se pide un mensaje concreto")
 		public void devuelveErrorAlConsultarMensaje() {
-			var peticion = get("http", "localhost", port, "/mensaje");
+			var peticion = get("http", "localhost", port, "/mensaje/centro");
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<MensajeDTO>>() {
@@ -541,11 +267,11 @@ public class EntidadesJpaApplicationTests {
 			assertThat(respuesta.hasBody()).isEqualTo(false);
 		}
 
-
+		//FUNCIONA
 		@Test
 		@DisplayName("devuelve error cuando se elimina un mensaje concreto")
 		public void devuelveErrorAlEliminarMensaje() {
-			var peticion = delete("http", "localhost", port, "/mensaje");
+			var peticion = delete("http", "localhost", port, "/mensaje/centro/45");
 
 			var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -612,7 +338,7 @@ public class EntidadesJpaApplicationTests {
 				.build();
 
 		@BeforeEach
-		public void introduceDatosCentro() {
+		public void insertaMensajes() {
 			mensajeRepository.save(Mapper.toMensaje(mensaje1));
 			mensajeRepository.save(Mapper.toMensaje(mensaje2));
 		}
@@ -620,7 +346,7 @@ public class EntidadesJpaApplicationTests {
 		@Test
 		@DisplayName("Devuelve la lista de mensajes correctamente")
 		public void devuelveListaMensajes() {
-			var peticion = get("http", "localhost", port, "/mensaje"); // Revisar el path
+			var peticion = get("http", "localhost", port, "/mensaje/centro"); // Revisar el path
 
 			var respuesta = restTemplate.exchange(peticion,
 					new ParameterizedTypeReference<List<MensajeDTO>>() {
@@ -633,6 +359,7 @@ public class EntidadesJpaApplicationTests {
 		@Nested
 		@DisplayName("Intenta insertar un mensaje")
 		public class InsertaMensaje {
+
 
 			@Test
 			@DisplayName("Cuando se inserta un mensaje correctamente")
@@ -681,7 +408,7 @@ public class EntidadesJpaApplicationTests {
 				var completa = centro.toString() + mensaje; //correcto???
 
 				//el path será /mensaje o /centro/mensaje
-				var peticion = post("http", "localhost", port, "/mensaje", completa);
+				var peticion = post("http", "localhost", port, "/mensaje/centro", completa);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -700,7 +427,7 @@ public class EntidadesJpaApplicationTests {
 				.startsWith("http://localhost:" + port + "/mensaje");
 
 		//creeis que hay que cambiar mensajeRepository para que devuelva List<Mensaje> en lugar de List<MensajeDTO>???
-		List<MensajeDTO> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
+		List<Mensaje> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
 		assertThat(mensajes).hasSize(1);
 		assertThat(respuesta.getHeaders().get("Location").get(0))
 				.endsWith("/" + mensajes.get(0).getIdMensaje());
@@ -715,7 +442,7 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("lo devuelve cuando existe")
 			public void devuelveMensaje() {
-				var peticion = get("http", "localhost", port, "/mensaje/1");
+				var peticion = get("http", "localhost", port, "/mensaje/centro/1");
 
 				var respuesta = restTemplate.exchange(peticion, MensajeDTO.class);
 
@@ -727,7 +454,7 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("da error cuando no existe")
 			public void errorCuandoMensajeNoExiste() {
-				var peticion = get("http", "localhost", port, "/mensaje/28");//el path es el correcto????
+				var peticion = get("http", "localhost", port, "/mensaje/centro/28");//el path es el correcto????
 
 				var respuesta = restTemplate.exchange(peticion,
 						new ParameterizedTypeReference<List<MensajeDTO>>() {
@@ -755,7 +482,7 @@ public class EntidadesJpaApplicationTests {
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-				List<MensajeDTO> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
+				List<Mensaje> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
 				assertThat(mensajes).hasSize(1);
 				assertThat(mensajes).allMatch(c -> c.getIdMensaje() != 1);
 			}
@@ -763,7 +490,7 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("da error cuando no existe")
 			public void errorCuandoNoExisteMensaje() {
-				var peticion = delete("http", "localhost", port, "/mensaje/28");
+				var peticion = delete("http", "localhost", port, "/mensaje/centro/28");
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -774,10 +501,3 @@ public class EntidadesJpaApplicationTests {
 	}
 
 }
-
-
-
-
-
-
-

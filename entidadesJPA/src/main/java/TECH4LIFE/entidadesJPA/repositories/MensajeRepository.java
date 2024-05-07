@@ -16,11 +16,11 @@ import org.springframework.stereotype.Repository;
 public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
 
     @Query("select m from Mensaje m where m.remitente = :remite")
-    List<MensajeDTO> bandejaSalida(@Param("remite") Destinatario remite);
+    List<Mensaje> bandejaSalida(@Param("remite") Destinatario remite);
     
     @Query("select m from Mensaje m join m.destinatarios d where d = :destino")
-    List<MensajeDTO> bandejaEntrada(@Param("destino") Destinatario destino);
+    List<Mensaje> bandejaEntrada(@Param("destino") Destinatario destino);
 
     @Query("select m from Mensaje m join m.destinatarios d where d.id = :idCentro and d.tipo = :CENTRO or m.remitente.id = : idCentro and m.remitente.tipo = :CENTRO")
-    List<MensajeDTO> bandejaTodos(@Param("idCentro") Integer idCentro);
+    List<Mensaje> bandejaTodos(@Param("idCentro") Integer idCentro);
 }

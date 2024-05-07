@@ -28,9 +28,9 @@ public class LogicaMensaje {
 //-----------------------------------------------------------------------------------------------
     //Get todos los mensajes de un centro
     @RolesAllowed("Gerente")
-    public List<MensajeDTO> getMensajesByCentro(Centro centro) throws MensajeNoExistente, UsuarioNoAutorizado {
+    public List<Mensaje> getMensajesByCentro(Centro centro) throws MensajeNoExistente, UsuarioNoAutorizado {
 
-        List<MensajeDTO> mensajesCentro = mensajeRepo.bandejaTodos(centro.getIdCentro());
+        List<Mensaje> mensajesCentro = mensajeRepo.bandejaTodos(centro.getIdCentro());
 
         if(mensajesCentro.isEmpty()) throw new MensajeNoExistente();
         return mensajesCentro;
