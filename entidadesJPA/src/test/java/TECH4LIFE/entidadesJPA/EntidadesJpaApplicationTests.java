@@ -463,8 +463,8 @@ public class EntidadesJpaApplicationTests {
 					new ParameterizedTypeReference<List<GerenteDTO>>() {
 					});
 
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(respuesta.getBody()).isEmpty();
+			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+			assertThat(respuesta.hasBody()).isEqualTo(false);
 		}
 
 		@Nested
