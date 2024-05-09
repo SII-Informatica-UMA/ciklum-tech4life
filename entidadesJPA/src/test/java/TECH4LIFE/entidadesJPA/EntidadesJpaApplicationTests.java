@@ -179,6 +179,7 @@ public class EntidadesJpaApplicationTests {
 				assertThat(respuesta.hasBody()).isEqualTo(false);
 			}
 
+			// Tiene pinta de que la prueba da fallo porque no está bien hecha
 			@Nested
 			@DisplayName("Intenta insertar un centro")
 			public class InsertaCentro {
@@ -271,6 +272,7 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Devuelve la lista de centros correctamente")
 			public void devuelveListaCentro() {
+
 				var peticion = get("http", "localhost", port, "/centro"); // Revisar el path
 
 				var respuesta = restTemplate.exchange(peticion,
@@ -281,6 +283,7 @@ public class EntidadesJpaApplicationTests {
 				assertThat(respuesta.getBody()).hasSize(2);
 			}
 
+			// Tiene pinta de que la prueba da fallo porque no está bien hecha
 			@Nested
 			@DisplayName("Intenta insertar un centro")
 			public class InsertaCentros {

@@ -6,6 +6,7 @@ import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.excepciones.*;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
+import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,10 @@ import java.util.Optional;
 @Transactional
 public class LogicaCentro {
 
+    // TO DO: Volver hacer repaso de la api revisando los métodos
+
    private CentroRepository centroRepo ;
+   private GerenteRepository gerenteRepo ;
 
    @Autowired
     public LogicaCentro(CentroRepository centroRepo) {
@@ -32,7 +36,7 @@ public class LogicaCentro {
 
     // Obtener un centro concreto (por la id) (CREO que lo hace un usuario Administrador)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-    @RolesAllowed("Administrador")
+
     public Centro getCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
         if (id == null || id < 0) throw new PeticionNoValida();
@@ -46,7 +50,7 @@ public class LogicaCentro {
 
     // Permite consultar el gerente de un centro (por la id del centro) (CREO que lo hace un usuario Administrador)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-    @RolesAllowed("Administrador")
+
     public Gerente getGerenteCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
         if (id == null || id < 0) throw new PeticionNoValida();
@@ -60,15 +64,20 @@ public class LogicaCentro {
 
     // Obtener la lista de todos los centros (Lo puede hacer usuario Administrador o Gerente)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-    @RolesAllowed({"Administrador","Gerente"})
-    public List<Centro> getTodosCentros() throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        // NO HAY PARÁMETRO DE ENTRADA PARA QUE PUDIERA SER UNA PETICIÓN NO VÁLIDA
-        //if (id == null || id < 0) throw new PeticionNoValida();
+    public List<Centro> getTodosCentros(Integer idGerente) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        List<Centro> centros = centroRepo.findAll() ;
+        List<Centro> centros ;
 
-        if (centros.isEmpty()) throw new CentroNoExistente();
+        if (idGerente != null) {
+            if (idGerente < 0) throw new PeticionNoValida();
+            centros = centroRepo.FindCentroByGerente(idGerente) ;
+            if (centros.isEmpty()) throw new CentroNoExistente();
+
+        } else {
+            centros = centroRepo.findAll() ;
+            if (centros.isEmpty()) throw new CentroNoExistente();
+        }
 
         return centros;
     }
@@ -83,14 +92,12 @@ public class LogicaCentro {
 
     // Elimina un centro (por la id) (CREO que lo hace un usuario Administrador)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-    @RolesAllowed("Administrador")
+
     public void eliminarCentro(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
         if (id == null || id < 0) throw new PeticionNoValida();
 
-        Optional<Centro> centro = centroRepo.findById(id);
-
-        if (centro.isEmpty()) throw new CentroNoExistente();
+        if (!centroRepo.existsById(id)) throw new CentroNoExistente();
 
         centroRepo.deleteById(id);
     }
@@ -98,18 +105,24 @@ public class LogicaCentro {
     // Permite eliminar una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
     // TO DO -> El final del método no estoy seguro si es correcto
-    @RolesAllowed("Administrador")
-    public void eliminarGerenteCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        if (id == null || id < 0) throw new PeticionNoValida();
+    public void eliminarGerenteCentroById(Integer idCentro, Integer idGerente) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        Optional<Centro> centro = centroRepo.findById(id);
+        if (idCentro == null || idCentro < 0) throw new PeticionNoValida();
+        if (idGerente == null || idGerente < 0) throw new PeticionNoValida();
+
+        Optional<Centro> centro = centroRepo.findById(idCentro);
+        Optional<Gerente> gerente = gerenteRepo.findById(idGerente);
 
         if (centro.isEmpty()) throw new CentroNoExistente();
+        if (gerente.isEmpty()) throw new GerenteNoExistente();
 
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
         centro.get().setGerente(null); // Elimino asociación (poniendo a null el atributo gerente de Centro)
+        gerente.get().setCentro(null); // Elimino asociación (poniendo a null el atributo centro de Gerente)
+
         centroRepo.save(centro.get()); // Guardo
+        gerenteRepo.save(gerente.get()); // Guardo
     }
 
     /*
@@ -119,7 +132,7 @@ public class LogicaCentro {
 
     // Permite crear un centro nuevo a un administrador (Lo hace un usuario Administrador)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-    @RolesAllowed("Administrador")
+
     public Centro postCentro(Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroExistente {
 
         if (centroEntity == null) throw new PeticionNoValida();
@@ -140,14 +153,12 @@ public class LogicaCentro {
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
     // TO DO -> El final del método no estoy seguro si es correcto
     // TO DO -> ¿Necesaria la excepción que señalo?
-    @RolesAllowed("Administrador")
+
     public void modificarCentro(Integer id, Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
         if (id == null || id < 0 || centroEntity == null) throw new PeticionNoValida();
 
-        Optional<Centro> centro = centroRepo.findById(id);
-
-        if (centro.isEmpty()) throw new CentroNoExistente();
+        if (!centroRepo.existsById(id)) throw new CentroNoExistente();
 
         /*
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
@@ -171,7 +182,7 @@ public class LogicaCentro {
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
     // TO DO -> El final del método no estoy seguro si es correcto
     // TO DO -> ¿Necesaria la excepción que señalo?
-    @RolesAllowed("Administrador")
+
     public Centro modificarGerenteCentroById (Integer id, Gerente gerenteEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
         if (id == null || id < 0 || gerenteEntity == null) throw new PeticionNoValida();
