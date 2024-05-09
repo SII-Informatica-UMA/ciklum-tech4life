@@ -293,7 +293,7 @@ public class EntidadesJpaApplicationTests {
 							.direccion("Calle pescaito, 54")
 							.build();
 					var peticion = post("http", "localhost", port, "/centro", centro);
-
+					// La petición necesita una query string
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
 					compruebaRespuestaCentro(centro, respuesta);
