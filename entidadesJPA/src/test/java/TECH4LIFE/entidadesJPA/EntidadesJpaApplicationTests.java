@@ -42,6 +42,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 	- Error común: He seguido todos los pasos y no aparece la carpeta site:
  *    Jacoco algunas veces falla y en vez de generar un .exec genera un ".exe" o un ".ex"
  * 	  Solución: añadir la c, y hacer mvn test de nuevo y debería generar la carpeta test
+ *
+ * 		SOLUCIÓN :
+	 * 	 - Para evitar este error, ubicar el proyecto en un sitio cuyo enlace no tenga carácteres extraños, es
+	 * 	   decir ni tildes, ni espacios...
+ *
  * */
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
