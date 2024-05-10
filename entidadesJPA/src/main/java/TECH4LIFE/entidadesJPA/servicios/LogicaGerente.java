@@ -74,7 +74,7 @@ public class LogicaGerente {
     //Añadir un Gerente
     public Gerente addGerente(Gerente gerente) {
         
-        if(gerente==null){
+        if(gerente.getIdUsuario()==null){
             throw new GerenteNoExistente();
         }
         return repo.save(gerente);

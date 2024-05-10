@@ -1,23 +1,17 @@
 package TECH4LIFE.entidadesJPA.controladores;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Gerente;
-import TECH4LIFE.entidadesJPA.excepciones.CentroNoExistente;
-import TECH4LIFE.entidadesJPA.excepciones.GerenteExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteNoExistente;
-import TECH4LIFE.entidadesJPA.excepciones.PeticionNoValida;
 import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import TECH4LIFE.entidadesJPA.servicios.LogicaGerente;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/gerente")
@@ -107,7 +101,7 @@ public class ControladorGerente {
                 .path(String.format("/%d",nuevoGerente.getId()))
                 .build()
                 .toUri();
-                //Todo bien 200
+                //Todo bien 201
             return ResponseEntity.created(uri).body(Mapper.toGerenteDTO(nuevoGerente));  
         }catch (GerenteNoExistente e){
             // [404] Not Found
