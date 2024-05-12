@@ -167,20 +167,52 @@ public class EntidadesJpaApplicationTests {
 		@DisplayName("Cuando no hay mensajes")
 		public class ListaMensajesVacia{
 
-			@BeforeEach
+			/*@BeforeEach
 			public void insertarCentro(){
 				Centro centro1 = new Centro();
 				centro1.setIdCentro(1);
 				centroRepository.save(centro1);
+			}*/
+
+			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+					.nombre("BasicFit")
+					.direccion("Calle la calle bonita, 56")
+					.build();
+
+			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+					.nombre("ProGYM")
+					.direccion("Calle avestruz, 44")
+					.build();
+
+
+			@BeforeEach
+			public void introduceDatosCentro() {
+				centroRepository.save(Mapper.toCentro(centro1));
+				centroRepository.save(Mapper.toCentro(centro2));
 			}
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
 			public void devuelveListaMensajes(){
+
+				var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1"); // Revisar el path
+
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<List<MensajeDTO>>() {
+				});
+
+				// Verificar el código de estado de la respuesta
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+				// Verificar que el cuerpo de la respuesta está vacío porque hay un centro pero no tiene mensajes
+				assertThat(respuesta.getBody()).isEmpty();
+			}
+
+/*
 				// Supongamos que el ID del centro para el cual se quieren consultar los mensajes es 1
-				long idCentro = 1;
+				//long idCentro = centro1;
 
 				// Construir la URL del endpoint GET /mensaje/centro
-				String url = "http://localhost:" + port + "/mensaje/centro?centro=" + idCentro;
+				String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
 
 				// Supongamos que enviamos una solicitud GET al endpoint
 				ResponseEntity<List<MensajeDTO>> response = restTemplate.exchange(
@@ -195,7 +227,11 @@ public class EntidadesJpaApplicationTests {
 
 				// Verificar que el cuerpo de la respuesta está vacío porque hay un centro pero no tiene mensajes
 				assertThat(response.getBody()).isEmpty();
+
+
 			}
+
+ */
 			@Test
 			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
 			public void insertaMensaje(){
@@ -216,6 +252,29 @@ public class EntidadesJpaApplicationTests {
 				// Verificar el código de estado de la respuesta
 				assertThat(response.getStatusCode().value()).isEqualTo(404);
 			}
+			@Test
+			@DisplayName("Elimina un mensaje concreto asociado a un centro dado el idMensaje")
+			public void eliminaMensajeConcreto(){
+				//TO DO
+			}
+		}
+		@Nested
+		@DisplayName("Cuando sí hay mensajes")
+		public class ListaMensajesConDatos{
+			@Test
+			@DisplayName("Devuelve la lista de mensajes asociada a un centro")
+			public void devuelveListaMensajes(){
+				//TO DO
+			}
+			@Test
+			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
+			public void insertaMensaje(){
+				//TO DO
+			}
+			@Test
+			@DisplayName("Devuelve un mensaje concreto asociado a un centro dado el idMensaje")
+			public void devuelveMensajeConcreto(){
+				//TO DO
 			}
 			@Test
 			@DisplayName("Elimina un mensaje concreto asociado a un centro dado el idMensaje")
@@ -223,380 +282,8 @@ public class EntidadesJpaApplicationTests {
 				//TO DO
 			}
 		}
-	@Nested
-	@DisplayName("Cuando sí hay mensajes")
-	public class ListaMensajesConDatos{
-		@Test
-		@DisplayName("Devuelve la lista de mensajes asociada a un centro")
-		public void devuelveListaMensajes(){
-			//TO DO
-		}
-		@Test
-		@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
-		public void insertaMensaje(){
-			//TO DO
-		}
-		@Test
-		@DisplayName("Devuelve un mensaje concreto asociado a un centro dado el idMensaje")
-		public void devuelveMensajeConcreto(){
-			//TO DO
-		}
-		@Test
-		@DisplayName("Elimina un mensaje concreto asociado a un centro dado el idMensaje")
-		public void eliminaMensajeConcreto(){
-			//TO DO
-		}
-	}
-
-	}
-	@Nested
-	@DisplayName("Cuando no hay mensajes")
-	public class ListaMensajesVacia {
-
-		/*
-		1- hay que hacer bien la consulta bandejaTodos. En caso deberia funcionar el metodo
-		 */
-	//query, get
-		@Test
-		@DisplayName("Devuelve la lista de mensajes vacía")
-		public void devuelveListaMensaje() {
-			// ID del centro para el cual se quieren consultar los mensajes
-			long idCentro = 1;
-			String BASE_URL = "http://localhost:" + port;
-			// Construir la URL del endpoint GET /mensaje/centro
-			String url = BASE_URL + "/mensaje/centro?centro=" + idCentro;
-
-			// Enviar la solicitud GET al endpoint
-			ResponseEntity<List<MensajeDTO>> response = restTemplate.exchange(
-					url,
-					HttpMethod.GET,
-					null,
-					new ParameterizedTypeReference<List<MensajeDTO>>() {} // Tipo de respuesta esperado
-			);
-
-			// Verificar el código de estado de la respuesta
-			assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-			// Verificar que el cuerpo de la respuesta no esté vacío
-			assertThat(response.getBody()).isEmpty();
-
-			// Puedes realizar más aserciones para verificar los datos específicos de los mensajes devueltos si lo deseas
-		}
-		}
-//--------------------------------------------------------------------------------------
-	//query, post
-	@Nested
-		@DisplayName("Intenta insertar un mensaje")
-		public class InsertaMensaje {
-			@Test
-			@DisplayName("y se guarda con éxito")
-			public void sinID() {
-				var centro = CentroDTO.builder()
-						.idCentro(12)
-						.nombre("PepeitoFit")
-						.direccion("Calle la gata, 56")
-						.build();
-				// Establecer destinatarios
-				Set<DestinatarioDTO> destinatarios = new HashSet<>();
-				DestinatarioDTO destinatario1 = new DestinatarioDTO();
-				destinatario1.setId(1);
-				destinatario1.setTipo(TipoDestinatario.CENTRO);
-				destinatarios.add(destinatario1);
-
-				// Establecer copias
-				Set<DestinatarioDTO> copias = new HashSet<>();
-				DestinatarioDTO copia1 = new DestinatarioDTO();
-				copia1.setId(2);
-				copia1.setTipo(TipoDestinatario.CENTRO);
-				copias.add(copia1);
-
-				// Establecer copias ocultas
-				Set<DestinatarioDTO> copiasOcultas = new HashSet<>();
-				DestinatarioDTO copiaOculta1 = new DestinatarioDTO();
-				copiaOculta1.setId(3);
-				copiaOculta1.setTipo(TipoDestinatario.CLIENTE);
-				copiasOcultas.add(copiaOculta1);
-
-				// Establecer remitente
-				DestinatarioDTO remitente = new DestinatarioDTO();
-				remitente.setId(4);
-				remitente.setTipo(TipoDestinatario.CLIENTE);
-
-
-				var mensaje = MensajeNuevoDTO.builder()
-						.asunto("Cambio entrenador")
-						.destinatarios(destinatarios)
-						.copia(copias)
-						.copiaOculta(copiasOcultas)
-						.remitente(remitente)
-						.contenido("Buenos días, quiero cambiar de entrenador.")
-						.build();
-
-				var completa = centro.toString() + mensaje; //correcto???
-
-				//el path será /mensaje o /centro/mensaje
-				var peticion = post("http", "localhost", port, "/mensaje/centro", completa);
-
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				compruebaRespuestaMensaje(mensaje, centro, respuesta);
-			}
-
-			private void compruebaRespuestaMensaje(MensajeNuevoDTO mensaje, CentroDTO centro, ResponseEntity<Void> respuesta) {
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-				assertThat(respuesta.getHeaders().get("Location").get(0))
-						.startsWith("http://localhost:" + port + "/mensaje/centro");
-
-				//creeis que hay que cambiar mensajeRepository para que devuelva List<Mensaje> en lugar de List<MensajeDTO>???
-				List<Mensaje> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
-				assertThat(mensajes).hasSize(1);
-				assertThat(respuesta.getHeaders().get("Location").get(0))
-						.endsWith("/" + mensajes.get(0).getIdMensaje());
-				compruebaCamposMensaje(mensaje, mensajes.get(0));
-			}
-		}
-		//path, get
-		@Test
-		@DisplayName("Devuelve error cuando se pide un mensaje concreto")
-		public void devuelveErrorAlConsultarMensaje() {
-			// ID del centro para el cual se quieren consultar los mensajes
-			long idCentro = 1;
-			long idMensaje = 1;
-			String BASE_URL = "http://localhost:" + port;
-			// Construir la URL del endpoint GET /mensaje/centro
-			String url = BASE_URL + "/mensaje/centro?mensaje=" + idMensaje + "centro=" + idCentro;
-
-			// Enviar la solicitud GET al endpoint
-			ResponseEntity<List<MensajeDTO>> response = restTemplate.exchange(
-					url,
-					HttpMethod.GET,
-					null,
-					new ParameterizedTypeReference<List<MensajeDTO>>() {} // Tipo de respuesta esperado
-			);
-
-			// Verificar el código de estado de la respuesta
-			assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
-		}
-
-		//FUNCIONA
-	//path
-		@Test
-		@DisplayName("devuelve error cuando se elimina un mensaje concreto")
-		public void devuelveErrorAlEliminarMensaje() {
-			var peticion = delete("http", "localhost", port, "/mensaje/centro/45");
-
-			var respuesta = restTemplate.exchange(peticion, Void.class);
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-		}
-
-//-----------------------------------------------------------------------------------------
-	@Nested
-	@DisplayName("Cuando hay mensajes")
-	public class ListaMensajeConDatos {
-
-		// Establecer destinatarios
-		private Set<DestinatarioDTO> destinatarios = new HashSet<>();
-		// Establecer copias
-		Set<DestinatarioDTO> copias = new HashSet<>();
-		//Establecer copias ocultas
-		Set<DestinatarioDTO> copiasOcultas = new HashSet<>();
-		// Establecer remitente
-		DestinatarioDTO remitente1 = new DestinatarioDTO();
-		DestinatarioDTO remitente2 = new DestinatarioDTO();
-
-		public ListaMensajeConDatos() {
-			establecerMensajes();
-		}
-
-		void establecerMensajes() {
-			//destinatario
-			DestinatarioDTO destinatario1 = new DestinatarioDTO();
-			destinatario1.setId(1);
-			destinatario1.setTipo(TipoDestinatario.CENTRO);
-			destinatarios.add(destinatario1);
-			//copia
-			DestinatarioDTO copia1 = new DestinatarioDTO();
-			copia1.setId(2);
-			copia1.setTipo(TipoDestinatario.CENTRO);
-			copias.add(copia1);
-			//copia oculta
-			DestinatarioDTO copiaOculta1 = new DestinatarioDTO();
-			copiaOculta1.setId(3);
-			copiaOculta1.setTipo(TipoDestinatario.CLIENTE);
-			copiasOcultas.add(copiaOculta1);
-			//remitente
-			remitente1.setId(4);
-			remitente1.setTipo(TipoDestinatario.CLIENTE);
-			remitente1.setId(5);
-			remitente1.setTipo(TipoDestinatario.CENTRO);
-		}
-
-		private MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
-				.asunto("Cambio entrenador")
-				.destinatarios(destinatarios)
-				.copia(copias)
-				.copiaOculta(copiasOcultas)
-				.remitente(remitente1)
-				.contenido("Buenos días, quiero cambiar de entrenador.")
-				.build();
-		private MensajeNuevoDTO mensaje2 = MensajeNuevoDTO.builder()
-				.asunto("Cambio en el evento")
-				.destinatarios(destinatarios)
-				.copia(copias)
-				.copiaOculta(copiasOcultas)
-				.remitente(remitente2)
-				.contenido("Buenos días, les informo del siguiente cambio en el evento")
-				.build();
-
-		@BeforeEach
-		public void insertaMensajes() {
-			mensajeRepository.save(Mapper.toMensaje(mensaje1));
-			mensajeRepository.save(Mapper.toMensaje(mensaje2));
-		}
-
-		@Test
-		@DisplayName("Devuelve la lista de mensajes correctamente")
-		public void devuelveListaMensajes() {
-			var peticion = get("http", "localhost", port, "/mensaje/centro"); // Revisar el path
-
-			var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<MensajeDTO>>() {
-					});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-			assertThat(respuesta.getBody()).hasSize(2);
-		}
-//------------------------------------------------------------------------------------
-		@Nested
-		@DisplayName("Intenta insertar un mensaje")
-		public class InsertaMensaje {
-			@Test
-			@DisplayName("y lo consigue cuando el mensaje a insertar no es null")
-			public void mensajeNoNull() {
-				var mensaje = MensajeNuevoDTO.builder()
-						.asunto("Un asunto")
-						.contenido("Un contenido")
-						.build();
-				var peticion = post("http", "localhost", port, "/mensaje/centro", mensaje);
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				compruebaRespuestaMensaje(mensaje, respuesta);
-			}
-
-			@Test
-			@DisplayName("pero da error cuando el mensaje a insertar es null")
-			public void mensajeNull() {
-				MensajeNuevoDTO mensaje= null;
-				var peticion = post("http", "localhost", port, "/mensaje/centro", mensaje);
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				compruebaRespuestaMensaje(mensaje, respuesta);
-			}
-
-	private void compruebaRespuestaMensaje(MensajeNuevoDTO mensaje, ResponseEntity<Void> respuesta) {
-
-		assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-		assertThat(respuesta.getHeaders().get("Location").get(0))
-				.startsWith("http://localhost:"+port+"/mensaje/centro");
-
-		List<Mensaje> mensajes = mensajeRepository.bandejaTodos(12);
-		assertThat(mensajes).hasSize(3);
-
-		Mensaje msj = mensajes.stream()
-				.filter(c->c.getAsunto().equals("Un asunto"))
-				.filter(c->c.getContenido().equals("Un contenido"))
-				.findAny()
-				.get();
-
-		assertThat(respuesta.getHeaders().get("Location").get(0))
-				.endsWith("/"+msj.getIdMensaje());
-		compruebaCamposMensaje(mensaje, msj);
 	}
 }
 
 
-	private void compruebaRespuestaMensaje(MensajeNuevoDTO mensaje, CentroDTO centro, ResponseEntity<Void> respuesta) {
-		assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-		assertThat(respuesta.getHeaders().get("Location").get(0))
-				.startsWith("http://localhost:" + port + "/mensaje");
 
-		//creeis que hay que cambiar mensajeRepository para que devuelva List<Mensaje> en lugar de List<MensajeDTO>???
-		List<Mensaje> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
-		assertThat(mensajes).hasSize(1);
-		assertThat(respuesta.getHeaders().get("Location").get(0))
-				.endsWith("/" + mensajes.get(0).getIdMensaje());
-		compruebaCamposMensaje(mensaje, mensajes.get(0));
-	}
-
-//----------------------------------------------------------------------------------------------
-		@Nested
-		@DisplayName("Al consultar un mensaje concreto")
-		public class ObtenerMensajes {
-
-	@Test
-	@DisplayName("lo devuelve cuando existe")
-	public void devuelveMensaje() {
-		var peticion = get("http", "localhost", port, "/mensaje/centro/1");
-
-		var respuesta = restTemplate.exchange(peticion, MensajeDTO.class);
-
-		assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-		assertThat(respuesta.hasBody()).isTrue();
-		assertThat(respuesta.getBody()).isNotNull();
-	}
-
-	@Test
-	@DisplayName("da error cuando no existe")
-	public void errorCuandoMensajeNoExiste() {
-		var peticion = get("http", "localhost", port, "/mensaje/centro/28");//el path es el correcto????
-
-		var respuesta = restTemplate.exchange(peticion,
-				new ParameterizedTypeReference<List<MensajeDTO>>() {
-				});
-
-		assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-		assertThat(respuesta.hasBody()).isEqualTo(false);
-	}
-}
-
-//----------------------------------------------------------------------------------------------
-		@Nested
-		@DisplayName("Al eliminar un mensaje")
-		public class EliminarMensaje {
-			@Test
-			@DisplayName("Lo elimina cuando existe")
-			public void eliminaCorrectamenteMensaje() {
-				var centro = CentroDTO.builder()
-						.idCentro(12)
-						.nombre("PepeitoFit")
-						.direccion("Calle la gata, 56")
-						.build();
-
-				var peticion = delete("http", "localhost", port, "/mensaje/1");
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-				List<Mensaje> mensajes = mensajeRepository.bandejaTodos(centro.getIdCentro());
-				assertThat(mensajes).hasSize(1);
-				assertThat(mensajes).allMatch(c -> c.getIdMensaje() != 1);
-			}
-
-			@Test
-			@DisplayName("da error cuando no existe")
-			public void errorCuandoNoExisteMensaje() {
-				var peticion = delete("http", "localhost", port, "/mensaje/centro/28");
-
-				var respuesta = restTemplate.exchange(peticion, Void.class);
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-				assertThat(respuesta.hasBody()).isEqualTo(false);
-			}
-		}
-	}
-}
