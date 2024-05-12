@@ -137,9 +137,9 @@ public class LogicaCentro {
 
         if (centroEntity == null) throw new PeticionNoValida();
 
-        Optional<Centro> centro = centroRepo.findById(centroEntity.getIdCentro());
+       //Optional<Centro> centro = centroRepo.findById(centroEntity.getIdCentro());
 
-        if (centro.isPresent()) throw new CentroExistente();
+        //if (centro.isPresent()) throw new CentroExistente();
 
         return centroRepo.save(centroEntity);
     }

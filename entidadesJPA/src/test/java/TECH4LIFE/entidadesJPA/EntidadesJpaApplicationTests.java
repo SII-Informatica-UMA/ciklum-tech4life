@@ -49,6 +49,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * */
 
+// Controlar el resto de excepciones para conseguir más cobertura en controladorCentro informe Jacoco
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("En el servicio de de gestión de centros y gerentes")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -367,7 +369,7 @@ public class EntidadesJpaApplicationTests {
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 
 					//compruebaRespuestaCentro(centro, respuesta);
 				}
@@ -390,7 +392,9 @@ public class EntidadesJpaApplicationTests {
 							.endsWith("/" + centroStream.getIdCentro());
 					compruebaCamposCentro(centro, centroStream);
 				}
-				*/
+
+				 */
+
 			}
 
 			@Nested

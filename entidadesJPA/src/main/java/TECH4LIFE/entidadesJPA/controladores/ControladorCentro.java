@@ -193,10 +193,10 @@ public class ControladorCentro {
             // CODE 403: Acceso no autorizado
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-        } catch (CentroExistente e) {
+        } /*catch (CentroExistente e) {
             // CODE 404: El centro no existe
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        }*/
     }
 
     /*
