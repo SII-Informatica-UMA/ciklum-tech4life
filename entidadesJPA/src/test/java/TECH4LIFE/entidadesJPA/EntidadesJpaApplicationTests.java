@@ -2,6 +2,7 @@ package TECH4LIFE.entidadesJPA;
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
 import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
+import TECH4LIFE.entidadesJPA.dtos.MensajeDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -152,7 +154,88 @@ public class EntidadesJpaApplicationTests {
 	---------------------------------------------
 	*/
 
-	// TO DO
+	@Nested
+	@DisplayName("En cuanto a los mensajes")
+	public class PruebasMensajes{
+		@Nested
+		@DisplayName("Cuando no hay mensajes")
+		public class ListaMensajesVacia{
+
+			/*@BeforeEach
+			public void insertarCentro(){
+				Centro centro1 = new Centro();
+				centro1.setIdCentro(1);
+				centroRepository.save(centro1);
+			}*/
+
+			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+					.nombre("BasicFit")
+					.direccion("Calle la calle bonita, 56")
+					.build();
+
+			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+					.nombre("ProGYM")
+					.direccion("Calle avestruz, 44")
+					.build();
+
+
+			@BeforeEach
+			public void introduceDatosCentro() {
+				centroRepository.save(Mapper.toCentro(centro1));
+				centroRepository.save(Mapper.toCentro(centro2));
+			}
+
+			@Test
+			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
+			public void devuelveListaMensajes(){
+				var peticion = get("http", "localhost", port, "/mensaje/centro");
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<List<MensajeDTO>>() {
+						});
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+				assertThat(respuesta.getBody().isEmpty());
+			}
+			@Test
+			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
+			public void insertaMensaje(){
+				//TO DO
+			}
+			@Test
+			@DisplayName("Devuelve un mensaje concreto asociado a un centro dado el idMensaje")
+			public void devuelveMensajeConcreto(){
+				//TO DO
+			}
+			@Test
+			@DisplayName("Elimina un mensaje concreto asociado a un centro dado el idMensaje")
+			public void eliminaMensajeConcreto(){
+				//TO DO
+			}
+		}
+		@Nested
+		@DisplayName("Cuando sí hay mensajes")
+		public class ListaMensajesConDatos{
+			@Test
+			@DisplayName("Devuelve la lista de mensajes asociada a un centro")
+			public void devuelveListaMensajes(){
+				//TO DO
+			}
+			@Test
+			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
+			public void insertaMensaje(){
+				//TO DO
+			}
+			@Test
+			@DisplayName("Devuelve un mensaje concreto asociado a un centro dado el idMensaje")
+			public void devuelveMensajeConcreto(){
+				//TO DO
+			}
+			@Test
+			@DisplayName("Elimina un mensaje concreto asociado a un centro dado el idMensaje")
+			public void eliminaMensajeConcreto(){
+				//TO DO
+			}
+		}
+	}
 
 }
 
