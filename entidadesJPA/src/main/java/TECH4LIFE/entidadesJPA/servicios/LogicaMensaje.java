@@ -27,10 +27,9 @@ public class LogicaMensaje {
 
 //-----------------------------------------------------------------------------------------------
     //Get todos los mensajes de un centro
-    @RolesAllowed("Gerente")
-    public List<Mensaje> getMensajesByCentro(Centro centro) throws MensajeNoExistente, UsuarioNoAutorizado {
+    public List<MensajeDTO> getMensajesByCentro(Centro centro) throws MensajeNoExistente, UsuarioNoAutorizado {
 
-        List<Mensaje> mensajesCentro = mensajeRepo.bandejaTodos(centro.getIdCentro());
+        List<MensajeDTO> mensajesCentro = mensajeRepo.bandejaTodos(centro.getIdCentro());
 
         if(mensajesCentro.isEmpty()) throw new MensajeNoExistente();
         return mensajesCentro;
@@ -38,7 +37,6 @@ public class LogicaMensaje {
 
 //----------------------------------------------------------------------------------------
     //Get un mensaje por su idMensaje
-    @RolesAllowed("Gerente")
     public Mensaje getMensajeById(Integer idMensaje) throws MensajeNoExistente, UsuarioNoAutorizado{
         Optional<Mensaje> mensaje = mensajeRepo.findById(idMensaje);
 
@@ -49,7 +47,6 @@ public class LogicaMensaje {
 
 //----------------------------------------------------------------------------------------
     //Post un nuevo mensaje
-    @RolesAllowed("Gerente")
     public Mensaje postMensaje(Mensaje mensajeCrear) throws MensajeNoExistente, UsuarioNoAutorizado{
         if(mensajeCrear == null) throw new MensajeNoExistente();
 
@@ -58,7 +55,6 @@ public class LogicaMensaje {
 
 //----------------------------------------------------------------------------------------
     //Delete un mensaje por su idMensaje
-    @RolesAllowed("Gerente")
     public void deleteMensaje(Integer idMensaje) throws MensajeNoExistente, UsuarioNoAutorizado {
         Optional<Mensaje> mensaje = mensajeRepo.findById(idMensaje);
 
