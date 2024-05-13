@@ -6,6 +6,7 @@ import TECH4LIFE.entidadesJPA.entities.Mensaje;
 import TECH4LIFE.entidadesJPA.entities.Destinatario;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +23,5 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
     List<MensajeDTO> bandejaEntrada(@Param("destino") Destinatario destino);
 
     @Query("select m from Mensaje m join m.destinatarios d where d.id = :idCentro and d.tipo = :CENTRO or m.remitente.id = : idCentro and m.remitente.tipo = :CENTRO")
-    List<MensajeDTO> bandejaTodos(@Param("idCentro") Integer idCentro);
+    List<Mensaje> bandejaTodos(@Param("idCentro") Integer idCentro);
 }

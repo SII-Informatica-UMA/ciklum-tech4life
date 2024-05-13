@@ -4,6 +4,7 @@ import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
 import TECH4LIFE.entidadesJPA.dtos.MensajeDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
+import TECH4LIFE.entidadesJPA.entities.Mensaje;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
@@ -16,10 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
@@ -161,13 +159,14 @@ public class EntidadesJpaApplicationTests {
 		@DisplayName("Cuando no hay mensajes")
 		public class ListaMensajesVacia{
 
-			/*@BeforeEach
-			public void insertarCentro(){
+			@BeforeEach
+			public void insertarCentro() {
 				Centro centro1 = new Centro();
 				centro1.setIdCentro(1);
 				centroRepository.save(centro1);
-			}*/
+			}
 
+/*
 			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
 					.nombre("BasicFit")
 					.direccion("Calle la calle bonita, 56")
@@ -185,20 +184,39 @@ public class EntidadesJpaApplicationTests {
 				centroRepository.save(Mapper.toCentro(centro2));
 			}
 
+ */
+/*
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
 			public void devuelveListaMensajes(){
-				var peticion = get("http", "localhost", port, "/mensaje/centro");
+				var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1");
 				var respuesta = restTemplate.exchange(peticion,
 						new ParameterizedTypeReference<List<MensajeDTO>>() {
 						});
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-				assertThat(respuesta.getBody().isEmpty());
+				assertThat(respuesta.hasBody()).isEqualTo(false);
 			}
+
+ */
+			@Test
+			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
+			public void devuelveListaMensajes(){
+				var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1");
+				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange(peticion.getUrl(),
+						HttpMethod.GET,
+						null,
+                        new ParameterizedTypeReference<>() {
+                        });
+
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
+				List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
+				assertThat(listaMensajes).isEmpty(); // Verificar que la lista de mensajes está vacía
+			}
+
 			@Test
 			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
 			public void insertaMensaje(){
-				//TO DO
+				
 			}
 			@Test
 			@DisplayName("Devuelve un mensaje concreto asociado a un centro dado el idMensaje")
