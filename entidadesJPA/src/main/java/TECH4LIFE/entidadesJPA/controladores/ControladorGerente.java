@@ -40,10 +40,10 @@ public class ControladorGerente {
     }
 
     //GET Gerente {idGerente}
-    @GetMapping("/{id}")
-    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="id") Integer id){
+    @GetMapping("/{idGerente}")
+    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="idGerente") Integer idGerente){
         try{  
-            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(id));
+            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(idGerente));
                 //Todo bien 200
                 return ResponseEntity.ok(gerenteDTO);
         }catch(UsuarioNoAutorizado e){
@@ -58,11 +58,11 @@ public class ControladorGerente {
 
     
     //PUT Gerente {idGerente}
-    @PutMapping("/{id}")
-    public ResponseEntity<GerenteDTO> modificarGerente(@PathVariable(name="id") Integer id, @RequestBody GerenteNuevoDTO gerente){
+    @PutMapping("/{idGerente}")
+    public ResponseEntity<GerenteDTO> modificarGerente(@PathVariable(name="idGerente") Integer idGerente, @RequestBody GerenteDTO gerente){
 
         try{
-            servicio.modificarGerente(id, Mapper.toGerente(gerente));
+            servicio.modificarGerente(idGerente, Mapper.toGerente(gerente));
            // [200] El gerente se ha actualizado
             return ResponseEntity.ok().build();
         }catch (GerenteNoExistente e){
@@ -74,10 +74,10 @@ public class ControladorGerente {
         // [403] Acceso no autorizado
     }
     //DELETE Gerente {idGerente}
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarGerentePorId(@PathVariable(name="id") Integer id){
+    @DeleteMapping("/{idGerente}")
+    public ResponseEntity<?> eliminarGerentePorId(@PathVariable(name="idGerente") Integer idGerente){
         try{
-            servicio.eliminarGerente(id);
+            servicio.eliminarGerente(idGerente);
              // [200] El gerente se ha borrado con éxito
             return ResponseEntity.ok().build();
         }catch (GerenteNoExistente e){
