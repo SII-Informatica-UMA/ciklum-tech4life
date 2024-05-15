@@ -259,6 +259,7 @@ public class EntidadesJpaApplicationTests {
 						.contenido("Contenido del mensaje")
 						.build();
 
+				//DUDA: está correcto el path?
 				// Paso 2: Realizar la solicitud HTTP
 				String url = String.format("http://localhost:%d/mensaje/centro/%d?idMensaje=%d", port, idCentro, idMensaje);
 
@@ -283,10 +284,23 @@ public class EntidadesJpaApplicationTests {
 		@Nested
 		@DisplayName("Cuando sí hay mensajes")
 		public class ListaMensajesConDatos{
+			@BeforeEach
+			public void insertarMensajes(){
+				
+			}
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro")
 			public void devuelveListaMensajes(){
-				//TO DO
+				var peticion = get("http", "localhost", port, "/mensaje/centro");
+				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
+						HttpMethod.GET,
+						null,
+						new ParameterizedTypeReference<List<MensajeDTO>>() {
+						});
+
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
+				List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
+				assertThat(listaMensajes).isNotEmpty(); // Verificar que la lista de mensajes está vacía
 			}
 			@Test
 			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
