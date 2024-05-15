@@ -212,7 +212,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("y se guarda con éxito")
 				public void crearCentro() {
-					var centro = Centro.builder()
+					var centro = CentroNuevoDTO.builder()
 							.nombre("egeFIT")
 							.direccion("Calle merluza, 56")
 							.build();
@@ -224,8 +224,9 @@ public class EntidadesJpaApplicationTests {
 
 					// Yo creo que faltaría verificar si se ha añadido, no solo el código
 					// Y esto se haría con el método compruebaRespuestaCentro que habría que corregirlo
+					compruebaRespuestaCentro(centro, respuesta);
 				}
-				/*
+
 				private void compruebaRespuestaCentro(CentroNuevoDTO centro, ResponseEntity<Void> respuesta) {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 					assertThat(respuesta.getHeaders().get("Location").get(0))
@@ -237,7 +238,7 @@ public class EntidadesJpaApplicationTests {
 							.endsWith("/" + centros.get(0).getIdCentro());
 					compruebaCamposCentro(centro, centros.get(0));
 				}
-				 */
+
 			}
 
 			@Nested
@@ -358,7 +359,7 @@ public class EntidadesJpaApplicationTests {
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 
-					//compruebaRespuestaCentro(centro, respuesta);
+					compruebaRespuestaCentro(centro, respuesta);
 				}
 
 				@Test
@@ -373,10 +374,10 @@ public class EntidadesJpaApplicationTests {
 
 					//compruebaRespuestaCentro(centro, respuesta);
 				}
-				/*
+
 				private void compruebaRespuestaCentro(CentroNuevoDTO centro, ResponseEntity<Void> respuesta) {
 
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 					assertThat(respuesta.getHeaders().get("Location").get(0))
 							.startsWith("http://localhost:" + port + "/centro");
 
@@ -392,9 +393,6 @@ public class EntidadesJpaApplicationTests {
 							.endsWith("/" + centroStream.getIdCentro());
 					compruebaCamposCentro(centro, centroStream);
 				}
-
-				 */
-
 			}
 
 			@Nested

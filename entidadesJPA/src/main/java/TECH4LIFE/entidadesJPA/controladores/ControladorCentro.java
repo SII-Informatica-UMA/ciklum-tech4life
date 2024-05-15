@@ -1,9 +1,6 @@
 package TECH4LIFE.entidadesJPA.controladores;
 
-import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
-import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
-import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
-import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
+import TECH4LIFE.entidadesJPA.dtos.*;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.excepciones.CentroExistente;
 import TECH4LIFE.entidadesJPA.excepciones.CentroNoExistente;
@@ -143,7 +140,7 @@ public class ControladorCentro {
 
     // Permite eliminar una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
     @DeleteMapping("/{idCentro}/gerente")
-    public ResponseEntity<?> eliminarGerenteCentro(@PathVariable Integer idCentro, Integer gerente) {
+    public ResponseEntity<?> eliminarGerenteCentro(@PathVariable Integer idCentro, @RequestParam(value= "gerente", required = false) Integer gerente) {
         try {
             // CODE 200: Devuelve el centro al que se ha asociado el gerente (CREO QUE ES ERRATA DE LA API)
             centroService.eliminarGerenteCentroById(idCentro,gerente) ;
@@ -208,12 +205,12 @@ public class ControladorCentro {
     // Actualiza un centro (por la id) (CREO que lo hace un usuario Administrador)
     // Duda: El profe no devuelve un ResponseEntity sino un CentroDTO
     @PutMapping("/{idCentro}")
-    public ResponseEntity<CentroDTO> editarCentro(@PathVariable Integer idCentro, @RequestBody CentroNuevoDTO centroNuevoDTO) {
+    public ResponseEntity<CentroDTO> editarCentro(@PathVariable Integer idCentro, @RequestBody CentroDTO centroDTO) {
 
         try {
 
             // CODE 200: El centro se ha actualizado
-            centroService.modificarCentro(idCentro, Mapper.toCentro(centroNuevoDTO)) ;
+            centroService.modificarCentro(idCentro, Mapper.toCentro(centroDTO)) ;
             return ResponseEntity.ok().build();
 
         } catch (PeticionNoValida e) {
@@ -232,11 +229,10 @@ public class ControladorCentro {
 
     // Permite añadir una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
     @PutMapping("/{idCentro}/gerente")
-    public ResponseEntity<CentroDTO> editarGerenteCentro (@PathVariable Integer idCentro, @RequestBody GerenteNuevoDTO gerenteNuevoDTO) {
+    public ResponseEntity<CentroDTO> editarGerenteCentro (@PathVariable Integer idCentro, @RequestBody IdGerenteDTO idgerenteDTO) {
         try {
             // CODE 200: Devuelve el centro al que se ha asociado el gerente
-
-            CentroDTO centroDTO = Mapper.toCentroDTO(centroService.modificarGerenteCentroById(idCentro,Mapper.toGerente(gerenteNuevoDTO)));
+            CentroDTO centroDTO = Mapper.toCentroDTO(centroService.modificarGerenteCentroById(idCentro,Mapper.toGerente(idgerenteDTO)));
             return ResponseEntity.ok(centroDTO);
 
         } catch (PeticionNoValida e) {

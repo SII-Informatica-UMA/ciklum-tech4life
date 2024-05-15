@@ -194,6 +194,7 @@ public class LogicaCentro {
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
         Centro centroAmodificar = centro.get() ;
         centroAmodificar.setGerente(gerenteEntity);
+        gerenteEntity.setCentro(centroAmodificar);
 
         // ¿Necesaria esta excepción?
         //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
