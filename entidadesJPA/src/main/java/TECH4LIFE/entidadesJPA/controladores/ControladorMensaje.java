@@ -37,7 +37,7 @@ public class ControladorMensaje {
  */
     //OBTENGO TODOS LOS MENSAJES DE UN CENTRO DADO EL CENTRO
     @GetMapping()    //capturo el objeto centro.
-    public ResponseEntity<List<MensajeDTO>> listaDeMensajes(@RequestParam(value = "centro", required = false) Centro centro){   //guardo en la variable centro el objeto Centro
+    public ResponseEntity<List<MensajeDTO>> listaDeMensajes(@RequestParam(value = "centro", required = true) Long centro){   //guardo en la variable centro el objeto Centro
         try{
             //CODE 200: Devuelve la lista de mensajes de cierto centro
             List<MensajeDTO> listaMensajes =
@@ -75,12 +75,12 @@ public class ControladorMensaje {
     POST
  */
     @PostMapping
-    public ResponseEntity<MensajeDTO> crearMensaje(@RequestParam(value = "centro", required = false) Centro centro, @RequestBody MensajeNuevoDTO mensajeNuevoDTO, UriComponentsBuilder builder) {
+    public ResponseEntity<MensajeDTO> crearMensaje(@RequestParam(value = "centro", required = true) Long centro, @RequestBody MensajeNuevoDTO mensajeNuevoDTO, UriComponentsBuilder builder) {
         try{
             //CODE 201: Se crea el mensaje y lo devuelve
             Mensaje mensaje  = servicioM.postMensaje(Mapper.toMensaje(mensajeNuevoDTO));
             URI uri = builder
-                    .path(String.format("/%d", centro.getIdCentro()))
+                    .path(String.format("/%d", centro))
                     .path(String.format("/%d", mensaje.getIdMensaje()))
                     .build()
                     .toUri();

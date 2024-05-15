@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import lombok.*;
+import org.springframework.boot.context.properties.bind.Name;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,7 +30,7 @@ public class Mensaje {
     private Set<Destinatario> copia;
     @OneToMany
     private Set<Destinatario> copiaOculta;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Destinatario remitente;
     private String contenido;
 }

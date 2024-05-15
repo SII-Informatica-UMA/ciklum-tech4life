@@ -30,18 +30,20 @@ public class LogicaMensaje {
 
 //-----------------------------------------------------------------------------------------------
     //Get todos los mensajes de un centro
-    public List<Mensaje> getMensajesByCentro(Centro centro) throws MensajeNoExistente, UsuarioNoAutorizado {
+    public List<Mensaje> getMensajesByCentro(Long idCentro) throws MensajeNoExistente, UsuarioNoAutorizado {
         List<Mensaje> mensajes;
-        Integer idCentro;
-        idCentro = centro.getIdCentro();
+        //Integer idCentro;
+        //idCentro = centro.getIdCentro();
         //System.out.println("Llega 1\n");
+        mensajes = mensajeRepo.bandejaTodos(idCentro);
+        /*
         if(idCentro != 0){
             if(idCentro < 0 ) throw new PeticionNoValida();
-            mensajes = mensajeRepo.bandejaTodos(idCentro);
-            if(mensajes.isEmpty()) throw new MensajeNoExistente();
+
+            //if(mensajes.isEmpty()) throw new MensajeNoExistente();
         }else{
             mensajes = null;
-        }
+        }*/
         return mensajes;
     }
 

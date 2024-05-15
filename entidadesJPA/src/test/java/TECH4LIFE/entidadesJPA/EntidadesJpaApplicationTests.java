@@ -8,6 +8,7 @@ import TECH4LIFE.entidadesJPA.entities.TipoDestinatario;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,7 +69,8 @@ public class EntidadesJpaApplicationTests {
 	 Inyección de los repositorios
 	---------------------------------------------
 	*/
-
+	//@Autowired
+	//private EntityManager entityManager;
 	@Autowired
 	private CentroRepository centroRepository;
 	@Autowired
@@ -145,25 +147,16 @@ public class EntidadesJpaApplicationTests {
 	---------------------------------------------
 	*/
 
-
-
-	/*
-	---------------------------------------------
-	 Pruebas de ControladorMensaje y LogicaMensaje
-	 Realizado por: Ana María Calvente Bonvie
-	---------------------------------------------
-	*/
-
 	@Nested
 	@DisplayName("En cuanto a los mensajes")
 	public class PruebasMensajes{
 		@Nested
 		@DisplayName("Cuando no hay mensajes")
 		public class ListaMensajesVacia{
-			// Método para insertar destinatarios y remitente
 			private DestinatarioDTO destinatario1;
 			private DestinatarioDTO destinatario2;
 			private DestinatarioDTO remitente;
+
 
 			@BeforeEach
 			public void insertarCentro() {
@@ -172,68 +165,53 @@ public class EntidadesJpaApplicationTests {
 				centroRepository.save(centro1);
 			}
 
-/*
-			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-					.nombre("BasicFit")
-					.direccion("Calle la calle bonita, 56")
-					.build();
-
-			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-					.nombre("ProGYM")
-					.direccion("Calle avestruz, 44")
-					.build();
-
-
-			@BeforeEach
-			public void introduceDatosCentro() {
-				centroRepository.save(Mapper.toCentro(centro1));
-				centroRepository.save(Mapper.toCentro(centro2));
-			}
-
- */
-/*
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
 			public void devuelveListaMensajes(){
-				var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1");
-				var respuesta = restTemplate.exchange(peticion,
-						new ParameterizedTypeReference<List<MensajeDTO>>() {
-						});
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-				assertThat(respuesta.hasBody()).isEqualTo(false);
-			}
-
- */
-			@Test
-			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
-			public void devuelveListaMensajes(){
-				var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1");
-				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange(peticion.getUrl(),
+				var peticion = get("http", "localhost", port, "/mensaje/centro");
+				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
 						HttpMethod.GET,
 						null,
-                        new ParameterizedTypeReference<>() {
+                        new ParameterizedTypeReference<List<MensajeDTO>>() {
                         });
 
 				assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
 				List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
 				assertThat(listaMensajes).isEmpty(); // Verificar que la lista de mensajes está vacía
 			}
-			private void insertarDesRem(){
+			public void insertarDesRem(){
 				// Creación de destinatarios
-				DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+				destinatario1 = DestinatarioDTO.builder()
 						.id(1)
 						.tipo(TipoDestinatario.CLIENTE)
 						.build();
-
-				DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+				 destinatario2 = DestinatarioDTO.builder()
 						.id(2)
 						.tipo(TipoDestinatario.CENTRO)
 						.build();
 				// Creación del remitente
-				DestinatarioDTO remitente = DestinatarioDTO.builder()
+				remitente = DestinatarioDTO.builder()
 						.id(3)  // ID del remitente
 						.tipo(TipoDestinatario.CENTRO)  // Tipo de destinatario (remitente)
 						.build();
+				/*
+				DestinatarioDTO d1 = new DestinatarioDTO();
+				d1.setId(1);
+				d1.setTipo(TipoDestinatario.CLIENTE);
+				entityManager.persist(d1);
+
+				DestinatarioDTO d2 = new DestinatarioDTO();
+				d2.setId(1);
+				d2.setTipo(TipoDestinatario.CENTRO);
+				entityManager.persist(d2);
+
+				// Creación del remitente
+				DestinatarioDTO r1 = new DestinatarioDTO();
+				r1.setId(1);
+				r1.setTipo(TipoDestinatario.CENTRO);
+				entityManager.persist(r1);
+
+				 */
 			}
 
 			@Test
@@ -251,15 +229,15 @@ public class EntidadesJpaApplicationTests {
 						.build();
 
 				// Paso 2: Realizar la solicitud HTTP
-				//var peticion = post("http", "localhost", port, "/mensaje", mensajeNuevoDTO);
-
-				//var respuesta = restTemplate.exchange(peticion, Void.class);
 				var headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
 
 				var request = new HttpEntity<>(mensajeNuevoDTO, headers);
 
-				var respuesta = restTemplate.exchange("http://localhost:" + port + "/mensaje", HttpMethod.POST, request, Void.class);
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
+						HttpMethod.POST,
+						request,
+						Void.class);
 
 				// Paso 3: Verificar la respuesta
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
