@@ -284,9 +284,58 @@ public class EntidadesJpaApplicationTests {
 		@Nested
 		@DisplayName("Cuando sí hay mensajes")
 		public class ListaMensajesConDatos{
+			private DestinatarioDTO destinatario1;
+			private DestinatarioDTO destinatario2;
+			private DestinatarioDTO remitente1;
+			private DestinatarioDTO remitente2;
+
+			public void insertarDesRem(){
+				// Creación de destinatarios
+				destinatario1 = DestinatarioDTO.builder()
+						.id(1)
+						.tipo(TipoDestinatario.CLIENTE)
+						.build();
+				destinatario2 = DestinatarioDTO.builder()
+						.id(2)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+				// Creación de remitentes
+				remitente1 = DestinatarioDTO.builder()
+						.id(3)  // ID del remitente
+						.tipo(TipoDestinatario.CENTRO)  // Tipo de destinatario (remitente)
+						.build();
+
+				remitente2 = DestinatarioDTO.builder()
+						.id(4)  // ID del remitente
+						.tipo(TipoDestinatario.CENTRO)  // Tipo de destinatario (remitente)
+						.build();
+			}
 			@BeforeEach
-			public void insertarMensajes(){
-				
+			public void insertaMensajes() {
+				insertarDesRem();
+				 MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
+						.asunto("Cambio entrenador")
+						.destinatarios(new HashSet<>(Arrays.asList(destinatario1, destinatario2)))
+						.copia(new HashSet<>())  // Puedes agregar copias si es necesario
+						.copiaOculta(new HashSet<>())  // Puedes agregar copias ocultas si es necesario
+						.remitente(remitente1)  // Agregar el remitente al mensaje quiero cambiar de entrenador
+						.build();
+				 MensajeNuevoDTO mensaje2 = MensajeNuevoDTO.builder()
+						.asunto("Cambio en el evento")
+						 .destinatarios(new HashSet<>(Arrays.asList(destinatario1, destinatario2)))
+						 .copia(new HashSet<>())  // Puedes agregar copias si es necesario
+						 .copiaOculta(new HashSet<>())  // Puedes agregar copias ocultas si es necesario
+						 .remitente(remitente2)  // Agregar el remitente al mensaje
+						.contenido("Buenos días, les informo del siguiente cambio en el evento")
+						.build();
+				mensajeRepository.save(Mapper.toMensaje(mensaje1));
+				mensajeRepository.save(Mapper.toMensaje(mensaje2));
+			}
+			@BeforeEach
+			public void insertarCentro() {
+				Centro centro1 = new Centro();
+				centro1.setIdCentro(1);
+				centroRepository.save(centro1);
 			}
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro")
@@ -305,17 +354,65 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
 			public void insertaMensaje(){
-				//TO DO
+				// Paso 1: Creación del objeto MensajeNuevoDTO
+				MensajeNuevoDTO mensajeNuevoDTO = MensajeNuevoDTO.builder()
+						.asunto("Asunto del mensaje")
+						.destinatarios(new HashSet<>(Arrays.asList(destinatario1, destinatario2)))
+						.copia(new HashSet<>())  // Puedes agregar copias si es necesario
+						.copiaOculta(new HashSet<>())  // Puedes agregar copias ocultas si es necesario
+						.remitente(remitente1)  // Agregar el remitente al mensaje
+						.contenido("Contenido del mensaje")
+						.build();
+
+				// Paso 2: Realizar la solicitud HTTP
+				var headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+
+				var request = new HttpEntity<>(mensajeNuevoDTO, headers);
+
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
+						HttpMethod.POST,
+						request,
+						Void.class);
+
+				// Paso 3: Verificar la respuesta
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+				Void mensajeCreado = respuesta.getBody();
+				assertThat(mensajeCreado).isNotNull();
 			}
 			@Test
 			@DisplayName("Devuelve un mensaje concreto asociado a un centro dado el idMensaje")
 			public void devuelveMensajeConcreto(){
-				//TO DO
+				// Paso 1: Preparar los datos de prueba
+				int idMensaje = 1; // Supongamos que el mensaje con id 1 existe en la base de datos
+				int idCentro = 1; // Supongamos que el centro con id 1 existe en la base de datos
+
+				// Objeto MensajeDTO esperado
+				MensajeDTO mensajeEsperado = MensajeDTO.builder()
+						.idMensaje(idMensaje)
+						.asunto("Asunto del mensaje")
+						.contenido("Contenido del mensaje")
+						.build();
+
+				//DUDA: está correcto el path?
+				// Paso 2: Realizar la solicitud HTTP
+				String url = String.format("http://localhost:%d/mensaje/centro/%d?idMensaje=%d", port, idCentro, idMensaje);
+
+				ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url, HttpMethod.GET, null, MensajeDTO.class);
+
+				// Paso 3: Verificar la respuesta
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.OK);
+				MensajeDTO listaMensajes = respuesta.getBody(); // Obtener el cuerpo de la respuesta
+				assertThat(listaMensajes).isNotNull();
 			}
 			@Test
 			@DisplayName("Elimina un mensaje concreto asociado a un centro dado el idMensaje")
 			public void eliminaMensajeConcreto(){
-				//TO DO
+				var peticion = delete("http", "localhost", port, "/mensaje/centro/1");
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 			}
 		}
 	}
