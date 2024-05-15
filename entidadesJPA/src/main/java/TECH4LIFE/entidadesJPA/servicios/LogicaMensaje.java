@@ -58,7 +58,7 @@ public class LogicaMensaje {
 //----------------------------------------------------------------------------------------
     //Post un nuevo mensaje
     public Mensaje postMensaje(Mensaje mensajeCrear) throws MensajeNoExistente, UsuarioNoAutorizado{
-        if(mensajeCrear == null) throw new MensajeNoExistente();
+        //if(mensajeCrear == null) throw new MensajeNoExistente();
 
         return mensajeRepo.save(mensajeCrear);
     }

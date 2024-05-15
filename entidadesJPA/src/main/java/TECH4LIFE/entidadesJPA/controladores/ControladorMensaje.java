@@ -74,13 +74,14 @@ public class ControladorMensaje {
 /*
     POST
  */
-    @PostMapping("/{centro}")
-    public ResponseEntity<MensajeDTO> crearMensaje(@PathVariable (name="centro") Centro centro, @RequestBody MensajeNuevoDTO mensajeNuevoDTO, UriComponentsBuilder builder) {
+    @PostMapping
+    public ResponseEntity<MensajeDTO> crearMensaje(@RequestParam(value = "centro", required = false) Centro centro, @RequestBody MensajeNuevoDTO mensajeNuevoDTO, UriComponentsBuilder builder) {
         try{
             //CODE 201: Se crea el mensaje y lo devuelve
             Mensaje mensaje  = servicioM.postMensaje(Mapper.toMensaje(mensajeNuevoDTO));
             URI uri = builder
-                    .path(String.format("/%d", centro.getIdCentro(), "/%d", mensaje.getIdMensaje()))
+                    .path(String.format("/%d", centro.getIdCentro()))
+                    .path(String.format("/%d", mensaje.getIdMensaje()))
                     .build()
                     .toUri();
             return ResponseEntity.created(uri).body(Mapper.toMensajeDTO(mensaje));

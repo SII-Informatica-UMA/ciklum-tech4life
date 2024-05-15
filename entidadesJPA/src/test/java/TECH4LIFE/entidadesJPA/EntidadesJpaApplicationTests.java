@@ -1,10 +1,10 @@
 package TECH4LIFE.entidadesJPA;
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
-import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
-import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
-import TECH4LIFE.entidadesJPA.dtos.MensajeDTO;
+import TECH4LIFE.entidadesJPA.dtos.*;
 import TECH4LIFE.entidadesJPA.entities.Centro;
+import TECH4LIFE.entidadesJPA.entities.Destinatario;
 import TECH4LIFE.entidadesJPA.entities.Mensaje;
+import TECH4LIFE.entidadesJPA.entities.TipoDestinatario;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
@@ -24,6 +24,8 @@ import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -158,6 +160,10 @@ public class EntidadesJpaApplicationTests {
 		@Nested
 		@DisplayName("Cuando no hay mensajes")
 		public class ListaMensajesVacia{
+			// Método para insertar destinatarios y remitente
+			private DestinatarioDTO destinatario1;
+			private DestinatarioDTO destinatario2;
+			private DestinatarioDTO remitente;
 
 			@BeforeEach
 			public void insertarCentro() {
@@ -212,16 +218,78 @@ public class EntidadesJpaApplicationTests {
 				List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
 				assertThat(listaMensajes).isEmpty(); // Verificar que la lista de mensajes está vacía
 			}
+			private void insertarDesRem(){
+				// Creación de destinatarios
+				DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+						.id(1)
+						.tipo(TipoDestinatario.CLIENTE)
+						.build();
+
+				DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+						.id(2)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+				// Creación del remitente
+				DestinatarioDTO remitente = DestinatarioDTO.builder()
+						.id(3)  // ID del remitente
+						.tipo(TipoDestinatario.CENTRO)  // Tipo de destinatario (remitente)
+						.build();
+			}
 
 			@Test
 			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
-			public void insertaMensaje(){
-				
+			public void insertaMensaje() {
+				insertarDesRem();
+				// Paso 1: Creación del objeto MensajeNuevoDTO
+				MensajeNuevoDTO mensajeNuevoDTO = MensajeNuevoDTO.builder()
+						.asunto("Asunto del mensaje")
+						.destinatarios(new HashSet<>(Arrays.asList(destinatario1, destinatario2)))
+						.copia(new HashSet<>())  // Puedes agregar copias si es necesario
+						.copiaOculta(new HashSet<>())  // Puedes agregar copias ocultas si es necesario
+						.remitente(remitente)  // Agregar el remitente al mensaje
+						.contenido("Contenido del mensaje")
+						.build();
+
+				// Paso 2: Realizar la solicitud HTTP
+				//var peticion = post("http", "localhost", port, "/mensaje", mensajeNuevoDTO);
+
+				//var respuesta = restTemplate.exchange(peticion, Void.class);
+				var headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+
+				var request = new HttpEntity<>(mensajeNuevoDTO, headers);
+
+				var respuesta = restTemplate.exchange("http://localhost:" + port + "/mensaje", HttpMethod.POST, request, Void.class);
+
+				// Paso 3: Verificar la respuesta
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+				Void mensajeCreado = respuesta.getBody();
+				assertThat(mensajeCreado).isNotNull();
 			}
+
 			@Test
 			@DisplayName("Devuelve un mensaje concreto asociado a un centro dado el idMensaje")
 			public void devuelveMensajeConcreto(){
-				//TO DO
+				// Paso 1: Preparar los datos de prueba
+				int idMensaje = 1; // Supongamos que el mensaje con id 1 existe en la base de datos
+				int idCentro = 1; // Supongamos que el centro con id 1 existe en la base de datos
+
+				// Objeto MensajeDTO esperado
+				MensajeDTO mensajeEsperado = MensajeDTO.builder()
+						.idMensaje(idMensaje)
+						.asunto("Asunto del mensaje")
+						.contenido("Contenido del mensaje")
+						.build();
+
+				// Paso 2: Realizar la solicitud HTTP
+				String url = String.format("http://localhost:%d/mensaje/centro/%d?idMensaje=%d", port, idCentro, idMensaje);
+
+				ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url, HttpMethod.GET, null, MensajeDTO.class);
+
+				// Paso 3: Verificar la respuesta
+				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+				MensajeDTO listaMensajes = respuesta.getBody(); // Obtener el cuerpo de la respuesta
+				assertThat(listaMensajes).isNull();
 			}
 			@Test
 			@DisplayName("Elimina un mensaje concreto asociado a un centro dado el idMensaje")
