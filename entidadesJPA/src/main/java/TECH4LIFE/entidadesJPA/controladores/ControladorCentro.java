@@ -228,7 +228,7 @@ public class ControladorCentro {
     }
 
     // Permite añadir una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
-    @PutMapping("/{idCentro}/gerente")
+    @PutMapping("centro/{idCentro}/gerente")
     public ResponseEntity<CentroDTO> editarGerenteCentro (@PathVariable Integer idCentro, @RequestBody IdGerenteDTO idgerenteDTO) {
         try {
             // CODE 200: Devuelve el centro al que se ha asociado el gerente

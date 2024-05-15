@@ -2,6 +2,7 @@ package TECH4LIFE.entidadesJPA;
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
 import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
+import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
@@ -339,6 +340,7 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 					assertThat(respuesta.hasBody()).isEqualTo(false);
 				}
+
 			}
 
 			@Nested
@@ -462,6 +464,51 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 					assertThat(respuesta.hasBody()).isEqualTo(false);
 				}
+
+
+			}
+
+			@Nested
+			@DisplayName("Y queremos añadir una asociacion entre un gerente y un centro")
+			public class AsociacionLlena {
+			
+				@Test
+				@DisplayName("Se añade correctamente")
+				@DirtiesContext
+				public void añadeAsociacionGerenteCentro() {
+					var centro = centro1;
+					var gerente = GerenteNuevoDTO.builder()
+							.idUsuario(1)
+							.empresa("mercadona")
+							.build();
+					var peticion = put("http", "localhost", port, "/centro/1/gerente", gerente.getIdUsuario());
+
+					var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					var centroBD = centroRepository.findById(1).get();
+    				assertThat(centroBD.getGerente().getIdUsuario()).isEqualTo(gerente.getIdUsuario());
+				}
+				
+				@Test
+				@DisplayName("Da error cuando no existe")
+				public void errorCuandoNoExiste() {
+					var centro = CentroNuevoDTO.builder()
+							.nombre("PepeitoFit")
+							.direccion("Calle la gata, 56")
+							.build();
+					var gerente = GerenteNuevoDTO.builder()
+							.idUsuario(1)
+							.empresa("hola")
+							.build();
+					var peticion = put("http", "localhost", port, "/centro/28", gerente);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+				
 			}
 		}
 	}
