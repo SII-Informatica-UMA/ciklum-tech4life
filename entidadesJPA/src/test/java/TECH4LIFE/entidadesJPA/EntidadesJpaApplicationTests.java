@@ -292,9 +292,14 @@ public class EntidadesJpaApplicationTests {
 				assertThat(listaMensajes).isNull();
 			}
 			@Test
-			@DisplayName("Elimina un mensaje concreto asociado a un centro dado el idMensaje")
-			public void eliminaMensajeConcreto(){
-				//TO DO
+			@DisplayName("devuelve error cuando se elimina un mensaje concreto")
+			public void devuelveErrorAlEliminarMensaje() {
+				//var peticion = delete("http", "localhost", port, "/mensaje");
+				var peticion = delete("http", "localhost", port, "/mensaje/centro/45");
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 			}
 		}
 		@Nested
