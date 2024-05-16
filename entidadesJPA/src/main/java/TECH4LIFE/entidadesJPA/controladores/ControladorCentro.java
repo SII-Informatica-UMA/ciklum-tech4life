@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import TECH4LIFE.entidadesJPA.security.JwtUtil ;
 
 import java.net.URI;
 import java.util.List;
@@ -120,6 +121,19 @@ public class ControladorCentro {
     @DeleteMapping("/{idCentro}")
     public ResponseEntity<?> eliminarCentro(@PathVariable Integer idCentro) {
         try {
+            //No estoy seguro si las siguientes líneas de código tendrían que ir aquí situadas,
+            // ya que esto se repite en la mayoría de métodos
+
+            // Petición HTTP al microservicio del profe para obtener el token del usuario logueado.
+            // String token = null;
+
+            // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
+            // JwtUtil jwtUtil = new JwtUtil();
+            // String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
+
+            // Petición HTTP al microservicio del profe para obtener el valor del boolean admin dado un nombre de usuario
+            //boolean admin = true;
+
             // CODE 200: El centro se ha eliminado
             centroService.eliminarCentro(idCentro) ;
             return ResponseEntity.ok().build();
@@ -202,12 +216,25 @@ public class ControladorCentro {
      */
 
 
-    // Actualiza un centro (por la id) (CREO que lo hace un usuario Administrador)
+    // Actualiza un centro (por la id) (CREO que lo hace un usuario Gerente me parece)
     // Duda: El profe no devuelve un ResponseEntity sino un CentroDTO
     @PutMapping("/{idCentro}")
     public ResponseEntity<CentroDTO> editarCentro(@PathVariable Integer idCentro, @RequestBody CentroDTO centroDTO) {
 
         try {
+            //No estoy seguro si las siguientes líneas de código tendrían que ir aquí situadas,
+            // ya que esto se repite en la mayoría de métodos
+
+            // Petición HTTP al microservicio del profe para obtener el token del usuario logueado.
+            // String token = null;
+
+            // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
+            // JwtUtil jwtUtil = new JwtUtil();
+            // String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
+
+            // Ahora tendríamos que consultar la lista de todos los nombres de usuario de los gerentes
+            // y ver si hay alguno que se llame como nombreUsuario. Si hay alguno, entonces
+            // esta autorizado a llamar a este método
 
             // CODE 200: El centro se ha actualizado
             centroService.modificarCentro(idCentro, Mapper.toCentro(centroDTO)) ;
