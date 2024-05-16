@@ -108,8 +108,7 @@ public class LogicaCentro {
 
     public void eliminarGerenteCentroById(Integer idCentro, Integer idGerente) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        if (idCentro == null || idCentro < 0) throw new PeticionNoValida();
-        if (idGerente == null || idGerente < 0) throw new PeticionNoValida();
+        if (idCentro == null || idCentro < 0 || idGerente == null || idGerente < 0) throw new PeticionNoValida();
 
         Optional<Centro> centro = centroRepo.findById(idCentro);
         Optional<Gerente> gerente = gerenteRepo.findById(idGerente);
