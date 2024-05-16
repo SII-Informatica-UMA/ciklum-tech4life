@@ -2,6 +2,7 @@ package TECH4LIFE.entidadesJPA;
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
 import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
+import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
 import TECH4LIFE.entidadesJPA.dtos.IdGerenteDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
@@ -208,6 +209,19 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.hasBody()).isEqualTo(false);
 				}
 
+				@Test
+				@DisplayName("Devuelve error cuando se pide el gerente de un centro concreto")
+				public void devuelveErrorAlConsultarGerenteDeCentro() {
+					var peticion = get("http", "localhost", port, "/centro/1/gerente");
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<CentroDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
 				
 			}
 
@@ -281,11 +295,24 @@ public class EntidadesJpaApplicationTests {
 				}
 
 				@Test
+				@DisplayName("devuelve error cuando se intenta añadir una asociacion a un centro no existente")
+				public void devuelveErrorAlAñadirAsociacionNoExistente() {
+					var idGerente = IdGerenteDTO.builder()
+									.idGerente(1)
+									.build();
+					var peticion = put("http", "localhost",port, "/centro/1/gerente", idGerente);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				}
+
+				@Test
 				@DisplayName("devuelve error cuando se realiza una peticion no valida")
 				public void devuelveErrorAlModificarCentroNoValida() {
 					var centro = CentroNuevoDTO.builder()
-							.nombre("KKFit")
-							.direccion("Calle la calle KK, 56")
+							.nombre("FitFit")
+							.direccion("Calle Fit, 8")
 							.build();
 					var peticion = put("http", "localhost",port, "/centro/-2", centro);
 
@@ -317,6 +344,16 @@ public class EntidadesJpaApplicationTests {
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+				}
+
+				@Test
+				@DisplayName("devuelve error cuando se elimina una asociacion de un centro concreto")
+				public void devuelveErrorAlEliminarAsociacionCentro() {
+        			var peticion = delete("http", "localhost",port, "/centro/1/gerente");
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 				}
 
 				
