@@ -36,8 +36,11 @@ public class LogicaGerente {
         return gerentes;
     }
     //Devuelve un gerente por id
-    public Gerente getGerente(Integer id) {
+    public Gerente getGerente(Integer id, boolean admin) {
         if(id==null || id<0){
+            throw new UsuarioNoAutorizado();
+        }
+        if(!admin){
             throw new UsuarioNoAutorizado();
         }
         Optional<Gerente> gerente = repo.findById(id);
@@ -73,10 +76,6 @@ public class LogicaGerente {
 
     //Añadir un Gerente
     public Gerente addGerente(Gerente gerente) {
-        
-        if(gerente.getIdUsuario()==null){
-            throw new GerenteNoExistente();
-        }
         return repo.save(gerente);
     }
 

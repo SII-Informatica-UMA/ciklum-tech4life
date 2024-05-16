@@ -38,12 +38,17 @@ public class ControladorGerente {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-
+    // DUDA CORREO --------------------------------------------------------------------------------------------!  
+    //////////QUITAR ERROR 404 3N EL POST!!!!!
     //GET Gerente {idGerente}
     @GetMapping("/{id}")
     public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="id") Integer id){
-        try{  
-            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(id));
+        try{ 
+            //Metodo en controlador comun para sacar todo esto???? 
+            String token = null; //peticion para el user del microservicio del profe
+            String NombreUsuario = null; //peticion para el nombre del usuario del microservicio del profe
+            boolean admin = true; //peticion para obtener el boolean admin del microservicio del profe
+            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(id,admin));
                 //Todo bien 200
                 return ResponseEntity.ok(gerenteDTO);
         }catch(UsuarioNoAutorizado e){
@@ -68,10 +73,7 @@ public class ControladorGerente {
         }catch (GerenteNoExistente e){
             // [404] Gerente no existente
             return ResponseEntity.notFound().build();
-        }catch (UsuarioNoAutorizado e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        // [403] Acceso no autorizado
     }
     //DELETE Gerente {idGerente}
     @DeleteMapping("/{id}")
@@ -103,10 +105,7 @@ public class ControladorGerente {
                 .toUri();
                 //Todo bien 201
             return ResponseEntity.created(uri).body(Mapper.toGerenteDTO(nuevoGerente));  
-        }catch (GerenteNoExistente e){
-            // [404] Not Found
-            return ResponseEntity.notFound().build();
-       }catch(UsuarioNoAutorizado e){
+        }catch(UsuarioNoAutorizado e){
             // [403] Acceso no autorizado
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
        }

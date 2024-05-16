@@ -1,3 +1,4 @@
+
 package TECH4LIFE.entidadesJPA.security;
 //import java.security.interfaces.RSAPrivateKey;
 //import java.security.interfaces.RSAPublicKey;
@@ -35,8 +36,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
-import es.uma.informatica.sii.fitness.usuarios.entities.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -129,3 +128,4 @@ public class JwtUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
+

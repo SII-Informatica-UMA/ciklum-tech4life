@@ -211,19 +211,7 @@ public class EntidadesJpaApplicationTests {
 					
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			}
-			@Test
-			@DisplayName("Intenta crear un gerente cuando no tiene Usuario")
-			public void CrearGerenteSinUsuario(){
-					var gerente = Gerente.builder()
-					.empresa("patatas")
-					.idUsuario(null)
-					.build();
-					var peticion = post("http", "localhost",port, "/gerente", gerente );
-					
-					var respuesta = restTemplate.exchange(peticion, Void.class);
-					
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-			}
+			
 		}
 
 		@Nested
@@ -404,19 +392,6 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			}
 
-			@Test
-            @DisplayName("Error no existe el usuario")
-            public void CrearGerenteSinUsuario(){
-                var gerente = Gerente.builder()
-                .empresa("landam")
-				.idUsuario(null)
-                .build();
-                var peticion = post("http", "localhost",port, "/gerente",gerente );
-                
-                var respuesta = restTemplate.exchange(peticion, Void.class);
-                
-                assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-            }
 		}
 
 	}
