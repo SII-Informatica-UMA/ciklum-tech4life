@@ -5,6 +5,7 @@ import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
 import TECH4LIFE.entidadesJPA.dtos.IdGerenteDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
+import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -206,7 +208,7 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.hasBody()).isEqualTo(false);
 				}
 
-				//Bad Request?? No se usa idCentro para obtener la lista de centros
+				
 			}
 
 			@Nested
@@ -276,6 +278,20 @@ public class EntidadesJpaApplicationTests {
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				}
+
+				@Test
+				@DisplayName("devuelve error cuando se realiza una peticion no valida")
+				public void devuelveErrorAlModificarCentroNoValida() {
+					var centro = CentroNuevoDTO.builder()
+							.nombre("KKFit")
+							.direccion("Calle la calle KK, 56")
+							.build();
+					var peticion = put("http", "localhost",port, "/centro/-2", centro);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 				}
 			}
 
@@ -347,6 +363,24 @@ public class EntidadesJpaApplicationTests {
 				}
 
 				@Test
+				@DisplayName("Da error cuando el id del gerente no es valido")
+				public void ErrordevuelveListaCentroIdGerenteNoValido() {
+					var gerente = new Gerente().builder()
+									.id(-3)
+									.build();
+					String url = String.format("http://localhost:%d/centro?gerente=%d", port, gerente.getId());
+
+        		ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<CentroDTO>>() {}
+        		);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+				}
+
+				@Test
 				@DisplayName("devuelve un centro concreto cuando existe")
 				public void devuelveCentro() {
 					var peticion = get("http", "localhost", port, "/centro/1");
@@ -368,6 +402,19 @@ public class EntidadesJpaApplicationTests {
 							});
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
+				@Test
+				@DisplayName("da error cuando el id del centro no es valido")
+				public void errorCuandoCentroNoValido() {
+					var peticion = get("http", "localhost", port, "/centro/-3");
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<CentroDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 					assertThat(respuesta.hasBody()).isEqualTo(false);
 				}
 
