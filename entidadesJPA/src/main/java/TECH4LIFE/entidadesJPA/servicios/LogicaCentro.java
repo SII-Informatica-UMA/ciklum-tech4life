@@ -135,7 +135,7 @@ public class LogicaCentro {
 
     public Centro postCentro(Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroExistente {
 
-        if (centroEntity == null) throw new PeticionNoValida();
+        if (centroEntity == null || centroEntity.getNombre()==null) throw new PeticionNoValida();
 
        //Optional<Centro> centro = centroRepo.findById(centroEntity.getIdCentro());
 
