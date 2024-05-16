@@ -1,4 +1,4 @@
-package es.uma.informatica.sii.fitness.security;
+package TECH4LIFE.entidadesJPA.security;
 //import java.security.interfaces.RSAPrivateKey;
 //import java.security.interfaces.RSAPublicKey;
 //

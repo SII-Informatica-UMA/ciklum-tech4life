@@ -1,4 +1,4 @@
-package es.uma.informatica.sii.fitness.security;
+package TECH4LIFE.entidadesJPA.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
