@@ -19,7 +19,7 @@ import java.util.Optional;
 @Transactional
 public class LogicaCentro {
 
-    // TO DO: Volver hacer repaso de la api revisando los métodos
+    // IMPORTANTE: Fijarnos en la lógica del backend con seguridad dado por el profe en el cv
 
    private CentroRepository centroRepo ;
    private GerenteRepository gerenteRepo ;

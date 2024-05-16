@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 //@Tag(name="Gestión de centros", description="Operaciones para la gestión de centros")
 public class ControladorCentro {
 
-    // TO DO: Volver hacer repaso de la api revisando los métodos
-
     private final LogicaCentro centroService;
 
     public ControladorCentro(LogicaCentro centroService) {
