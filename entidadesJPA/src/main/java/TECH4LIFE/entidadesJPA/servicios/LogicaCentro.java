@@ -25,8 +25,10 @@ public class LogicaCentro {
    private GerenteRepository gerenteRepo ;
 
    @Autowired
-    public LogicaCentro(CentroRepository centroRepo) {
+    public LogicaCentro(CentroRepository centroRepo,
+                        GerenteRepository gerenteRepo) {
        this.centroRepo = centroRepo;
+       this.gerenteRepo = gerenteRepo;
    }
 
     /*
