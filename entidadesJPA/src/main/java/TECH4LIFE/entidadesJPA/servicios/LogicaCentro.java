@@ -108,13 +108,14 @@ public class LogicaCentro {
 
     public void eliminarGerenteCentroById(Integer idCentro, Integer idGerente) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        if (idCentro == null || idCentro < 0 || idGerente == null || idGerente < 0) throw new PeticionNoValida();
+        if (idCentro == null || idCentro < 0 /*|| idGerente == null || idGerente < 0*/) throw new PeticionNoValida();
+
+        if (centroRepo.findById(idCentro).isEmpty()) throw new CentroNoExistente();
 
         Optional<Centro> centro = centroRepo.findById(idCentro);
         Optional<Gerente> gerente = gerenteRepo.findById(idGerente);
 
-        if (centro.isEmpty()) throw new CentroNoExistente();
-        if (gerente.isEmpty()) throw new GerenteNoExistente();
+        //if (gerente.isEmpty()) throw new GerenteNoExistente(); no se usa
 
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
         centro.get().setGerente(null); // Elimino asociación (poniendo a null el atributo gerente de Centro)

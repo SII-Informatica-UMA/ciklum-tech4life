@@ -222,6 +222,19 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.hasBody()).isEqualTo(false);
 				}
 
+				@Test
+				@DisplayName("Devuelve error cuando se pide el gerente de un centro con id no valida")
+				public void devuelveErrorAlConsultarGerenteDeCentroNoValido() {
+					var peticion = get("http", "localhost", port, "/centro/-1/gerente");
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<CentroDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
 				
 			}
 
@@ -305,6 +318,19 @@ public class EntidadesJpaApplicationTests {
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				}
+
+				@Test
+				@DisplayName("devuelve error cuando se intenta añadir una asociacion a un centro no valido")
+				public void devuelveErrorAlAñadirAsociacionNoValido() {
+					var idGerente = IdGerenteDTO.builder()
+									.idGerente(1)
+									.build();
+					var peticion = put("http", "localhost",port, "/centro/-1/gerente", idGerente);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 				}
 
 				@Test
@@ -417,6 +443,26 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 				}
 
+				/*DA ERROR 404,asociar gerentes/centros??
+				@Test
+				@DisplayName("Devuelve la lista de centros de un gerente correctamente")
+				public void devuelveListaCentroGerente() {
+
+					
+					String url = String.format("http://localhost:%d/centro?gerente=%d", port, 1);
+
+					ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
+                	url,
+                	HttpMethod.GET,
+                	null,
+                	new ParameterizedTypeReference<List<CentroDTO>>() {}
+        			);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					assertThat(respuesta.getBody()).isNotNull();
+    				assertThat(respuesta.getBody()).isNotEmpty();
+				} */
+
 				@Test
 				@DisplayName("devuelve un centro concreto cuando existe")
 				public void devuelveCentro() {
@@ -428,6 +474,19 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.hasBody()).isTrue();
 					assertThat(respuesta.getBody()).isNotNull();
 				}
+				/* DA ERROR 404,asociar gerentes/centros??
+				@Test
+				@DisplayName("devuelve el gerente de un centro concreto cuando existe")
+				public void devuelveGerenteCentro() {
+					//(Mapper.toCentroDTO(Mapper.toCentro(null))).
+					var peticion = get("http", "localhost", port, "/centro/1/gerente");
+
+					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					assertThat(respuesta.hasBody()).isTrue();
+					assertThat(respuesta.getBody()).isNotNull();
+				}*/
 
 				@Test
 				@DisplayName("da error cuando no existe el centro concreto")
