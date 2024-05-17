@@ -168,6 +168,7 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
 			public void devuelveListaMensajes(){
+				//Deberia dar error 404, REVISAR
 				var peticion = get("http", "localhost", port, "/mensaje/centro");
 				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
 						HttpMethod.GET,
