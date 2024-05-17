@@ -31,12 +31,12 @@ public class LogicaCentro {
     private final JwtUtil jwtUtil;
 
     // Cuando descomento esto los test se ponen en rojo
-    /*
+
     @Value("${baseURIOfFrontend}")
     private String baseURIOfFrontend = "http://localhost:4200";
     @Value("${passwordresettoken.expiration}")
     private long passwordResetTokenExpiration = 0;
-     */
+
 
    @Autowired
     public LogicaCentro(CentroRepository centroRepo,
