@@ -95,6 +95,19 @@ public class LogicaCentro {
 
     public void eliminarCentro(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
+        //No estoy seguro si las siguientes líneas de código tendrían que ir aquí situadas,
+        // ya que esto se repite en la mayoría de métodos
+
+        // Petición HTTP al microservicio del profe para obtener el token del usuario logueado.
+        // String token = null;
+
+        // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
+        // JwtUtil jwtUtil = new JwtUtil();
+        // String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
+
+        // Petición HTTP al microservicio del profe para obtener el valor del boolean admin dado un nombre de usuario
+        //boolean admin = true;
+
         if (id == null || id < 0) throw new PeticionNoValida();
 
         if (!centroRepo.existsById(id)) throw new CentroNoExistente();
@@ -155,6 +168,20 @@ public class LogicaCentro {
     // TO DO -> ¿Necesaria la excepción que señalo?
 
     public void modificarCentro(Integer id, Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+
+        //No estoy seguro si las siguientes líneas de código tendrían que ir aquí situadas,
+        // ya que esto se repite en la mayoría de métodos
+
+        // Petición HTTP al microservicio del profe para obtener el token del usuario logueado.
+        // String token = null;
+
+        // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
+        // JwtUtil jwtUtil = new JwtUtil();
+        // String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
+
+        // Ahora tendríamos que consultar la lista de todos los nombres de usuario de los gerentes
+        // y ver si hay alguno que se llame como nombreUsuario. Si hay alguno, entonces
+        // esta autorizado a llamar a este método
 
         if (id == null || id < 0 || centroEntity == null) throw new PeticionNoValida();
 
