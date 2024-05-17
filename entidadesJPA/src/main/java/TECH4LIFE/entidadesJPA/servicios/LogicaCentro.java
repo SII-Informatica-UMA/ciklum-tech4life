@@ -7,16 +7,20 @@ import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.excepciones.*;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
+import TECH4LIFE.entidadesJPA.security.JwtUtil;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
-@Transactional
+@Transactional(noRollbackFor = TokenNoValidoException.class)
 public class LogicaCentro {
 
     // IMPORTANTE: Fijarnos en la lógica del backend con seguridad dado por el profe en el cv
@@ -24,9 +28,23 @@ public class LogicaCentro {
    private CentroRepository centroRepo ;
    private GerenteRepository gerenteRepo ;
 
+    private final JwtUtil jwtUtil;
+
+    // Cuando descomento esto los test se ponen en rojo
+    /*
+    @Value("${baseURIOfFrontend}")
+    private String baseURIOfFrontend = "http://localhost:4200";
+    @Value("${passwordresettoken.expiration}")
+    private long passwordResetTokenExpiration = 0;
+     */
+
    @Autowired
-    public LogicaCentro(CentroRepository centroRepo) {
+    public LogicaCentro(CentroRepository centroRepo,
+                        GerenteRepository gerenteRepo,
+                        JwtUtil jwtUtil) {
        this.centroRepo = centroRepo;
+       this.gerenteRepo = gerenteRepo;
+       this.jwtUtil = jwtUtil;
    }
 
     /*
