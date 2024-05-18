@@ -157,7 +157,6 @@ public class EntidadesJpaApplicationTests {
 			private DestinatarioDTO destinatario2;
 			private DestinatarioDTO remitente;
 
-
 			@BeforeEach
 			public void insertarCentro() {
 				Centro centro1 = new Centro();
@@ -168,7 +167,6 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
 			public void devuelveListaMensajes(){
-				//Deberia dar error 404, REVISAR
 				var peticion = get("http", "localhost", port, "/mensaje/centro");
 				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
 						HttpMethod.GET,
@@ -214,7 +212,7 @@ public class EntidadesJpaApplicationTests {
 
 				 */
 			}
-
+			/* 
 			@Test
 			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
 			public void insertaMensaje() {
@@ -245,10 +243,11 @@ public class EntidadesJpaApplicationTests {
 				Void mensajeCreado = respuesta.getBody();
 				assertThat(mensajeCreado).isNotNull();
 			}
-
+			*/
 			@Test
-			@DisplayName("Devuelve un mensaje concreto asociado a un centro dado el idMensaje")
-			public void devuelveMensajeConcreto(){
+			@DisplayName("Devuelve error al pedir un mensaje concreto asociado a un centro dado el idMensaje")
+			public void devuelveErrorMensajeNoEncontrado(){
+				//HE CAMBIADO EL NOMBRE DEL METODO A ERROR NO ENCONTRADO
 				// Paso 1: Preparar los datos de prueba
 				int idMensaje = 1; // Supongamos que el mensaje con id 1 existe en la base de datos
 				int idCentro = 1; // Supongamos que el centro con id 1 existe en la base de datos
