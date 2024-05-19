@@ -30,11 +30,11 @@ public class LogicaCentro {
 
     private final JwtUtil jwtUtil;
 
-    // Cuando descomento esto los test se ponen en rojo
+    // Poniendo la información en los @Value funciona
 
-    @Value("${baseURIOfFrontend}")
+    @Value("http://localhost:4200/reset-password")
     private String baseURIOfFrontend = "http://localhost:4200";
-    @Value("${passwordresettoken.expiration}")
+    @Value("60")
     private long passwordResetTokenExpiration = 0;
 
 
