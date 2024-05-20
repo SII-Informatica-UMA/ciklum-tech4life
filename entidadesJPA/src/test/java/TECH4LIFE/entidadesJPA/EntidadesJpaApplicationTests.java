@@ -400,11 +400,23 @@ public class EntidadesJpaApplicationTests {
 					.direccion("Calle avestruz, 44")
 					.build();
 
+			private Gerente gerente1 = Gerente.builder()
+			.id(1)
+			.idUsuario(2)
+			.build();
+			
+
 
 			@BeforeEach
 			public void introduceDatosCentro() {
 				centroRepository.save(Mapper.toCentro(centro1));
 				centroRepository.save(Mapper.toCentro(centro2));
+				gerenteRepository.save(gerente1);
+				Centro centro3 = Centro.builder()
+					.idCentro(3)
+					.gerente(gerente1)
+					.build();
+				centroRepository.save(centro3);
 			}
 
 
