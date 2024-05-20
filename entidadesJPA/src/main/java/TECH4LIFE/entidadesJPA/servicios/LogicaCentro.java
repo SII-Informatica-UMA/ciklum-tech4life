@@ -202,6 +202,7 @@ public class LogicaCentro {
         //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
 
         centroRepo.save(centroAmodificar) ;
+        gerenteRepo.save(gerenteEntity);
         return centroAmodificar;
     }
 

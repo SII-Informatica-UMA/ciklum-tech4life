@@ -50,7 +50,7 @@ public class Mapper {
 
     public static Gerente toGerente(IdGerenteDTO idGerenteDTO) {
         return Gerente.builder()
-                .idUsuario(idGerenteDTO.getIdGerente())
+                .id(idGerenteDTO.getIdGerente())
                 .build();
     }
 

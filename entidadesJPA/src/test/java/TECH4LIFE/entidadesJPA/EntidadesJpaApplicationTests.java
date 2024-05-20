@@ -10,6 +10,8 @@ import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
+import jakarta.transaction.Transactional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,8 +32,10 @@ import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isNull;
 
 
 /*
@@ -400,23 +404,36 @@ public class EntidadesJpaApplicationTests {
 					.direccion("Calle avestruz, 44")
 					.build();
 
-			private Gerente gerente1 = Gerente.builder()
-			.id(1)
-			.idUsuario(2)
-			.build();
+			private Gerente gerente2 = Gerente.builder()
+					.id(2)
+					.idUsuario(3)
+					.build();
+					
 			
-
-
 			@BeforeEach
+			@Transactional
 			public void introduceDatosCentro() {
 				centroRepository.save(Mapper.toCentro(centro1));
 				centroRepository.save(Mapper.toCentro(centro2));
-				gerenteRepository.save(gerente1);
-				Centro centro3 = Centro.builder()
-					.idCentro(3)
-					.gerente(gerente1)
+				gerenteRepository.save(gerente2);
+
+				Gerente gerente1 = Gerente.builder()
+					.id(1)
+					.idUsuario(2)
 					.build();
+
+				Centro centro3 = Centro.builder()
+					.nombre("Centro 3")
+					.idCentro(3)
+					.direccion("Calle del centro3, 3")
+					.build();
+
+				gerenteRepository.save(gerente1);
 				centroRepository.save(centro3);
+				centro3.setGerente(gerente1);
+				gerente1.setCentro(centro3);
+				centroRepository.save(centro3);
+				gerenteRepository.save(gerente1);
 			}
 
 
@@ -434,7 +451,7 @@ public class EntidadesJpaApplicationTests {
 							});
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-					assertThat(respuesta.getBody()).hasSize(2);
+					assertThat(respuesta.getBody()).hasSize(3);
 				}
 
 				@Test
@@ -455,7 +472,7 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 				}
 
-				/*DA ERROR 404,asociar gerentes/centros??
+
 				@Test
 				@DisplayName("Devuelve la lista de centros de un gerente correctamente")
 				public void devuelveListaCentroGerente() {
@@ -473,7 +490,7 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 					assertThat(respuesta.getBody()).isNotNull();
     				assertThat(respuesta.getBody()).isNotEmpty();
-				} */
+				} 
 
 				@Test
 				@DisplayName("devuelve un centro concreto cuando existe")
@@ -486,19 +503,19 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.hasBody()).isTrue();
 					assertThat(respuesta.getBody()).isNotNull();
 				}
-				/* DA ERROR 404,asociar gerentes/centros??
+				
 				@Test
 				@DisplayName("devuelve el gerente de un centro concreto cuando existe")
 				public void devuelveGerenteCentro() {
 					//(Mapper.toCentroDTO(Mapper.toCentro(null))).
-					var peticion = get("http", "localhost", port, "/centro/1/gerente");
+					var peticion = get("http", "localhost", port, "/centro/3/gerente");
 
 					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 					assertThat(respuesta.hasBody()).isTrue();
 					assertThat(respuesta.getBody()).isNotNull();
-				}*/
+				}
 
 				@Test
 				@DisplayName("da error cuando no existe el centro concreto")
@@ -569,7 +586,7 @@ public class EntidadesJpaApplicationTests {
 							.startsWith("http://localhost:" + port + "/centro");
 
 					List<Centro> centros = centroRepository.findAll();
-					assertThat(centros).hasSize(3);
+					assertThat(centros).hasSize(4);
 
 					Centro centroStream = centros.stream()
 							.filter(c -> c.getDireccion().equals("Calle pescaito, 54"))
@@ -635,7 +652,7 @@ public class EntidadesJpaApplicationTests {
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 					List<Centro> centros = centroRepository.findAll();
-					assertThat(centros).hasSize(1);
+					assertThat(centros).hasSize(2);
 					assertThat(centros).allMatch(c->c.getIdCentro()!=1);
 				}
 
@@ -649,35 +666,43 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 					assertThat(respuesta.hasBody()).isEqualTo(false);
 				}
+			
+				@Test
+				@DisplayName("Elimina una asociacion de un gerente de un centro concreto correctamente")
+				public void devuelveErrorAlEliminarAsociacionCentro() {
+				String url = String.format("http://localhost:%d/centro/3/gerente?gerente=%d", port, 1);
 
+					var respuesta = restTemplate.exchange(
+                	url,
+                	HttpMethod.DELETE,
+                	null,
+                	Void.class
+        			);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					Optional<Centro> centro = centroRepository.findById(3);
+					assertThat(centro.get().getGerente()).isEqualTo(null);
+				}
 
 			}
 
 			@Nested
 			@DisplayName("Y queremos añadir una asociacion entre un gerente y un centro")
 			public class AsociacionLlena {
-			/* 
+			//DA ERROR 500 ¿?
 				@Test
 				@DisplayName("Se añade correctamente")
 				@DirtiesContext
 				public void añadeAsociacionGerenteCentro() {
-					var centro = centro1;
-					var gerente = GerenteNuevoDTO.builder()
-							.idUsuario(1)
-							.empresa("mercadona")
-							.build();
-					var idGerenteDTO = IdGerenteDTO.builder()
-							.idGerente(gerente.getIdUsuario())
-							.build();
-					var peticion = put("http", "localhost", port, "/centro/1/gerente", idGerenteDTO);
+					
+					var peticion = put("http", "localhost", port, "/centro/1/gerente", 2);
 
 					var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 					var centroBD = centroRepository.findById(1).get();
-    				assertThat(centroBD.getGerente().getIdUsuario()).isEqualTo(gerente.getIdUsuario());
+    				assertThat(centroBD.getGerente().getId()).isEqualTo(2);
 				}
-				*/
+				
 				@Test
 				@DisplayName("Da error cuando no existe")
 				public void errorCuandoNoExiste() {
