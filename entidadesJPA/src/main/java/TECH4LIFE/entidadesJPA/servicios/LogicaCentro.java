@@ -8,13 +8,19 @@ import TECH4LIFE.entidadesJPA.excepciones.*;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.security.JwtUtil;
+import TECH4LIFE.entidadesJPA.security.SecurityConfguration;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -23,20 +29,18 @@ import java.util.logging.Logger;
 @Transactional(noRollbackFor = TokenNoValidoException.class)
 public class LogicaCentro {
 
-    // IMPORTANTE: Fijarnos en la lógica del backend con seguridad dado por el profe en el cv
-
    private CentroRepository centroRepo ;
    private GerenteRepository gerenteRepo ;
 
     private final JwtUtil jwtUtil;
 
-    // Poniendo la información en los @Value funciona
-
+    // Poniendo la información en los @Value funciona, creo que esto no se usa
+    /*
     @Value("http://localhost:4200/reset-password")
     private String baseURIOfFrontend = "http://localhost:4200";
     @Value("60")
     private long passwordResetTokenExpiration = 0;
-
+       */
 
    @Autowired
     public LogicaCentro(CentroRepository centroRepo,
@@ -46,14 +50,12 @@ public class LogicaCentro {
        this.gerenteRepo = gerenteRepo;
        this.jwtUtil = jwtUtil;
    }
-
     /*
      *   GETS
      *   ----
      */
 
     // Obtener un centro concreto (por la id) (CREO que lo hace un usuario Administrador)
-    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
 
     public Centro getCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
@@ -67,7 +69,6 @@ public class LogicaCentro {
     }
 
     // Permite consultar el gerente de un centro (por la id del centro) (CREO que lo hace un usuario Administrador)
-    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
 
     public Gerente getGerenteCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
@@ -81,7 +82,6 @@ public class LogicaCentro {
     }
 
     // Obtener la lista de todos los centros (Lo puede hacer usuario Administrador o Gerente)
-    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
 
     public List<Centro> getTodosCentros(Integer idGerente) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
@@ -109,24 +109,26 @@ public class LogicaCentro {
      */
 
     // Elimina un centro (por la id) (CREO que lo hace un usuario Administrador)
-    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
 
     public void eliminarCentro(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        //No estoy seguro si las siguientes líneas de código tendrían que ir aquí situadas,
-        // ya que esto se repite en la mayoría de métodos
+        // Obtengo userDetails
+        Optional<UserDetails> userDetails = SecurityConfguration.getAuthenticatedUser() ;
 
-        // Petición HTTP al microservicio del profe para obtener el token del usuario logueado.
-        // String token = null;
+        if (id == null || id < 0 || userDetails.isEmpty()) throw new PeticionNoValida();
+
+        // Generamos el token
+
+        String token = jwtUtil.generateToken(userDetails.get());
 
         // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
-        // JwtUtil jwtUtil = new JwtUtil();
-        // String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
 
-        // Petición HTTP al microservicio del profe para obtener el valor del boolean admin dado un nombre de usuario
+        String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
+
+        // Petición GET HTTP al microservicio del profe para obtener el valor del boolean admin dado un nombre de usuario
+
+
         //boolean admin = true;
-
-        if (id == null || id < 0) throw new PeticionNoValida();
 
         if (!centroRepo.existsById(id)) throw new CentroNoExistente();
 
@@ -134,8 +136,6 @@ public class LogicaCentro {
     }
 
     // Permite eliminar una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
-    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-    // TO DO -> El final del método no estoy seguro si es correcto
 
     public void eliminarGerenteCentroById(Integer idCentro, Integer idGerente) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
@@ -162,7 +162,6 @@ public class LogicaCentro {
      */
 
     // Permite crear un centro nuevo a un administrador (Lo hace un usuario Administrador)
-    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
 
     public Centro postCentro(Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroExistente {
 
@@ -182,26 +181,23 @@ public class LogicaCentro {
 
     // Actualiza un centro (por la id) (CREO que lo hace un usuario Administrador)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-    // TO DO -> El final del método no estoy seguro si es correcto
-    // TO DO -> ¿Necesaria la excepción que señalo?
 
     public void modificarCentro(Integer id, Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        //No estoy seguro si las siguientes líneas de código tendrían que ir aquí situadas,
-        // ya que esto se repite en la mayoría de métodos
+        // Obtengo userDetails
+        Optional<UserDetails> userDetails = SecurityConfguration.getAuthenticatedUser() ;
 
-        // Petición HTTP al microservicio del profe para obtener el token del usuario logueado.
-        // String token = null;
+        if (id == null || id < 0 || centroEntity == null || userDetails.isEmpty()) throw new PeticionNoValida();
+
+        // Generamos el token
+
+        String token = jwtUtil.generateToken(userDetails.get());
 
         // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
-        // JwtUtil jwtUtil = new JwtUtil();
-        // String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
 
-        // Ahora tendríamos que consultar la lista de todos los nombres de usuario de los gerentes
-        // y ver si hay alguno que se llame como nombreUsuario. Si hay alguno, entonces
-        // esta autorizado a llamar a este método
+        String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
 
-        if (id == null || id < 0 || centroEntity == null) throw new PeticionNoValida();
+        // Duda Correo ¿Como saco idUsuario a partir del nombre del usuario?
 
         if (!centroRepo.existsById(id)) throw new CentroNoExistente();
 
@@ -224,9 +220,6 @@ public class LogicaCentro {
     }
 
     // Permite añadir una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
-    // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
-    // TO DO -> El final del método no estoy seguro si es correcto
-    // TO DO -> ¿Necesaria la excepción que señalo?
 
     public Centro modificarGerenteCentroById (Integer id, Gerente gerenteEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 

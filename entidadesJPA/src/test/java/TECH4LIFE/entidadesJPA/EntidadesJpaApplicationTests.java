@@ -11,6 +11,7 @@ import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
 import TECH4LIFE.entidadesJPA.security.JwtUtil;
+import TECH4LIFE.entidadesJPA.security.SecurityConfguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -124,8 +125,13 @@ public class EntidadesJpaApplicationTests {
 
 	private RequestEntity<Void> get(String scheme, String host, int port, String path) {
 		URI uri = uri(scheme, host,port, path);
+
+		// Tenemos que generar un token
+		// No hay usuario autenticado DUDA CORREO
+		//String token = jwtUtil.generateToken(SecurityConfguration.getAuthenticatedUser().get());
 		var peticion = RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
+				//.header("Authorization", "Bearer" + token)
 				.build();
 		return peticion;
 	}
