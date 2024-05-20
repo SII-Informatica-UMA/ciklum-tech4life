@@ -693,13 +693,17 @@ public class EntidadesJpaApplicationTests {
 				@DisplayName("Se añade correctamente")
 				@DirtiesContext
 				public void añadeAsociacionGerenteCentro() {
+
+					IdGerenteDTO id = IdGerenteDTO.builder()
+								.idGerente(2)
+								.build();
 					
-					var peticion = put("http", "localhost", port, "/centro/1/gerente", 2);
+					var peticion = put("http", "localhost", port, "/centro/3/gerente", id);
 
 					var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-					var centroBD = centroRepository.findById(1).get();
+					var centroBD = centroRepository.findById(3).get();
     				assertThat(centroBD.getGerente().getId()).isEqualTo(2);
 				}
 				
