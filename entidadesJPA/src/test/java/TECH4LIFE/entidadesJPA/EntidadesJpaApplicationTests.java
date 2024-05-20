@@ -693,10 +693,15 @@ public class EntidadesJpaApplicationTests {
 				@DisplayName("Se añade correctamente")
 				@DirtiesContext
 				public void añadeAsociacionGerenteCentro() {
-
-					IdGerenteDTO id = IdGerenteDTO.builder()
-								.idGerente(2)
+					var gerente = Gerente.builder()
+							.id(5)
+							.idUsuario(4)
+							.empresa("hola")
+							.build();
+					var id = IdGerenteDTO.builder()
+								.idGerente(gerente.getId())
 								.build();
+
 					
 					var peticion = put("http", "localhost", port, "/centro/3/gerente", id);
 
@@ -704,7 +709,7 @@ public class EntidadesJpaApplicationTests {
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 					var centroBD = centroRepository.findById(3).get();
-    				assertThat(centroBD.getGerente().getId()).isEqualTo(2);
+    				assertThat(centroBD.getGerente().getId()).isEqualTo(5);
 				}
 				
 				@Test

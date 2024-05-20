@@ -194,15 +194,22 @@ public class LogicaCentro {
         if (centro.isEmpty()) throw new CentroNoExistente();
 
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
+
+        System.out.println("Modificando centro con id: " + id + " y gerente: " + gerenteEntity);
+
         Centro centroAmodificar = centro.get() ;
         centroAmodificar.setGerente(gerenteEntity);
         gerenteEntity.setCentro(centroAmodificar);
+
+        System.out.println("Modificado centro con id: " + id + " y gerente: " + gerenteEntity);
 
         // ¿Necesaria esta excepción?
         //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
 
         centroRepo.save(centroAmodificar) ;
         gerenteRepo.save(gerenteEntity);
+        System.out.println("Guardado centro con id: " + id + " y gerente: " + gerenteEntity);
+
         return centroAmodificar;
     }
 

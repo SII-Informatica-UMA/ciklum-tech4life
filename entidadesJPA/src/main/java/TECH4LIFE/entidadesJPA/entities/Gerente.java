@@ -1,8 +1,5 @@
 package TECH4LIFE.entidadesJPA.entities;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 
 import java.util.Objects;
