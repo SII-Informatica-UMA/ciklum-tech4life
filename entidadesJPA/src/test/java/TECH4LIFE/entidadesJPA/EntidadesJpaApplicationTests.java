@@ -247,6 +247,7 @@ public class EntidadesJpaApplicationTests {
 						.id(1)
 						.tipo(TipoDestinatario.CENTRO)
 						.build();
+				Centro centro = centroRepository.getById(1);
 
 				MensajeNuevoDTO mensajeNuevoDTO = MensajeNuevoDTO.builder()
 						.asunto("Asunto del mensaje")
@@ -257,20 +258,27 @@ public class EntidadesJpaApplicationTests {
 						.contenido("Contenido del mensaje")
 						.build();
 
+				Mensaje guardado = mensajeRepository.save(Mapper.toMensaje(mensajeNuevoDTO));
+
 				// Paso 2: Realizar la solicitud HTTP
-				var headers = new HttpHeaders();
+
+				String url = String.format("http://localhost:%d/mensaje/centro?centro=%d", port, 1);
+
+				HttpHeaders headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
 
-				var request = new HttpEntity<>(mensajeNuevoDTO, headers);
+				HttpEntity<MensajeNuevoDTO> requestEntity = new HttpEntity<>(mensajeNuevoDTO, headers);
 
-				var respuesta = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
+				ResponseEntity <MensajeDTO> respuesta = restTemplate.exchange(
+						url,
 						HttpMethod.POST,
-						request,
-						Void.class);
+						requestEntity,
+						MensajeDTO.class
+				);
 
 				// Paso 3: Verificar la respuesta
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-				Void mensajeCreado = respuesta.getBody();
+				MensajeDTO mensajeCreado = respuesta.getBody();
 				assertThat(mensajeCreado).isNotNull();
 			}
 /*
