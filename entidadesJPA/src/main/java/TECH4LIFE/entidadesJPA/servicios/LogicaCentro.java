@@ -189,26 +189,26 @@ public class LogicaCentro {
 
         if (id == null || id < 0 || gerenteEntity == null) throw new PeticionNoValida();
 
-        Optional<Centro> centro = centroRepo.findById(id);
+        //Optional<Centro> centro = centroRepo.findById(id);
 
-        if (centro.isEmpty()) throw new CentroNoExistente();
+        //if (centro.isEmpty()) throw new CentroNoExistente();
+        if (!centroRepo.existsById(id)) throw new CentroNoExistente();
 
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
 
-        System.out.println("Modificando centro con id: " + id + " y gerente: " + gerenteEntity);
-
-        Centro centroAmodificar = centro.get() ;
-        centroAmodificar.setGerente(gerenteEntity);
-        gerenteEntity.setCentro(centroAmodificar);
-
-        System.out.println("Modificado centro con id: " + id + " y gerente: " + gerenteEntity);
+        Optional<Gerente> gerente = gerenteRepo.findById(gerenteEntity.getId());
+        Gerente gerenteAmodificar = gerente.get();
+        Centro centroAmodificar = centroRepo.findById(id).get() ;
+        centroAmodificar.setGerente(gerenteAmodificar);
+        gerenteAmodificar.setCentro(centroAmodificar);
 
         // ¿Necesaria esta excepción?
         //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
 
         centroRepo.save(centroAmodificar) ;
-        gerenteRepo.save(gerenteEntity);
-        System.out.println("Guardado centro con id: " + id + " y gerente: " + gerenteEntity);
+        gerenteRepo.save(gerenteAmodificar);
+
+
 
         return centroAmodificar;
     }

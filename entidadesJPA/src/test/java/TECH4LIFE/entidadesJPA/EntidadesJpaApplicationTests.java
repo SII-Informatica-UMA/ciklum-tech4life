@@ -404,22 +404,30 @@ public class EntidadesJpaApplicationTests {
 					.direccion("Calle avestruz, 44")
 					.build();
 
+			private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
+					.idUsuario(1)
+					.build();
+
 			private Gerente gerente2 = Gerente.builder()
 					.id(2)
 					.idUsuario(3)
 					.build();
-					
+
+
+
 			
 			@BeforeEach
 			@Transactional
 			public void introduceDatosCentro() {
+
 				centroRepository.save(Mapper.toCentro(centro1));
 				centroRepository.save(Mapper.toCentro(centro2));
+				gerenteRepository.save(Mapper.toGerente(gerente1));
 				gerenteRepository.save(gerente2);
 
-				Gerente gerente1 = Gerente.builder()
-					.id(1)
-					.idUsuario(2)
+				Gerente gerente3 = Gerente.builder()
+					.id(3)
+					.idUsuario(4)
 					.build();
 
 				Centro centro3 = Centro.builder()
@@ -428,12 +436,12 @@ public class EntidadesJpaApplicationTests {
 					.direccion("Calle del centro3, 3")
 					.build();
 
-				gerenteRepository.save(gerente1);
+				gerenteRepository.save(gerente3);
 				centroRepository.save(centro3);
-				centro3.setGerente(gerente1);
-				gerente1.setCentro(centro3);
+				centro3.setGerente(gerente3);
+				gerente3.setCentro(centro3);
 				centroRepository.save(centro3);
-				gerenteRepository.save(gerente1);
+				gerenteRepository.save(gerente3);
 			}
 
 
@@ -478,7 +486,7 @@ public class EntidadesJpaApplicationTests {
 				public void devuelveListaCentroGerente() {
 
 					
-					String url = String.format("http://localhost:%d/centro?gerente=%d", port, 1);
+					String url = String.format("http://localhost:%d/centro?gerente=%d", port, 3);
 
 					ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
                 	url,
@@ -670,7 +678,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("Elimina una asociacion de un gerente de un centro concreto correctamente")
 				public void devuelveErrorAlEliminarAsociacionCentro() {
-				String url = String.format("http://localhost:%d/centro/3/gerente?gerente=%d", port, 1);
+				String url = String.format("http://localhost:%d/centro/3/gerente?gerente=%d", port, 3);
 
 					var respuesta = restTemplate.exchange(
                 	url,
@@ -683,6 +691,21 @@ public class EntidadesJpaApplicationTests {
 					assertThat(centro.get().getGerente()).isEqualTo(null);
 				}
 
+				@Test
+				@DisplayName("Da error al eliminar una asociacion de un gerente de un centro concreto no valido")
+				public void devuelveErrorAlEliminarAsociacionCentroNoValido() {
+					String url = String.format("http://localhost:%d/centro/-3/gerente?gerente=%d", port, 1);
+
+					var respuesta = restTemplate.exchange(
+							url,
+							HttpMethod.DELETE,
+							null,
+							Void.class
+					);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+
+				}
+
 			}
 
 			@Nested
@@ -691,25 +714,37 @@ public class EntidadesJpaApplicationTests {
 			//DA ERROR 500 ¿?
 				@Test
 				@DisplayName("Se añade correctamente")
-				@DirtiesContext
 				public void añadeAsociacionGerenteCentro() {
-					var gerente = Gerente.builder()
+					/*Gerente gerente = Gerente.builder()
 							.id(5)
 							.idUsuario(4)
 							.empresa("hola")
 							.build();
-					var id = IdGerenteDTO.builder()
-								.idGerente(gerente.getId())
-								.build();
+					gerenteRepository.save(gerente);
+
+					Centro centro = Centro.builder()
+							.nombre("Centro 6")
+							.direccion("Calle del centro 6, 6")
+							.idCentro(6)
+							.gerente(null)
+							.build();
+					centroRepository.save(centro);*/
+
+					IdGerenteDTO id = IdGerenteDTO.builder()
+							.idGerente(1)
+							.build();
+
 
 					
-					var peticion = put("http", "localhost", port, "/centro/3/gerente", id);
+					var peticion = put("http", "localhost", port, "/centro/2/gerente", id);
 
 					var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-					var centroBD = centroRepository.findById(3).get();
-    				assertThat(centroBD.getGerente().getId()).isEqualTo(5);
+					var centroBD = centroRepository.findById(2).get();
+    				assertThat(centroBD.getGerente().getId()).isEqualTo(1);
+					var gerenteBD = gerenteRepository.findById(1).get();
+					assertThat(gerenteBD.getCentro().getIdCentro()).isEqualTo(2);
 				}
 				
 				@Test
