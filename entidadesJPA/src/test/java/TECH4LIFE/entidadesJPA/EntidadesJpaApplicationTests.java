@@ -6,6 +6,7 @@ import TECH4LIFE.entidadesJPA.entities.Destinatario;
 import TECH4LIFE.entidadesJPA.entities.Mensaje;
 import TECH4LIFE.entidadesJPA.entities.TipoDestinatario;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
+import TECH4LIFE.entidadesJPA.repositories.DestinatarioRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
 import jakarta.persistence.EntityManager;
@@ -77,6 +78,8 @@ public class EntidadesJpaApplicationTests {
 	private GerenteRepository gerenteRepository;
 	@Autowired
 	private MensajeRepository mensajeRepository;
+	@Autowired
+	private DestinatarioRepository destinatarioRepository;
 
 	/*
 	---------------------------------------------
@@ -88,6 +91,7 @@ public class EntidadesJpaApplicationTests {
 	public void initializeDatabase() {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
+		destinatarioRepository.deleteAll();
 		mensajeRepository.deleteAll();
 	}
 
@@ -247,6 +251,8 @@ public class EntidadesJpaApplicationTests {
 						.id(1)
 						.tipo(TipoDestinatario.CENTRO)
 						.build();
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario));
+				destinatarioRepository.save(Mapper.toDestinatario(remitente));
 				Centro centro = centroRepository.getById(1);
 
 				MensajeNuevoDTO mensajeNuevoDTO = MensajeNuevoDTO.builder()
