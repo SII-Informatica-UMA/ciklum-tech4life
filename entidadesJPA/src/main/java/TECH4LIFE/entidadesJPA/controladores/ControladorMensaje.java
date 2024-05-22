@@ -4,6 +4,9 @@ import TECH4LIFE.entidadesJPA.dtos.MensajeDTO;
 import TECH4LIFE.entidadesJPA.dtos.MensajeNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.entities.Mensaje;
+import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
+import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
+import TECH4LIFE.entidadesJPA.repositories.DestinatarioRepository;
 import TECH4LIFE.entidadesJPA.excepciones.MensajeNoExistente;
 import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import TECH4LIFE.entidadesJPA.servicios.LogicaMensaje;
@@ -16,7 +19,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mensaje")
+@RequestMapping("/mensaje/centro")
 //cuando llegue una solicitud con esta ruta, se ejecutará algún procedimiento de aquí
 public class ControladorMensaje {
     private LogicaMensaje servicio;
@@ -32,11 +35,11 @@ public class ControladorMensaje {
     GETS
  */
     //OBTENGO TODOS LOS MENSAJES DE UN CENTRO DADO EL CENTRO
-    @GetMapping("/{centro}")    //capturo el objeto centro.
-    public ResponseEntity<List<MensajeDTO>> listaDeMensajes(@PathVariable (name="centro") Centro centro){   //guardo en la variable centro el objeto Centro
+    @GetMapping //capturo el objeto centro.
+    public ResponseEntity<List<MensajeDTO>> listaDeMensajes(@RequestParam (value="centro", required = true) Integer centro){   //guardo en la variable centro el objeto Centro
         try{
             //CODE 200: Devuelve la lista de mensajes de cierto centro
-            List<MensajeDTO> listaMensajes = servicio.getMensajesByCentro(centro);
+            List<MensajeDTO> listaMensajes = servicio.getMensajesByCentro();
             return ResponseEntity.ok(listaMensajes);
         } catch(UsuarioNoAutorizado e){
             //CODE 403: Acceso no autorizado
