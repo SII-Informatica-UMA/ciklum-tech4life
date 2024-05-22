@@ -1,12 +1,10 @@
 package TECH4LIFE.entidadesJPA;
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
-import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
-import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
-import TECH4LIFE.entidadesJPA.dtos.DestinatarioDTO;
-import TECH4LIFE.entidadesJPA.dtos.MensajeDTO;
+import TECH4LIFE.entidadesJPA.dtos.*;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.entities.TipoDestinatario;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
+import TECH4LIFE.entidadesJPA.repositories.DestinatarioRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +26,9 @@ import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -77,6 +77,8 @@ public class EntidadesJpaApplicationTests {
 	private GerenteRepository gerenteRepository;
 	@Autowired
 	private MensajeRepository mensajeRepository;
+	@Autowired
+	private DestinatarioRepository destinatarioRepository;
 
 	/*
 	---------------------------------------------
@@ -89,6 +91,8 @@ public class EntidadesJpaApplicationTests {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
+		destinatarioRepository.deleteAll();
+
 	}
 
 	/*
@@ -201,9 +205,9 @@ public class EntidadesJpaApplicationTests {
 			}
 
 			@Test
-			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
-			public void devuelveListaMensajes() {
-				var peticion = get("http", "localhost", port, "/mensaje/centro");
+			@DisplayName("Da error al pedir una lista de mensajes vacía")
+			public void devuelveListaMensajesError() {
+
 				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
 						HttpMethod.GET,
 						null,
@@ -211,14 +215,110 @@ public class EntidadesJpaApplicationTests {
 						});
 
 				assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
-				List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
-				//assertThat(listaMensajes).size().isEqualTo(0); // Verificar que la lista de mensajes está vacía
+				//List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el cuerpo de la respuesta
+				//assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de mensajes está vacía
+			}
+
+			@Test
+			@DisplayName("Da error al pedir un mensaje no existente")
+			public void errordevuelveMensajeById() {
+
+				var peticion = get("http", "localhost", port, "/mensaje/centro/1");
+
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<MensajeDTO>() {
+						});
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+
+			}
+
+			@Test
+			@DisplayName("Da error al eliminar un mensaje no existente")
+			public void errorEliminaMensajeById() {
+
+				var peticion = delete("http", "localhost", port, "/mensaje/centro/1");
+
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<MensajeDTO>() {
+						});
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+
 			}
 
 
 			// TO DO
 
 		}
+		@Nested
+		@DisplayName("Cuando hay mensajes")
+		public class ListaMensajesLlena{
+			private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+					.id(1)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+					.nombre("Centro1")
+					.direccion("Calle del Centro1, 1")
+					.build();
+
+			private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+					.id(2)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+					.nombre("Centro2")
+					.direccion("Calle del Centro2, 2")
+					.build();
+
+			private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+
+			@BeforeEach
+			public void insertarCentro() {
+				centroRepository.save(Mapper.toCentro(centro1));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+				Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>();
+				listaDestinatariosDTO.add(destinatario2);
+				listaDestinatariosDTO.add(destinatario3);
+				MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
+						.asunto("Asunto1")
+						.remitente(destinatario1)
+						.destinatarios(listaDestinatariosDTO)
+						.build();
+				mensajeRepository.save(Mapper.toMensaje(mensaje1));
+
+			}
+
+			@Test
+			@DisplayName("Devuelve correctamente el mensaje")
+			public void devuelveMensajeById() {
+
+				var peticion = get("http", "localhost", port, "/mensaje/centro/1");
+
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<MensajeDTO>() {
+						});
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+
+			}
+
+		}
+
 	}
 }
 
