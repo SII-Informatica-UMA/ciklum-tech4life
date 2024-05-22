@@ -80,8 +80,10 @@ public class ControladorMensaje {
             //CODE 201: Se crea el mensaje y lo devuelve
             Mensaje mensaje  = servicioM.postMensaje(mensajeNuevoDTO, centro);
             URI uri = builder
-                    .path("/mensaje/centro")
-                    .queryParam("centro", centro)
+                    .path("/mensaje")
+                    .path(String.format("/%d", mensaje.getIdMensaje()))
+                    .path("/centro")
+                    .path(String.format("/%d", centro))
                     .build()
                     .toUri();
             return ResponseEntity.created(uri).body(Mapper.toMensajeDTO(mensaje));
