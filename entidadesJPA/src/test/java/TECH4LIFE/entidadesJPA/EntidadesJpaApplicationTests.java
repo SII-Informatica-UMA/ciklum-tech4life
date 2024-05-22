@@ -26,9 +26,7 @@ import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -253,18 +251,18 @@ public class EntidadesJpaApplicationTests {
 						.build();
 				destinatarioRepository.save(Mapper.toDestinatario(destinatario));
 				destinatarioRepository.save(Mapper.toDestinatario(remitente));
-				Centro centro = centroRepository.getById(1);
+
+
+				Set<DestinatarioDTO> destinatarios = new HashSet<>();
+				destinatarios.add(destinatario);
 
 				MensajeNuevoDTO mensajeNuevoDTO = MensajeNuevoDTO.builder()
 						.asunto("Asunto del mensaje")
-						.destinatarios(new HashSet<>(Arrays.asList(destinatario)))
-						.copia(new HashSet<>(Arrays.asList(destinatario)))  // Puedes agregar copias si es necesario
-						.copiaOculta(new HashSet<>(Arrays.asList(destinatario)))  // Puedes agregar copias ocultas si es necesario
-						.remitente(remitente)  // Agregar el remitente al mensaje
+						.destinatarios(destinatarios)
+						.copia(destinatarios)
+						.copiaOculta(destinatarios)
 						.contenido("Contenido del mensaje")
 						.build();
-
-				Mensaje guardado = mensajeRepository.save(Mapper.toMensaje(mensajeNuevoDTO));
 
 				// Paso 2: Realizar la solicitud HTTP
 
@@ -286,6 +284,7 @@ public class EntidadesJpaApplicationTests {
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 				MensajeDTO mensajeCreado = respuesta.getBody();
 				assertThat(mensajeCreado).isNotNull();
+				assertThat(mensajeCreado.getRemitente().getId()).isEqualTo(1);
 			}
 /*
 			@Test
