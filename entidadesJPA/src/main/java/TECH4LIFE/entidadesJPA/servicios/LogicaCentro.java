@@ -179,7 +179,7 @@ public class LogicaCentro {
      *   ----
      */
 
-    // Actualiza un centro (por la id) (CREO que lo hace un usuario Administrador)
+    // Actualiza un centro (por la id) (CREO que lo hace un usuario Gerente)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
 
     public void modificarCentro(Integer id, Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
@@ -189,15 +189,7 @@ public class LogicaCentro {
 
         if (id == null || id < 0 || centroEntity == null || userDetails.isEmpty()) throw new PeticionNoValida();
 
-        // Generamos el token
-
-        String token = jwtUtil.generateToken(userDetails.get());
-
-        // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
-
-        String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
-
-        // Duda Correo ¿Como saco idUsuario a partir del nombre del usuario?
+        if (gerenteRepo.FindGerenteByidUsuario(Integer.parseInt(userDetails.get().getUsername())) == null) throw new UsuarioNoAutorizado() ;
 
         if (!centroRepo.existsById(id)) throw new CentroNoExistente();
 

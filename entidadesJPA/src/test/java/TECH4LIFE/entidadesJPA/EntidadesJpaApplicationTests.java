@@ -128,10 +128,10 @@ public class EntidadesJpaApplicationTests {
 
 		// Tenemos que generar un token
 		// No hay usuario autenticado DUDA CORREO
-		//String token = jwtUtil.generateToken(SecurityConfguration.getAuthenticatedUser().get());
+		String token = jwtUtil.generateToken(SecurityConfguration.getAuthenticatedUser().get());
 		var peticion = RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
-				//.header("Authorization", "Bearer" + token)
+				.header("Authorization", "Bearer" + token)
 				.build();
 		return peticion;
 	}
