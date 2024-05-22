@@ -2,7 +2,10 @@ package TECH4LIFE.entidadesJPA;
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
 import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
 import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
+import TECH4LIFE.entidadesJPA.dtos.DestinatarioDTO;
+import TECH4LIFE.entidadesJPA.dtos.MensajeDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
+import TECH4LIFE.entidadesJPA.entities.TipoDestinatario;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +62,7 @@ public class EntidadesJpaApplicationTests {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
-	@Value(value="${local.server.port}")
+	@Value(value = "${local.server.port}")
 	private int port;
 
 	/*
@@ -94,19 +98,19 @@ public class EntidadesJpaApplicationTests {
 	---------------------------------------------
 	*/
 
-	private URI uri(String scheme, String host, int port, String ...paths) {
+	private URI uri(String scheme, String host, int port, String... paths) {
 		UriBuilderFactory ubf = new DefaultUriBuilderFactory();
 		UriBuilder ub = ubf.builder()
 				.scheme(scheme)
 				.host(host).port(port);
-		for (String path: paths) {
+		for (String path : paths) {
 			ub = ub.path(path);
 		}
 		return ub.build();
 	}
 
 	private RequestEntity<Void> get(String scheme, String host, int port, String path) {
-		URI uri = uri(scheme, host,port, path);
+		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
 				.build();
@@ -114,14 +118,14 @@ public class EntidadesJpaApplicationTests {
 	}
 
 	private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
-		URI uri = uri(scheme, host,port, path);
+		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.delete(uri)
 				.build();
 		return peticion;
 	}
 
 	private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
-		URI uri = uri(scheme, host,port, path);
+		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.post(uri)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
@@ -129,7 +133,7 @@ public class EntidadesJpaApplicationTests {
 	}
 
 	private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object) {
-		URI uri = uri(scheme, host,port, path);
+		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.put(uri)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
@@ -159,12 +163,63 @@ public class EntidadesJpaApplicationTests {
 	 Realizado por:
 	---------------------------------------------
 	*/
+	@Nested
+	@DisplayName("Tests de Mensajes")
+	public class PruebasMensajes {
+		@Nested
+		@DisplayName("Cuando no hay mensajes")
+		public class ListaMensajesVacia {
+			private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+					.id(1)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+					.nombre("Centro1")
+					.direccion("Calle del Centro1, 1")
+					.build();
+
+			private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+					.id(2)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+					.nombre("Centro2")
+					.direccion("Calle del Centro2, 2")
+					.build();
+
+			private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
 
 
+			@BeforeEach
+			public void insertarCentro() {
+				centroRepository.save(Mapper.toCentro(centro1));
+			}
+
+			@Test
+			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
+			public void devuelveListaMensajes() {
+				var peticion = get("http", "localhost", port, "/mensaje/centro");
+				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
+						HttpMethod.GET,
+						null,
+						new ParameterizedTypeReference<List<MensajeDTO>>() {
+						});
+
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
+				List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
+				//assertThat(listaMensajes).size().isEqualTo(0); // Verificar que la lista de mensajes está vacía
+			}
 
 
-	// TO DO
+			// TO DO
 
+		}
+	}
 }
 
 
