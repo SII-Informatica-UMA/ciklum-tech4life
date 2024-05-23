@@ -6,6 +6,7 @@ import TECH4LIFE.entidadesJPA.entities.Destinatario;
 import TECH4LIFE.entidadesJPA.entities.Mensaje;
 import TECH4LIFE.entidadesJPA.entities.TipoDestinatario;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
+import TECH4LIFE.entidadesJPA.repositories.DestinatarioRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
 import jakarta.persistence.EntityManager;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
@@ -69,8 +71,8 @@ public class EntidadesJpaApplicationTests {
 	 Inyección de los repositorios
 	---------------------------------------------
 	*/
-	//@Autowired
-	//private EntityManager entityManager;
+	@Autowired
+	private DestinatarioRepository destinatarioRepository;
 	@Autowired
 	private CentroRepository centroRepository;
 	@Autowired
@@ -89,6 +91,7 @@ public class EntidadesJpaApplicationTests {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
+		destinatarioRepository.deleteAll();
 	}
 
 	/*
@@ -179,6 +182,8 @@ public class EntidadesJpaApplicationTests {
 				List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
 				assertThat(listaMensajes).isEmpty(); // Verificar que la lista de mensajes está vacía
 			}
+			@BeforeEach
+			@Transactional
 			public void insertarDesRem(){
 				// Creación de destinatarios
 				destinatario1 = DestinatarioDTO.builder()
@@ -194,24 +199,10 @@ public class EntidadesJpaApplicationTests {
 						.id(3)  // ID del remitente
 						.tipo(TipoDestinatario.CENTRO)  // Tipo de destinatario (remitente)
 						.build();
-				/*
-				DestinatarioDTO d1 = new DestinatarioDTO();
-				d1.setId(1);
-				d1.setTipo(TipoDestinatario.CLIENTE);
-				entityManager.persist(d1);
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+				destinatarioRepository.save(Mapper.toDestinatario(remitente));
 
-				DestinatarioDTO d2 = new DestinatarioDTO();
-				d2.setId(1);
-				d2.setTipo(TipoDestinatario.CENTRO);
-				entityManager.persist(d2);
-
-				// Creación del remitente
-				DestinatarioDTO r1 = new DestinatarioDTO();
-				r1.setId(1);
-				r1.setTipo(TipoDestinatario.CENTRO);
-				entityManager.persist(r1);
-
-				 */
 			}
 
 			@Test

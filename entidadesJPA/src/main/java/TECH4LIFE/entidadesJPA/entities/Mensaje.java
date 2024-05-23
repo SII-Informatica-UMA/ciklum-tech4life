@@ -21,16 +21,17 @@ import org.springframework.boot.context.properties.bind.Name;
 @Entity
 public class Mensaje {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idMensaje ;
     private String asunto ;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private Set<Destinatario> destinatarios;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private Set<Destinatario> copia;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private Set<Destinatario> copiaOculta;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Destinatario remitente;
     private String contenido;
 }
