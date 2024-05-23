@@ -26,6 +26,7 @@ import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -193,15 +194,24 @@ public class EntidadesJpaApplicationTests {
 					.direccion("Calle del Centro2, 2")
 					.build();
 
-			private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
+			private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
 					.id(3)
 					.tipo(TipoDestinatario.CENTRO)
 					.build();
 
+			private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+					.nombre("Centro3")
+					.direccion("Calle del Centro3, 3")
+					.build();
 
 			@BeforeEach
 			public void insertarCentro() {
 				centroRepository.save(Mapper.toCentro(centro1));
+				centroRepository.save(Mapper.toCentro(centro2));
+				centroRepository.save(Mapper.toCentro(centro3));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
 			}
 
 			@Test
@@ -247,6 +257,26 @@ public class EntidadesJpaApplicationTests {
 
 			}
 
+			@Test
+			@DisplayName("Inserta correctamente un mensaje nuevo")
+			public void InsertaMensaje(){
+				var peticion = post("http", "localhost", port, "/mensaje/centro", 1);
+
+				Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(Arrays.asList(destinatario2,destinatario3));
+
+				MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
+						.contenido("Hola hola")
+						.destinatarios(listaDestinatarios)
+						.copia(listaDestinatarios)
+						.copiaOculta(listaDestinatarios)
+						.build();
+
+				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeNuevoDTO>(mensajeNuevo) {
+						},
+						new ParameterizedTypeReference<MensajeDTO>() {
+						});
+			}
+
 
 			// TO DO
 
@@ -279,6 +309,11 @@ public class EntidadesJpaApplicationTests {
 					.direccion("Calle del Centro2, 2")
 					.build();
 
+			private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+					.nombre("Centro3")
+					.direccion("Calle del Centro3, 3")
+					.build();
+
 			private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
 					.id(3)
 					.tipo(TipoDestinatario.CENTRO)
@@ -288,16 +323,20 @@ public class EntidadesJpaApplicationTests {
 			@BeforeEach
 			public void insertarCentro() {
 				centroRepository.save(Mapper.toCentro(centro1));
+				centroRepository.save(Mapper.toCentro(centro2));
+				centroRepository.save(Mapper.toCentro(centro3));
 				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
 				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
 				destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
-				Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>();
-				listaDestinatariosDTO.add(destinatario2);
-				listaDestinatariosDTO.add(destinatario3);
+				Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(Arrays.asList(destinatario2, destinatario3));
+				//listaDestinatariosDTO.add(destinatario2);
+				//listaDestinatariosDTO.add(destinatario3);
 				MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
 						.asunto("Asunto1")
 						.remitente(destinatario1)
 						.destinatarios(listaDestinatariosDTO)
+						.copia(listaDestinatariosDTO)
+						.copiaOculta(listaDestinatariosDTO)
 						.build();
 				mensajeRepository.save(Mapper.toMensaje(mensaje1));
 
@@ -313,7 +352,21 @@ public class EntidadesJpaApplicationTests {
 						new ParameterizedTypeReference<MensajeDTO>() {
 						});
 
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+			}
+
+			@Test
+			@DisplayName("Elimina correctamente un mensaje existente")
+			public void EliminaMensajeById() {
+
+				var peticion = delete("http", "localhost", port, "/mensaje/centro/1");
+
+				var respuesta = restTemplate.exchange(peticion,
+						Void.class
+						);
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 
 			}
 
