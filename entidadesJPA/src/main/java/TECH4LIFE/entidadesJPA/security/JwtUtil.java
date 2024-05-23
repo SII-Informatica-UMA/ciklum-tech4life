@@ -93,6 +93,11 @@ public class JwtUtil {
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
+    public String generateToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        return doGenerateToken(claims, username);
+    }
+
     /* METODO ELIMINADO public String generateToken(Usuario usuario) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, usuario.getId().toString());

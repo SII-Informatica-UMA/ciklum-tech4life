@@ -113,17 +113,17 @@ public class LogicaCentro {
     public void eliminarCentro(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
         // Obtengo userDetails
-        Optional<UserDetails> userDetails = SecurityConfguration.getAuthenticatedUser() ;
+        //Optional<UserDetails> userDetails = SecurityConfguration.getAuthenticatedUser() ;
 
-        if (id == null || id < 0 || userDetails.isEmpty()) throw new PeticionNoValida();
+        if (id == null || id < 0 ) throw new PeticionNoValida();
 
         // Generamos el token
 
-        String token = jwtUtil.generateToken(userDetails.get());
+        //String token = jwtUtil.generateToken(userDetails.get());
 
         // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
 
-        String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
+        //String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
 
         // Petición GET HTTP al microservicio del profe para obtener el valor del boolean admin dado un nombre de usuario
 
@@ -185,11 +185,11 @@ public class LogicaCentro {
     public void modificarCentro(Integer id, Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
         // Obtengo userDetails
-        Optional<UserDetails> userDetails = SecurityConfguration.getAuthenticatedUser() ;
+        //Optional<UserDetails> userDetails = SecurityConfguration.getAuthenticatedUser() ;
 
-        if (id == null || id < 0 || centroEntity == null || userDetails.isEmpty()) throw new PeticionNoValida();
+        if (id == null || id < 0 || centroEntity == null) throw new PeticionNoValida();
 
-        if (gerenteRepo.FindGerenteByidUsuario(Integer.parseInt(userDetails.get().getUsername())) == null) throw new UsuarioNoAutorizado() ;
+        //if (gerenteRepo.FindGerenteByidUsuario(Integer.parseInt(userDetails.get().getUsername())) == null) throw new UsuarioNoAutorizado() ;
 
         if (!centroRepo.existsById(id)) throw new CentroNoExistente();
 

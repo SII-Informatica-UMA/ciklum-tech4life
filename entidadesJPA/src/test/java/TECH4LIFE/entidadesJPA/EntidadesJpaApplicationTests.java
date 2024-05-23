@@ -91,6 +91,7 @@ public class EntidadesJpaApplicationTests {
 	private MensajeRepository mensajeRepository;
     @Autowired
     private JwtUtil jwtUtil;
+	String token;
 
 	/*
 	---------------------------------------------
@@ -103,6 +104,7 @@ public class EntidadesJpaApplicationTests {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
+		token = jwtUtil.generateToken("usuario1");
 	}
 
 	/*
@@ -128,10 +130,10 @@ public class EntidadesJpaApplicationTests {
 
 		// Tenemos que generar un token
 		// No hay usuario autenticado DUDA CORREO
-		String token = jwtUtil.generateToken(SecurityConfguration.getAuthenticatedUser().get());
+
 		var peticion = RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
-				.header("Authorization", "Bearer" + token)
+				.header("Authorization", "Bearer " + token)
 				.build();
 		return peticion;
 	}
@@ -139,6 +141,7 @@ public class EntidadesJpaApplicationTests {
 	private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
 		URI uri = uri(scheme, host,port, path);
 		var peticion = RequestEntity.delete(uri)
+				.header("Authorization", "Bearer " + token)
 				.build();
 		return peticion;
 	}
@@ -146,6 +149,7 @@ public class EntidadesJpaApplicationTests {
 	private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
 		URI uri = uri(scheme, host,port, path);
 		var peticion = RequestEntity.post(uri)
+				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
 		return peticion;
@@ -154,6 +158,7 @@ public class EntidadesJpaApplicationTests {
 	private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object) {
 		URI uri = uri(scheme, host,port, path);
 		var peticion = RequestEntity.put(uri)
+				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
 		return peticion;
