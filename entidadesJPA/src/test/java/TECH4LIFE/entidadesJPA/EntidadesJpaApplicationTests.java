@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
@@ -260,7 +257,6 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Inserta correctamente un mensaje nuevo")
 			public void InsertaMensaje(){
-				var peticion = post("http", "localhost", port, "/mensaje/centro", 1);
 
 				Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(Arrays.asList(destinatario2,destinatario3));
 
@@ -271,10 +267,19 @@ public class EntidadesJpaApplicationTests {
 						.copiaOculta(listaDestinatarios)
 						.build();
 
-				var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<MensajeNuevoDTO>(mensajeNuevo) {
-						},
-						new ParameterizedTypeReference<MensajeDTO>() {
-						});
+				var peticion = post("http", "localhost", port, "/mensaje/centro", mensajeNuevo);
+				/*HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+
+				HttpEntity<MensajeNuevoDTO> requestEntity = new HttpEntity<>(mensajeNuevo, headers);
+				var respuesta = restTemplate.exchange(
+						url,
+						HttpMethod.POST,
+						requestEntity,
+						MensajeDTO.class
+				);*/
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			}
 
 
