@@ -25,14 +25,6 @@ public class Mapper {
                 .build();
     }
 
-    public static Centro toCentro(CentroDTO centroDTO) {
-        return Centro.builder()
-                .nombre(centroDTO.getNombre())
-                .direccion(centroDTO.getDireccion())
-                .idCentro(centroDTO.getIdCentro())
-                .build();
-    }
-
     public static CentroDTO toCentroDTO(Centro centro) {
         return CentroDTO.builder()
                 .idCentro(centro.getIdCentro())
@@ -48,9 +40,10 @@ public class Mapper {
                 .build();
     }
 
-    public static Gerente toGerente(IdGerenteDTO idGerenteDTO) {
+    public static Gerente toGerente(GerenteDTO gerenteDTO) {
         return Gerente.builder()
-                .id(idGerenteDTO.getIdGerente())
+                .idUsuario(gerenteDTO.getIdUsuario())
+                .empresa(gerenteDTO.getEmpresa())
                 .build();
     }
 
@@ -98,6 +91,28 @@ public class Mapper {
                 .tipo(destinatarioDTO.getTipo())
                 .build())
             .collect(Collectors.toSet());
+    }
+
+    public static Mensaje toMensaje(MensajeNuevoDTO mensajeNuevoDTO){
+        return Mensaje.builder()
+                .asunto(mensajeNuevoDTO.getAsunto())
+                .destinatarios(toDestinatarios(mensajeNuevoDTO.getDestinatarios()))
+                .copia(toDestinatarios(mensajeNuevoDTO.getCopia()))
+                .copiaOculta(toDestinatarios(mensajeNuevoDTO.getCopiaOculta()))
+                .remitente(toDestinatario(mensajeNuevoDTO.getRemitente()))
+                .contenido(mensajeNuevoDTO.getContenido())
+                .build();
+    }
+
+    public static MensajeDTO toMensajeDTO(Mensaje mensaje){
+        return MensajeDTO.builder()
+                .asunto(mensaje.getAsunto())
+                .destinatarios(toDestinatariosDTO(mensaje.getDestinatarios()))
+                .copia(toDestinatariosDTO(mensaje.getCopia()))
+                .copiaOculta(toDestinatariosDTO(mensaje.getCopiaOculta()))
+                .remitente(toDestinatarioDTO(mensaje.getRemitente()))
+                .contenido(mensaje.getContenido())
+                .build();
     }
 
     public static Mensaje toMensaje(MensajeNuevoDTO mensajeNuevoDTO){

@@ -4,28 +4,61 @@ import java.util.List;
 import java.util.Optional;
 
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
+
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
 import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
+import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.entities.Gerente;
+import TECH4LIFE.entidadesJPA.excepciones.CentroNoExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteExistente;
 import TECH4LIFE.entidadesJPA.excepciones.GerenteNoExistente;
+import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
+import TECH4LIFE.entidadesJPA.security.JwtUtil;
+import TECH4LIFE.entidadesJPA.security.SecurityConfguration;
 
 @Service
 @Transactional
 public class LogicaGerente {
     private GerenteRepository repo;
+    private final JwtUtil jwtUtil;
+
+    public LogicaGerente(GerenteRepository gerenterepo, JwtUtil jwtUtil){
+        this.repo = gerenterepo;
+        this.jwtUtil=jwtUtil;
+    }  
 
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
-        return repo.findAll();  
+
+        //Optional<UserDetails>userDetailsOpt= SecurityConfguration.getAuthenticatedUser();
+        List<Gerente> gerentes = repo.findAll() ;
+        if (gerentes.isEmpty()/*||userDetailsOpt.isEmpty()*/){
+            throw new GerenteNoExistente();
+        } 
+        //UserDetails userDetails = userDetailsOpt.get();
+
+        // Verifica si el usuario tiene el rol de administrador
+        //boolean isAdmin = userDetails.getUsername().
+        /*if(!isAdmin){
+            throw new UsuarioNoAutorizado();
+        }*/
+        return gerentes;
     }
     //Devuelve un gerente por id
-    public Optional<Gerente> getGerente(Integer id) {
-        return repo.findById(id);
+    public Gerente getGerente(Integer id) {
+        if(id==null || id<0){
+            throw new UsuarioNoAutorizado();
+        }
+        Optional<Gerente> gerente = repo.findById(id);
+        if(gerente.isEmpty()){
+            throw new GerenteNoExistente();
+        }
+        return gerente.get();
     }
 
     //Modificar Gerente
@@ -54,13 +87,6 @@ public class LogicaGerente {
 
     //Añadir un Gerente
     public Gerente addGerente(Gerente gerente) {
-        
-        if(gerente==null){
-            throw new GerenteNoExistente();
-           
-        }else if(repo.findById(gerente.getId()).isPresent()){
-            throw new GerenteExistente();
-        }
         return repo.save(gerente);
     }
 
