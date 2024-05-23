@@ -9,8 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GerenteRepository extends JpaRepository<Gerente, Integer> {
- 
-    @Query("select c from Centro c where c.gerente = :gerente")
-    Centro FindCentroByGerente(@Param("gerente") Gerente gerente);
 
+    @Query("select g from Gerente g  where g.centro.idCentro= :id")
+    Gerente FindGerenteByCentro(@Param("id") Integer id);
 }

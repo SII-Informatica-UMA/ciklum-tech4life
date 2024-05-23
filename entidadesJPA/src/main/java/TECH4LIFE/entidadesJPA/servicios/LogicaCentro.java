@@ -57,7 +57,7 @@ public class LogicaCentro {
 
         if (id == null || id < 0) throw new PeticionNoValida();
 
-        Gerente gerente = centroRepo.FindGerenteByCentro(id) ;
+        Gerente gerente = gerenteRepo.FindGerenteByCentro(id) ;
 
         if (gerente == null) throw new CentroNoExistente();
 
@@ -73,7 +73,7 @@ public class LogicaCentro {
 
         if (idGerente != null) {
             if (idGerente < 0) throw new PeticionNoValida();
-            centros = centroRepo.FindCentroByGerente(idGerente) ;
+            centros = centroRepo.FindCentrosByGerente(idGerente) ;
             if (centros.isEmpty()) throw new CentroNoExistente();
 
         } else {
