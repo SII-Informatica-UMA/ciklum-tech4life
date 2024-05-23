@@ -130,15 +130,18 @@ public class JwtUtil {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
+    //agregado:
+    public String generateToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        return doGenerateToken(claims, username);
+    }
+    
     //AGREGADO PARA LOS TESTS:
 
-    public UserDetails createUserDetails(String username, String password, List<String> roles){
+    /*public UserDetails createUserDetails(String username, String password, List<String> roles){
         List<SimpleGrantedAuthority> authorities = roles.stream()
         .map(SimpleGrantedAuthority :: new).toList();
-
         return new User(username, password, authorities);
-
-    }
+    }*/
 }
 

@@ -35,19 +35,18 @@ public class LogicaGerente {
     //Devuelve lista de gerentes
     public List<Gerente> getGerentes() {
 
-        Optional<UserDetails>userDetailsOpt= SecurityConfguration.getAuthenticatedUser();
+        //Optional<UserDetails>userDetailsOpt= SecurityConfguration.getAuthenticatedUser();
         List<Gerente> gerentes = repo.findAll() ;
-        if (gerentes.isEmpty()||userDetailsOpt.isEmpty()){
+        if (gerentes.isEmpty()/*||userDetailsOpt.isEmpty()*/){
             throw new GerenteNoExistente();
         } 
-        UserDetails userDetails = userDetailsOpt.get();
+        //UserDetails userDetails = userDetailsOpt.get();
 
         // Verifica si el usuario tiene el rol de administrador
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-        if(!isAdmin){
+        //boolean isAdmin = userDetails.getUsername().
+        /*if(!isAdmin){
             throw new UsuarioNoAutorizado();
-        }
+        }*/
         return gerentes;
     }
     //Devuelve un gerente por id

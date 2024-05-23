@@ -46,6 +46,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -104,19 +105,20 @@ public class EntidadesJpaApplicationTests {
 	// Agregamos seguridad
 	@Autowired
 	private JwtUtil jwtUtil;
-	private UserDetails userDetails;
+	//private UserDetails userDetails;
 	private String token;
-	@Autowired
-    private MockMvc mockMvc;
 
+
+
+	
 
 	@BeforeEach
 	public void initializeDatabase() {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
-		userDetails = jwtUtil.createUserDetails("1", "", List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_GERENTE"));
-		token = jwtUtil.generateToken(userDetails);
+		//userDetails = jwtUtil.createUserDetails("1", "", List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_GERENTE"));
+		token = jwtUtil.generateToken("usuario1");
 	}
 
 	/*
@@ -187,11 +189,6 @@ public class EntidadesJpaApplicationTests {
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
 	}
 
-	private String createBasicAuthHeader(String username, String password) {
-		String auth = username + ":" + password;
-		byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes());
-		return "Basic " + new String(encodedAuth);
-	}
 
 	@Nested
 	@DisplayName("Cuando no hay Gerentes")
@@ -202,18 +199,13 @@ public class EntidadesJpaApplicationTests {
 
 			@Test
 			@DisplayName("Devuelve la lista de gerentes vacía")
-			@WithMockUser(username = "admin", roles = {"ROLE_ADMIN"})
+			//@WithMockUser(username = "admin", roles = {"ROLE_ADMIN"})
 			public void devuelveListaGerentes() {
-				 // Construye la URL de la petición utilizando el método get
-				 URI url = uri("http", "localhost", port, "/gerente");
+				var peticion = get("http", "localhost", port, "/gerente");
 
-				 // Realiza la solicitud HTTP GET con los encabezados de autenticación
-				 ResponseEntity<List<GerenteDTO>> respuesta = restTemplate.exchange(
-						 url,
-						 HttpMethod.GET,
-						 null,
-						 new ParameterizedTypeReference<List<GerenteDTO>>() {});
-			 
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<List<GerenteDTO>>() {
+						});
 				 // Verifica la respuesta
 				 assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 				 assertThat(respuesta.hasBody()).isEqualTo(false);
