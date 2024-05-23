@@ -268,17 +268,10 @@ public class EntidadesJpaApplicationTests {
 						.build();
 				// ¿Posible cambio en petición?
 				//var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1", mensajeNuevo);
-				var peticion = post("http", "localhost", port, "/mensaje/centro", mensajeNuevo);
-				/*HttpHeaders headers = new HttpHeaders();
-				headers.setContentType(MediaType.APPLICATION_JSON);
+				var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1", mensajeNuevo);
 
-				HttpEntity<MensajeNuevoDTO> requestEntity = new HttpEntity<>(mensajeNuevo, headers);
-				var respuesta = restTemplate.exchange(
-						url,
-						HttpMethod.POST,
-						requestEntity,
-						MensajeDTO.class
-				);*/
+				var respuesta = restTemplate.exchange(peticion,
+						Void.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			}
