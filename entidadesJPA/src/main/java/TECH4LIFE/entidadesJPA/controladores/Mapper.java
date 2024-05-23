@@ -115,25 +115,4 @@ public class Mapper {
                 .build();
     }
 
-    public static Mensaje toMensaje(MensajeNuevoDTO mensajeNuevoDTO){
-        return Mensaje.builder()
-                .asunto(mensajeNuevoDTO.getAsunto())
-                .destinatarios(toDestinatarios(mensajeNuevoDTO.getDestinatarios()))
-                .copia(toDestinatarios(mensajeNuevoDTO.getCopia()))
-                .copiaOculta(toDestinatarios(mensajeNuevoDTO.getCopiaOculta()))
-                .remitente(toDestinatario(mensajeNuevoDTO.getRemitente()))
-                .contenido(mensajeNuevoDTO.getContenido())
-                .build();
-    }
-
-    public static MensajeDTO toMensajeDTO(Mensaje mensaje){
-        return MensajeDTO.builder()
-                .asunto(mensaje.getAsunto())
-                .destinatarios(toDestinatariosDTO(mensaje.getDestinatarios()))
-                .copia(toDestinatariosDTO(mensaje.getCopia()))
-                .copiaOculta(toDestinatariosDTO(mensaje.getCopiaOculta()))
-                .remitente(toDestinatarioDTO(mensaje.getRemitente()))
-                .contenido(mensaje.getContenido())
-                .build();
-    }
 }
