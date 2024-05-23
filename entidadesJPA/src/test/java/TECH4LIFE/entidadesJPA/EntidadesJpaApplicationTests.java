@@ -11,17 +11,33 @@ import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
 import TECH4LIFE.entidadesJPA.security.JwtUtil;
-
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Base64;
+import java.util.List;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.apache.tomcat.util.http.parser.Authorization;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +45,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
-
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,10 +63,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("En el servicio de de gestión de centros y gerentes")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureMockMvc
+@ExtendWith(SpringExtension.class)
 public class EntidadesJpaApplicationTests {
 
 	/*
@@ -78,18 +101,21 @@ public class EntidadesJpaApplicationTests {
 	 * ---------------------------------------------
 	 */
 
-	//Agregamos seguridad
+	// Agregamos seguridad
 	@Autowired
 	private JwtUtil jwtUtil;
 	private UserDetails userDetails;
 	private String token;
+	@Autowired
+    private MockMvc mockMvc;
+
 
 	@BeforeEach
 	public void initializeDatabase() {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
-		userDetails = jwtUtil.createUserDetails("1","",List.of("ROLE_USER","ROLE_ADMIN","ROLE_GERENTE"));
+		userDetails = jwtUtil.createUserDetails("1", "", List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_GERENTE"));
 		token = jwtUtil.generateToken(userDetails);
 	}
 
@@ -161,6 +187,12 @@ public class EntidadesJpaApplicationTests {
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
 	}
 
+	private String createBasicAuthHeader(String username, String password) {
+		String auth = username + ":" + password;
+		byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes());
+		return "Basic " + new String(encodedAuth);
+	}
+
 	@Nested
 	@DisplayName("Cuando no hay Gerentes")
 	public class ListaGerentesVacia {
@@ -170,16 +202,21 @@ public class EntidadesJpaApplicationTests {
 
 			@Test
 			@DisplayName("Devuelve la lista de gerentes vacía")
+			@WithMockUser(username = "admin", roles = {"ROLE_ADMIN"})
 			public void devuelveListaGerentes() {
-				
-				var peticion = get("http", "localhost", port, "/gerente");
+				 // Construye la URL de la petición utilizando el método get
+				 URI url = uri("http", "localhost", port, "/gerente");
 
-				var respuesta = restTemplate.exchange(peticion,
-						new ParameterizedTypeReference<List<GerenteDTO>>() {
-						});
-
-				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-				assertThat(respuesta.hasBody()).isEqualTo(false);
+				 // Realiza la solicitud HTTP GET con los encabezados de autenticación
+				 ResponseEntity<List<GerenteDTO>> respuesta = restTemplate.exchange(
+						 url,
+						 HttpMethod.GET,
+						 null,
+						 new ParameterizedTypeReference<List<GerenteDTO>>() {});
+			 
+				 // Verifica la respuesta
+				 assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				 assertThat(respuesta.hasBody()).isEqualTo(false);
 			}
 
 			@Test

@@ -58,7 +58,6 @@ public class ControladorGerente {
             //No encontrado 404
             return ResponseEntity.notFound().build();
         }
-           
     }
 
     
@@ -73,6 +72,8 @@ public class ControladorGerente {
         }catch (GerenteNoExistente e){
             // [404] Gerente no existente
             return ResponseEntity.notFound().build();
+        }catch(UsuarioNoAutorizado e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
     //DELETE Gerente {idGerente}
