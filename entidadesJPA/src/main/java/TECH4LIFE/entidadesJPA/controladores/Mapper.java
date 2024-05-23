@@ -25,6 +25,14 @@ public class Mapper {
                 .build();
     }
 
+    public static Centro toCentro(CentroDTO centroDTO) {
+        return Centro.builder()
+                .nombre(centroDTO.getNombre())
+                .direccion(centroDTO.getDireccion())
+                .idCentro(centroDTO.getIdCentro())
+                .build();
+    }
+
     public static CentroDTO toCentroDTO(Centro centro) {
         return CentroDTO.builder()
                 .idCentro(centro.getIdCentro())
@@ -37,6 +45,12 @@ public class Mapper {
         return Gerente.builder()
                 .idUsuario(gerenteNuevoDTO.getIdUsuario())
                 .empresa(gerenteNuevoDTO.getEmpresa())
+                .build();
+    }
+
+    public static Gerente toGerente(IdGerenteDTO idGerenteDTO) {
+        return Gerente.builder()
+                .id(idGerenteDTO.getIdGerente())
                 .build();
     }
 
@@ -77,20 +91,20 @@ public class Mapper {
 
     public static Set<DestinatarioDTO> toDestinatariosDTO(Set<Destinatario> destinatarios){
         return destinatarios.stream()
-            .map(destinatario -> DestinatarioDTO.builder()
-                .id(destinatario.getId())
-                .tipo(destinatario.getTipo())
-                .build())
-            .collect(Collectors.toSet());
+                .map(destinatario -> DestinatarioDTO.builder()
+                        .id(destinatario.getId())
+                        .tipo(destinatario.getTipo())
+                        .build())
+                .collect(Collectors.toSet());
     }
 
     public static Set<Destinatario> toDestinatarios(Set<DestinatarioDTO> destinatariosDTO){
         return destinatariosDTO.stream()
-            .map(destinatarioDTO -> Destinatario.builder()
-                .id(destinatarioDTO.getId())
-                .tipo(destinatarioDTO.getTipo())
-                .build())
-            .collect(Collectors.toSet());
+                .map(destinatarioDTO -> Destinatario.builder()
+                        .id(destinatarioDTO.getId())
+                        .tipo(destinatarioDTO.getTipo())
+                        .build())
+                .collect(Collectors.toSet());
     }
 
     public static Mensaje toMensaje(MensajeNuevoDTO mensajeNuevoDTO){
@@ -114,5 +128,4 @@ public class Mapper {
                 .contenido(mensaje.getContenido())
                 .build();
     }
-
 }

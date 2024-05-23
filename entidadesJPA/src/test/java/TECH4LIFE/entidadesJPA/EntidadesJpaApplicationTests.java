@@ -800,7 +800,7 @@ public class EntidadesJpaApplicationTests {
 	 * 
 	 */
 	@Nested
-	@DisplayName("Pruebas de Gerentes")
+	@DisplayName("En cuanto a los gerentes")
 	public class PruebasGerente {
 		@Nested
 		@DisplayName("Cuando no hay Gerentes")
@@ -1046,6 +1046,11 @@ public class EntidadesJpaApplicationTests {
 	 * ---------------------------------------------
 	 */
 
-	// TO DO
+	@Nested
+	@DisplayName("En cuanto a los mensajes")
+	public class PruebasMensajes {
 
+		// TO DO
+		
+	}
 }
