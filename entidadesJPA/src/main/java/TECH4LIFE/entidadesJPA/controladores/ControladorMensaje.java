@@ -83,7 +83,7 @@ public class ControladorMensaje {
             Mensaje mensaje  = servicio.postMensaje(Mapper.toMensaje(mensajeNuevoDTO));
             URI uri = builder
                     .path("/mensaje")
-                    //.path(String.format("/%d", mensaje.getIdMensaje()))
+                    .path(String.format("/%d", mensaje.getIdMensaje()))
                     .path("/centro")
                     .path(String.format("/%d" , centroId))
                     .build()
