@@ -32,23 +32,8 @@ public class LogicaCentro {
    private CentroRepository centroRepo ;
    private GerenteRepository gerenteRepo ;
 
-   @Autowired
-    public LogicaCentro(CentroRepository centroRepo,
-                        GerenteRepository gerenteRepo) {
-       this.centroRepo = centroRepo;
-       this.gerenteRepo = gerenteRepo;
-   }
-    private final JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil ;
 
-    // Poniendo la información en los @Value funciona, creo que esto no se usa
-    /*
-    @Value("http://localhost:4200/reset-password")
-    private String baseURIOfFrontend = "http://localhost:4200";
-    @Value("60")
-    private long passwordResetTokenExpiration = 0;
-       */
-
-   @Autowired
     public LogicaCentro(CentroRepository centroRepo,
                         GerenteRepository gerenteRepo,
                         JwtUtil jwtUtil) {
