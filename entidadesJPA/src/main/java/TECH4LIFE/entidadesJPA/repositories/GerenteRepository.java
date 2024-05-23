@@ -12,4 +12,7 @@ public interface GerenteRepository extends JpaRepository<Gerente, Integer> {
 
     @Query("select g from Gerente g  where g.centro.idCentro= :id")
     Gerente FindGerenteByCentro(@Param("id") Integer id);
+    @Query("select g from Gerente g where g.idUsuario = :idUsuario")
+    Gerente FindGerenteByidUsuario(@Param("idUsuario") Integer idUsuario);
+
 }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import TECH4LIFE.entidadesJPA.security.JwtUtil ;
 
 import java.net.URI;
 import java.util.List;
@@ -20,8 +21,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/centro")
 //@Tag(name="Gestión de centros", description="Operaciones para la gestión de centros")
 public class ControladorCentro {
-
-    // TO DO: Volver hacer repaso de la api revisando los métodos
 
     private final LogicaCentro centroService;
 
@@ -120,6 +119,7 @@ public class ControladorCentro {
     @DeleteMapping("/{idCentro}")
     public ResponseEntity<?> eliminarCentro(@PathVariable Integer idCentro) {
         try {
+
             // CODE 200: El centro se ha eliminado
             centroService.eliminarCentro(idCentro) ;
             return ResponseEntity.ok().build();
@@ -202,7 +202,7 @@ public class ControladorCentro {
      */
 
 
-    // Actualiza un centro (por la id) (CREO que lo hace un usuario Administrador)
+    // Actualiza un centro (por la id) (CREO que lo hace un usuario Gerente me parece)
     // Duda: El profe no devuelve un ResponseEntity sino un CentroDTO
     @PutMapping("/{idCentro}")
     public ResponseEntity<CentroDTO> editarCentro(@PathVariable Integer idCentro, @RequestBody CentroDTO centroDTO) {

@@ -12,6 +12,8 @@ import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
 import jakarta.transaction.Transactional;
 
+import TECH4LIFE.entidadesJPA.security.JwtUtil;
+import TECH4LIFE.entidadesJPA.security.SecurityConfguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,12 +21,14 @@ import org.junit.jupiter.api.Nested;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
@@ -89,6 +93,9 @@ public class EntidadesJpaApplicationTests {
 	private GerenteRepository gerenteRepository;
 	@Autowired
 	private MensajeRepository mensajeRepository;
+    @Autowired
+    private JwtUtil jwtUtil;
+	String token;
 
 	/*
 	---------------------------------------------
@@ -101,6 +108,7 @@ public class EntidadesJpaApplicationTests {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
+		token = jwtUtil.generateToken("usuario1");
 	}
 
 	/*
@@ -123,8 +131,13 @@ public class EntidadesJpaApplicationTests {
 
 	private RequestEntity<Void> get(String scheme, String host, int port, String path) {
 		URI uri = uri(scheme, host,port, path);
+
+		// Tenemos que generar un token
+		// No hay usuario autenticado DUDA CORREO
+
 		var peticion = RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer " + token)
 				.build();
 		return peticion;
 	}
@@ -132,6 +145,7 @@ public class EntidadesJpaApplicationTests {
 	private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
 		URI uri = uri(scheme, host,port, path);
 		var peticion = RequestEntity.delete(uri)
+				.header("Authorization", "Bearer " + token)
 				.build();
 		return peticion;
 	}
@@ -139,6 +153,7 @@ public class EntidadesJpaApplicationTests {
 	private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
 		URI uri = uri(scheme, host,port, path);
 		var peticion = RequestEntity.post(uri)
+				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
 		return peticion;
@@ -147,6 +162,7 @@ public class EntidadesJpaApplicationTests {
 	private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object) {
 		URI uri = uri(scheme, host,port, path);
 		var peticion = RequestEntity.put(uri)
+				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
 		return peticion;
