@@ -266,7 +266,8 @@ public class EntidadesJpaApplicationTests {
 						.copia(listaDestinatarios)
 						.copiaOculta(listaDestinatarios)
 						.build();
-
+				// ¿Posible cambio en petición?
+				//var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1", mensajeNuevo);
 				var peticion = post("http", "localhost", port, "/mensaje/centro", mensajeNuevo);
 				/*HttpHeaders headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
