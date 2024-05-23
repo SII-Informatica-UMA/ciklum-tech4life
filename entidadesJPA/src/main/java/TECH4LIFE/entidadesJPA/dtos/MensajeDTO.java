@@ -16,7 +16,7 @@ public class MensajeDTO {
     private String asunto ;
     private Set<DestinatarioDTO> destinatarios ;
     private Set<DestinatarioDTO> copia ;
-    private Set<DestinatarioDTO> copiaOculta ;
+    private Set<DestinatarioDTO> copiaOculta ; // lista vacía
     private DestinatarioDTO remitente ;
     private String contenido;
 }
