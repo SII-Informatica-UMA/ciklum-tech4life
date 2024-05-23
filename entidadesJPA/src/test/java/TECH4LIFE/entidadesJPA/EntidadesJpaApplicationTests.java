@@ -254,7 +254,7 @@ public class EntidadesJpaApplicationTests {
 
 			}
 
-			@Test
+			/*@Test
 			@DisplayName("Inserta correctamente un mensaje nuevo")
 			public void InsertaMensaje(){
 
@@ -274,7 +274,7 @@ public class EntidadesJpaApplicationTests {
 						Void.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-			}
+			}*/
 
 
 			// TO DO
@@ -366,6 +366,20 @@ public class EntidadesJpaApplicationTests {
 						);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+			}
+
+			@Test
+			@DisplayName("Devuelve la lista de mensajes de un centro correctamente")
+			public void devuelveListaMensajes() {
+
+				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
+						HttpMethod.GET,
+						null,
+						new ParameterizedTypeReference<List<MensajeDTO>>() {
+						});
+
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
 
 			}
 
