@@ -10,46 +10,65 @@ import TECH4LIFE.entidadesJPA.entities.Gerente;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
-import org.junit.jupiter.api.BeforeEach;
+import TECH4LIFE.entidadesJPA.security.JwtUtil;
+import java.util.Base64;
+import java.util.List;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.apache.tomcat.util.http.parser.Authorization;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
-
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/*
- *  ANOTACIONES IMPORTANTES SOBRE LAS PRUEBAS JUNIT
- * ---------------------------------------------------
- *
- * 	- Añadir jacoco como plugin al pom.xml del proyecto Maven (Ya lo he añadido)
- * 	- Ejecutar desde consola de comandos mvn test o desde intellij -> icono maven -> Lifecycle -> test
- * 		OJO porque para que salga el informe de jacoco no se puede ejecutar desde intellij
- * 	- El informe de cobertura de código de jacoco se encuentra
- * 	  en el siguiente path -> target/site/jacoco/index.html
- *
- * 	- Error común: He seguido todos los pasos y no aparece la carpeta site:
- *    Jacoco algunas veces falla y en vez de generar un .exec genera un ".exe" o un ".ex"
- * 	  Solución: añadir la c, y hacer mvn test de nuevo y debería generar la carpeta test
- * */
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("En el servicio de de gestión de centros y gerentes")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureMockMvc
+@ExtendWith(SpringExtension.class)
 public class EntidadesJpaApplicationTests {
 
 	/*
@@ -83,17 +102,28 @@ public class EntidadesJpaApplicationTests {
 	 * ---------------------------------------------
 	 */
 
+	// Agregamos seguridad
+	@Autowired
+	private JwtUtil jwtUtil;
+	//private UserDetails userDetails;
+	private String token;
+
+
+
+	
+
 	@BeforeEach
 	public void initializeDatabase() {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
+		//userDetails = jwtUtil.createUserDetails("1", "", List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_GERENTE"));
+		token = jwtUtil.generateToken("usuario1");
 	}
 
 	/*
 	 * ---------------------------------------------
 	 * Métodos comunes a todas las pruebas
-	 * Realizado por: Raúl García Balongo
 	 * ---------------------------------------------
 	 */
 
@@ -112,6 +142,7 @@ public class EntidadesJpaApplicationTests {
 		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.get(uri)
 				.accept(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer " + token)
 				.build();
 		return peticion;
 	}
@@ -119,13 +150,14 @@ public class EntidadesJpaApplicationTests {
 	private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
 		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.delete(uri)
+				.header("Authorization", "Bearer " + token)
 				.build();
 		return peticion;
 	}
 
 	private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
 		URI uri = uri(scheme, host, port, path);
-		var peticion = RequestEntity.post(uri)
+		var peticion = RequestEntity.post(uri).header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
 		return peticion;
@@ -134,16 +166,15 @@ public class EntidadesJpaApplicationTests {
 	private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object) {
 		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.put(uri)
+				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
 		return peticion;
 	}
 
-	
 	/*
 	 * ---------------------------------------------
 	 * Pruebas de ControladorGerente y LogicaGerente
-	 * Realizado por:
 	 * ---------------------------------------------
 	 */
 	private void compruebaCamposGerente(GerenteDTO expected, GerenteDTO actual) {
@@ -158,6 +189,7 @@ public class EntidadesJpaApplicationTests {
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
 	}
 
+
 	@Nested
 	@DisplayName("Cuando no hay Gerentes")
 	public class ListaGerentesVacia {
@@ -167,9 +199,22 @@ public class EntidadesJpaApplicationTests {
 
 			@Test
 			@DisplayName("Devuelve la lista de gerentes vacía")
+			//@WithMockUser(username = "admin", roles = {"ROLE_ADMIN"})
 			public void devuelveListaGerentes() {
+				var peticion = get("http", "localhost", port, "/gerente");
 
-				var peticion = get("http", "localhost", port, "/gerente"); 
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<List<GerenteDTO>>() {
+						});
+				 // Verifica la respuesta
+				 assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				 assertThat(respuesta.hasBody()).isEqualTo(false);
+			}
+
+			@Test
+			@DisplayName("Devuelve error cuando se pide un Gerente concreto")
+			public void devuelveErrorAlConsultarGerente() {
+				var peticion = get("http", "localhost", port, "/gerente");
 
 				var respuesta = restTemplate.exchange(peticion,
 						new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -177,22 +222,8 @@ public class EntidadesJpaApplicationTests {
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 				assertThat(respuesta.hasBody()).isEqualTo(false);
-			}	
+			}
 
-		@Test
-		@DisplayName("Devuelve error cuando se pide un Gerente concreto")
-		public void devuelveErrorAlConsultarGerente() {
-			var peticion = get("http", "localhost", port, "/gerente");
-
-			var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<GerenteDTO>>() {
-					});
-
-			assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-			assertThat(respuesta.hasBody()).isEqualTo(false);
-		}
-			
-			
 		}
 
 		@Nested
@@ -200,30 +231,18 @@ public class EntidadesJpaApplicationTests {
 		public class PostGerentesVacia {
 			@Test
 			@DisplayName("Intenta crear un gerente cuando no hay gerentes")
-			public void CrearGerenteBien(){
-					var gerente = Gerente.builder()
-					.empresa("patatas")
-					.idUsuario(6)
-					.build();
-					var peticion = post("http", "localhost",port, "/gerente", gerente );
-					
-					var respuesta = restTemplate.exchange(peticion, Void.class);
-					
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+			public void CrearGerenteBien() {
+				var gerente = Gerente.builder()
+						.empresa("patatas")
+						.idUsuario(6)
+						.build();
+				var peticion = post("http", "localhost", port, "/gerente", gerente);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			}
-			@Test
-			@DisplayName("Intenta crear un gerente cuando no tiene Usuario")
-			public void CrearGerenteSinUsuario(){
-					var gerente = Gerente.builder()
-					.empresa("patatas")
-					.idUsuario(null)
-					.build();
-					var peticion = post("http", "localhost",port, "/gerente", gerente );
-					
-					var respuesta = restTemplate.exchange(peticion, Void.class);
-					
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-			}
+
 		}
 
 		@Nested
@@ -235,20 +254,21 @@ public class EntidadesJpaApplicationTests {
 				var gerente = GerenteNuevoDTO.builder()
 						.empresa("kfc")
 						.build();
-				var peticion = put("http", "localhost",port, "/gerente/2", gerente);
+				var peticion = put("http", "localhost", port, "/gerente/2", gerente);
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 			}
 		}
+
 		@Nested
 		@DisplayName("Metodos DELETE gerente lista vacia")
 		public class DeleteGerentesVacia {
 			@Test
 			@DisplayName("devuelve error cuando se elimina un Gerente concreto")
 			public void devuelveErrorAlEliminarGerente() {
-				var peticion = delete("http", "localhost",port, "/gerente/40");
+				var peticion = delete("http", "localhost", port, "/gerente/40");
 
 				var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -271,7 +291,6 @@ public class EntidadesJpaApplicationTests {
 				.idUsuario(2)
 				.build();
 
-
 		@BeforeEach
 		public void introduceDatosGerente() {
 			gerenteRepository.save(Mapper.toGerente(gerente1));
@@ -284,7 +303,7 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Devuelve la lista de Gerentes correctamente")
 			public void devuelveListaGerente() {
-				var peticion = get("http", "localhost", port, "/gerente"); 
+				var peticion = get("http", "localhost", port, "/gerente");
 
 				var respuesta = restTemplate.exchange(peticion,
 						new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -293,6 +312,7 @@ public class EntidadesJpaApplicationTests {
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 				assertThat(respuesta.getBody()).hasSize(2);
 			}
+
 			@Test
 			@DisplayName("lo devuelve cuando existe")
 			public void devuelveGerente() {
@@ -319,9 +339,6 @@ public class EntidadesJpaApplicationTests {
 			}
 
 		}
-
-
-		
 
 		@Nested
 		@DisplayName("Metodos PUT gerente lista llena")
@@ -365,58 +382,46 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Lo elimina cuando existe")
 			public void eliminaCorrectamenteGerente() {
-		
-				var peticion = delete("http", "localhost",port, "/gerente/1");
 
-				var respuesta = restTemplate.exchange(peticion,Void.class);
+				var peticion = delete("http", "localhost", port, "/gerente/1");
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 				List<Gerente> gerentes = gerenteRepository.findAll();
 				assertThat(gerentes).hasSize(1);
-				assertThat(gerentes).allMatch(c->c.getId()!=1);
+				assertThat(gerentes).allMatch(c -> c.getId() != 1);
 			}
 
 			@Test
 			@DisplayName("da error cuando no existe")
 			public void errorCuandoNoExisteGerente() {
-				var peticion = delete("http", "localhost",port, "/gerente/40");
+				var peticion = delete("http", "localhost", port, "/gerente/40");
 
-				var respuesta = restTemplate.exchange(peticion,Void.class);
+				var respuesta = restTemplate.exchange(peticion, Void.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 				assertThat(respuesta.hasBody()).isEqualTo(false);
 			}
 		}
+
 		@Nested
 		@DisplayName("Metodos POST gerente en lista llena")
 		public class PostGerente {
 			@Test
 			@DisplayName("Crea un gerente bien")
-			public void CrearGerenteBien(){
-					var gerente = Gerente.builder()
-					.empresa("patatas")
-					.idUsuario(6)
-					.build();
-					var peticion = post("http", "localhost",port, "/gerente", gerente );
-					
-					var respuesta = restTemplate.exchange(peticion, Void.class);
-					
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+			public void CrearGerenteBien() {
+				var gerente = Gerente.builder()
+						.empresa("patatas")
+						.idUsuario(6)
+						.build();
+				var peticion = post("http", "localhost", port, "/gerente", gerente);
+
+				var respuesta = restTemplate.exchange(peticion, Void.class);
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			}
 
-			@Test
-            @DisplayName("Error no existe el usuario")
-            public void CrearGerenteSinUsuario(){
-                var gerente = Gerente.builder()
-                .empresa("landam")
-				.idUsuario(null)
-                .build();
-                var peticion = post("http", "localhost",port, "/gerente",gerente );
-                
-                var respuesta = restTemplate.exchange(peticion, Void.class);
-                
-                assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-            }
 		}
 
 	}

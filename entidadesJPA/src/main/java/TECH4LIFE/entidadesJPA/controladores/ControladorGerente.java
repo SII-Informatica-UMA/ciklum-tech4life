@@ -38,7 +38,8 @@ public class ControladorGerente {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-
+    // DUDA CORREO --------------------------------------------------------------------------------------------!  
+    //////////QUITAR ERROR 404 3N EL POST!!!!!
     //GET Gerente {idGerente}
     @GetMapping("/{idGerente}")
     public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="idGerente") Integer idGerente){
@@ -53,7 +54,6 @@ public class ControladorGerente {
             //No encontrado 404
             return ResponseEntity.notFound().build();
         }
-           
     }
 
     
@@ -68,10 +68,9 @@ public class ControladorGerente {
         }catch (GerenteNoExistente e){
             // [404] Gerente no existente
             return ResponseEntity.notFound().build();
-        }catch (UsuarioNoAutorizado e){
+        }catch(UsuarioNoAutorizado e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        // [403] Acceso no autorizado
     }
     //DELETE Gerente {idGerente}
     @DeleteMapping("/{idGerente}")
@@ -103,10 +102,7 @@ public class ControladorGerente {
                 .toUri();
                 //Todo bien 201
             return ResponseEntity.created(uri).body(Mapper.toGerenteDTO(nuevoGerente));  
-        }catch (GerenteNoExistente e){
-            // [404] Not Found
-            return ResponseEntity.notFound().build();
-       }catch(UsuarioNoAutorizado e){
+        }catch(UsuarioNoAutorizado e){
             // [403] Acceso no autorizado
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
        }
