@@ -29,115 +29,173 @@ import java.util.logging.Logger;
 @Transactional(noRollbackFor = TokenNoValidoException.class)
 public class LogicaCentro {
 
-   private CentroRepository centroRepo ;
-   private GerenteRepository gerenteRepo ;
+    private CentroRepository centroRepo;
+    private GerenteRepository gerenteRepo;
 
-    private final JwtUtil jwtUtil ;
+    private final JwtUtil jwtUtil;
 
     public LogicaCentro(CentroRepository centroRepo,
-                        GerenteRepository gerenteRepo,
-                        JwtUtil jwtUtil) {
-       this.centroRepo = centroRepo;
-       this.gerenteRepo = gerenteRepo;
-       this.jwtUtil = jwtUtil;
-   }
+            GerenteRepository gerenteRepo,
+            JwtUtil jwtUtil) {
+        this.centroRepo = centroRepo;
+        this.gerenteRepo = gerenteRepo;
+        this.jwtUtil = jwtUtil;
+    }
     /*
-     *   GETS
-     *   ----
+     * GETS
+     * ----
      */
 
-    // Obtener un centro concreto (por la id) (CREO que lo hace un usuario Administrador)
+    // Obtener un centro concreto (por la id) (CREO que lo hace un usuario
+    // Administrador)
 
-    public Centro getCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+    public Centro getCentroById(Integer id, String authHeader) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        if (id == null || id < 0) throw new PeticionNoValida();
+        //SEGURIDAD:
+        String token =jwtUtil.extractToken(authHeader);
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
+        //-----------------------
+        if (id == null || id < 0)
+            throw new PeticionNoValida();
 
         Optional<Centro> centro = centroRepo.findById(id);
 
-        if (centro.isEmpty()) throw new CentroNoExistente();
+        if (centro.isEmpty())
+            throw new CentroNoExistente();
 
         return centro.get();
     }
 
-    // Permite consultar el gerente de un centro (por la id del centro) (CREO que lo hace un usuario Administrador)
+    // Permite consultar el gerente de un centro (por la id del centro) (CREO que lo
+    // hace un usuario Administrador)
 
-    public Gerente getGerenteCentroById(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+    public Gerente getGerenteCentroById(Integer id,String authHeader) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        if (id == null || id < 0) throw new PeticionNoValida();
+        //SEGURIDAD
+        String token =jwtUtil.extractToken(authHeader);
 
-        Gerente gerente = gerenteRepo.FindGerenteByCentro(id) ;
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
 
-        if (gerente == null) throw new CentroNoExistente();
+        //-----------------------------------------
+        if (id == null || id < 0)
+            throw new PeticionNoValida();
+
+        Gerente gerente = gerenteRepo.FindGerenteByCentro(id);
+
+        if (gerente == null)
+            throw new CentroNoExistente();
 
         return gerente;
     }
 
-    // Obtener la lista de todos los centros (Lo puede hacer usuario Administrador o Gerente)
+    // Obtener la lista de todos los centros (Lo puede hacer usuario Administrador o
+    // Gerente)
 
-    public List<Centro> getTodosCentros(Integer idGerente) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+    public List<Centro> getTodosCentros(Integer idGerente,String authHeader)
+            throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+        List<Centro> centros;
+        // SEGURIDAD:
+        String token = jwtUtil.extractToken(authHeader);
+        String idUsuario = jwtUtil.getUsernameFromToken(token);
 
-        List<Centro> centros ;
-
-        if (idGerente != null) {
-            if (idGerente < 0) throw new PeticionNoValida();
-            centros = centroRepo.FindCentrosByGerente(idGerente) ;
-            if (centros.isEmpty()) throw new CentroNoExistente();
+        if (!( jwtUtil.isAdmin(token) || gerenteRepo.FindGerenteByidUsuario(Integer.parseInt(idUsuario))!=null)) {
+            throw new UsuarioNoAutorizado();
+        }
+         // ------------------------
+         if (idGerente != null) {
+            if (idGerente < 0)
+                throw new PeticionNoValida();
+            centros = centroRepo.FindCentrosByGerente(idGerente);
+            if (centros.isEmpty())
+                throw new CentroNoExistente();
 
         } else {
-            centros = centroRepo.findAll() ;
-            if (centros.isEmpty()) throw new CentroNoExistente();
+            centros = centroRepo.findAll();
+            if (centros.isEmpty())
+                throw new CentroNoExistente();
         }
-
         return centros;
     }
 
-    // Obtener la lista de todos los centros asociados a un gerente ESTE MÉTODO NO SE ESPECIFICA EN OPENAPI
+    // Obtener la lista de todos los centros asociados a un gerente ESTE MÉTODO NO
+    // SE ESPECIFICA EN OPENAPI
     // TO DO -> SEGÚN LA TUTORÍA UN GERENTE NO PUEDE TENER ASOCIADO MÁS DE UN CENTRO
 
     /*
-     *   DELETES
-     *   -------
+     * DELETES
+     * -------
      */
 
     // Elimina un centro (por la id) (CREO que lo hace un usuario Administrador)
 
-    public void eliminarCentro(Integer id) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+    public void eliminarCentro(Integer id, String authHeader)
+            throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
+        String token = jwtUtil.extractToken(authHeader);
+
+        // Verificar si el usuario es administrador
+        if (token == null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
+
+        // ----------------------------------------------------
         // Obtengo userDetails
-        //Optional<UserDetails> userDetails = SecurityConfguration.getAuthenticatedUser() ;
+        // Optional<UserDetails> userDetails =
+        // SecurityConfguration.getAuthenticatedUser() ;
 
-        if (id == null || id < 0 ) throw new PeticionNoValida();
+        if (id == null || id < 0)
+            throw new PeticionNoValida();
 
         // Generamos el token
 
-        //String token = jwtUtil.generateToken(userDetails.get());
+        // String token = jwtUtil.generateToken(userDetails.get());
 
-        // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del usuario dado el token.
+        // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del
+        // usuario dado el token.
 
-        //String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
+        // String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
 
-        // Petición GET HTTP al microservicio del profe para obtener el valor del boolean admin dado un nombre de usuario
+        // Petición GET HTTP al microservicio del profe para obtener el valor del
+        // boolean admin dado un nombre de usuario
 
+        // boolean admin = true;
 
-        //boolean admin = true;
-
-        if (!centroRepo.existsById(id)) throw new CentroNoExistente();
+        if (!centroRepo.existsById(id))
+            throw new CentroNoExistente();
 
         centroRepo.deleteById(id);
     }
 
-    // Permite eliminar una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
+    // Permite eliminar una asociación entre un centro y un gerente. (CREO que lo
+    // hace un usuario Administrador)
 
-    public void eliminarGerenteCentroById(Integer idCentro, Integer idGerente) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+    public void eliminarGerenteCentroById(Integer idCentro, Integer idGerente,String authHeader)
+            throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
-        if (idCentro == null || idCentro < 0 /*|| idGerente == null || idGerente < 0*/) throw new PeticionNoValida();
+        //SEGURIDAD:
+        String token =jwtUtil.extractToken(authHeader);
 
-        if (centroRepo.findById(idCentro).isEmpty()) throw new CentroNoExistente();
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
+        //---------------------------------------------------
+        if (idCentro == null || idCentro < 0 /* || idGerente == null || idGerente < 0 */){
+            throw new PeticionNoValida();
+        }
+        if (centroRepo.findById(idCentro).isEmpty())
+            throw new CentroNoExistente();
 
         Optional<Centro> centro = centroRepo.findById(idCentro);
         Optional<Gerente> gerente = gerenteRepo.findById(idGerente);
 
-        //if (gerente.isEmpty()) throw new GerenteNoExistente(); no se usa
+        // if (gerente.isEmpty()) throw new GerenteNoExistente(); no se usa
 
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
         centro.get().setGerente(null); // Elimino asociación (poniendo a null el atributo gerente de Centro)
@@ -148,86 +206,126 @@ public class LogicaCentro {
     }
 
     /*
-     *   POSTS
-     *   -----
+     * POSTS
+     * -----
      */
 
-    // Permite crear un centro nuevo a un administrador (Lo hace un usuario Administrador)
+    // Permite crear un centro nuevo a un administrador (Lo hace un usuario
+    // Administrador)
 
-    public Centro postCentro(Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroExistente {
+    public Centro postCentro(Centro centroEntity,String authHeader) throws PeticionNoValida, UsuarioNoAutorizado, CentroExistente {
+          
+        //SEGURIDAD
+        String token =jwtUtil.extractToken(authHeader);
 
-        if (centroEntity == null || centroEntity.getNombre()==null) throw new PeticionNoValida();
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
+        //-------------------------------
 
-       //Optional<Centro> centro = centroRepo.findById(centroEntity.getIdCentro());
+        if (centroEntity == null || centroEntity.getNombre() == null)
+            throw new PeticionNoValida();
 
-        //if (centro.isPresent()) throw new CentroExistente();
+        // Optional<Centro> centro = centroRepo.findById(centroEntity.getIdCentro());
+
+        // if (centro.isPresent()) throw new CentroExistente();
 
         return centroRepo.save(centroEntity);
     }
 
     /*
-     *   PUTS
-     *   ----
+     * PUTS
+     * ----
      */
 
     // Actualiza un centro (por la id) (CREO que lo hace un usuario Gerente)
     // TO DO -> DUDA: ¿Cómo sé si el usuario está autorizado o no?
 
-    public void modificarCentro(Integer id, Centro centroEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+    public void modificarCentro(Integer id, Centro centroEntity,String authHeader)
+            throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
 
         // Obtengo userDetails
-        //Optional<UserDetails> userDetails = SecurityConfguration.getAuthenticatedUser() ;
+        // Optional<UserDetails> userDetails =
+        // SecurityConfguration.getAuthenticatedUser() ;
+        
+        //SEGURIDAD
+        
+        String token =jwtUtil.extractToken(authHeader);
+        String idUsuario = jwtUtil.getUsernameFromToken(token);
 
-        if (id == null || id < 0 || centroEntity == null) throw new PeticionNoValida();
+        if (token==null || gerenteRepo.FindGerenteByidUsuario(Integer.parseInt(idUsuario))==null) {
+            throw new UsuarioNoAutorizado();
+        }
+    
+        //-------------------------------
 
-        //if (gerenteRepo.FindGerenteByidUsuario(Integer.parseInt(userDetails.get().getUsername())) == null) throw new UsuarioNoAutorizado() ;
+        if (id == null || id < 0 || centroEntity == null)
+            throw new PeticionNoValida();
 
-        if (!centroRepo.existsById(id)) throw new CentroNoExistente();
+        // if
+        // (gerenteRepo.FindGerenteByidUsuario(Integer.parseInt(userDetails.get().getUsername()))
+        // == null) throw new UsuarioNoAutorizado() ;
+
+        if (!centroRepo.existsById(id))
+            throw new CentroNoExistente();
 
         /*
-        // NO ESTOY SEGURO SI ESTO ES CORRECTO
-        Centro centroAmodificar = centro.get() ;
-        centroAmodificar.setIdCentro(centroEntity.getIdCentro());
-        centroAmodificar.setNombre(centroEntity.getNombre());
-        centroAmodificar.setDireccion(centroEntity.getDireccion());
-        centroAmodificar.setGerente(centroEntity.getGerente());
-        */
+         * // NO ESTOY SEGURO SI ESTO ES CORRECTO
+         * Centro centroAmodificar = centro.get() ;
+         * centroAmodificar.setIdCentro(centroEntity.getIdCentro());
+         * centroAmodificar.setNombre(centroEntity.getNombre());
+         * centroAmodificar.setDireccion(centroEntity.getDireccion());
+         * centroAmodificar.setGerente(centroEntity.getGerente());
+         */
 
         centroEntity.setIdCentro(id);
         centroRepo.save(centroEntity);
 
         // ¿Necesaria esta excepción?
-        //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
+        // if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw
+        // new CentroExistente();
 
-        //centroRepo.save(centroAmodificar) ;
+        // centroRepo.save(centroAmodificar) ;
     }
 
-    // Permite añadir una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
+    // Permite añadir una asociación entre un centro y un gerente. (CREO que lo hace
+    // un usuario Administrador)
 
-    public Centro modificarGerenteCentroById (Integer id, Gerente gerenteEntity) throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+    public Centro modificarGerenteCentroById(Integer id, Gerente gerenteEntity,String authHeader)
+            throws PeticionNoValida, UsuarioNoAutorizado, CentroNoExistente {
+        //SEGURIDAD: 
+        String token =jwtUtil.extractToken(authHeader);
 
-        if (id == null || id < 0 || gerenteEntity == null) throw new PeticionNoValida();
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
+        //------------------------------------
 
-        //Optional<Centro> centro = centroRepo.findById(id);
+        if (id == null || id < 0 || gerenteEntity == null)
+            throw new PeticionNoValida();
 
-        //if (centro.isEmpty()) throw new CentroNoExistente();
-        if (!centroRepo.existsById(id)) throw new CentroNoExistente();
+        // Optional<Centro> centro = centroRepo.findById(id);
+
+        // if (centro.isEmpty()) throw new CentroNoExistente();
+        if (!centroRepo.existsById(id))
+            throw new CentroNoExistente();
 
         // NO ESTOY SEGURO SI ESTO ES CORRECTO
 
         Optional<Gerente> gerente = gerenteRepo.findById(gerenteEntity.getId());
         Gerente gerenteAmodificar = gerente.get();
-        Centro centroAmodificar = centroRepo.findById(id).get() ;
+        Centro centroAmodificar = centroRepo.findById(id).get();
         centroAmodificar.setGerente(gerenteAmodificar);
         gerenteAmodificar.setCentro(centroAmodificar);
 
         // ¿Necesaria esta excepción?
-        //if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw new CentroExistente();
+        // if (centroRepo.findById(centroAmodificar.getIdCentro()).isPresent()) throw
+        // new CentroExistente();
 
-        centroRepo.save(centroAmodificar) ;
+        centroRepo.save(centroAmodificar);
         gerenteRepo.save(gerenteAmodificar);
-
-
 
         return centroAmodificar;
     }

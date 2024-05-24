@@ -46,6 +46,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -125,13 +126,38 @@ public class JwtUtil {
         byte[] keyBytes = secret.getBytes();
         Key key = Keys.hmacShaKeyFor(keyBytes);
 
-
-
         return Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
                 .signWith(key, SignatureAlgorithm.HS512).compact();
     }
+//AGREGADO PARA TESTS DE MARTIN  SOBRE SEGURIDAD:
+
+   public String extractToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new UsuarioNoAutorizado();
+        }
+        return authHeader.substring(7); // Remueve el prefijo "Bearer "
+    }
+
+    public boolean isAdmin(String token) {
+        Claims claims = getAllClaimsFromToken(token);
+        Boolean isAdmin = claims.get("administrador", Boolean.class);
+        return isAdmin;
+    }
+
+    public String doGenerateToken(String subject,boolean isAdmin) {
+        byte[] keyBytes = secret.getBytes();
+        Key key = Keys.hmacShaKeyFor(keyBytes);
+
+        return Jwts.builder().setSubject(subject)
+                .claim("administrador",isAdmin)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValidity * 1000))
+                .signWith(key, SignatureAlgorithm.HS512).compact();
+    }
+//FIN DE TESTS SOBRE SEGURIDAD
+
 
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {

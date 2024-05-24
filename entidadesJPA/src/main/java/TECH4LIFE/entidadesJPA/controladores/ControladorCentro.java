@@ -37,11 +37,11 @@ public class ControladorCentro {
 
     // Obtener un centro concreto (por la id) (CREO que lo hace un usuario Administrador)
     @GetMapping("/{idCentro}")
-    public ResponseEntity<CentroDTO> verCentro(@PathVariable Integer idCentro){
+    public ResponseEntity<CentroDTO> verCentro(@PathVariable Integer idCentro, @RequestHeader("Authorization") String authHeader){
 
         try {
             // CODE 200: El centro existe
-            CentroDTO centroDTO = Mapper.toCentroDTO(centroService.getCentroById(idCentro)) ;
+            CentroDTO centroDTO = Mapper.toCentroDTO(centroService.getCentroById(idCentro,authHeader)) ;
             return ResponseEntity.ok(centroDTO);
 
         } catch (PeticionNoValida e) {
@@ -60,10 +60,10 @@ public class ControladorCentro {
 
     // Permite consultar el gerente de un centro (por la id del centro) (CREO que lo hace un usuario Administrador)
     @GetMapping("/{idCentro}/gerente")
-    public ResponseEntity<GerenteDTO> verGerenteCentro(@PathVariable Integer idCentro){
+    public ResponseEntity<GerenteDTO> verGerenteCentro(@PathVariable Integer idCentro, @RequestHeader("Authorization") String authHeader){
         try {
             // CODE 200: Devuelve el gerente del centro especificado
-            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(centroService.getGerenteCentroById(idCentro));
+            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(centroService.getGerenteCentroById(idCentro,authHeader));
             return ResponseEntity.ok(gerenteDTO);
 
         } catch (PeticionNoValida e) {
@@ -83,12 +83,12 @@ public class ControladorCentro {
 
     // Obtener la lista de todos los centros (Lo puede hacer usuario Administrador o Gerente)
     @GetMapping()
-    public ResponseEntity<List<CentroDTO>> listaDeCentros(@RequestParam(value = "gerente", required = false) Integer gerente) {
+    public ResponseEntity<List<CentroDTO>> listaDeCentros(@RequestParam(value = "gerente", required = false) Integer gerente, @RequestHeader("Authorization") String authHeader) {
 
         try {
             // CODE 200: Devuelve la lista de centros
             List<CentroDTO> listaCentrosDTO =
-                    centroService.getTodosCentros(gerente).stream().map(Mapper::toCentroDTO)
+                    centroService.getTodosCentros(gerente,authHeader).stream().map(Mapper::toCentroDTO)
                             .collect(Collectors.toList());
             return ResponseEntity.ok(listaCentrosDTO);
 
@@ -117,11 +117,11 @@ public class ControladorCentro {
 
     // Elimina un centro (por la id) (CREO que lo hace un usuario Administrador)
     @DeleteMapping("/{idCentro}")
-    public ResponseEntity<?> eliminarCentro(@PathVariable Integer idCentro) {
+    public ResponseEntity<?> eliminarCentro(@PathVariable Integer idCentro, @RequestHeader("Authorization") String authHeader) {
         try {
 
             // CODE 200: El centro se ha eliminado
-            centroService.eliminarCentro(idCentro) ;
+            centroService.eliminarCentro(idCentro,authHeader) ;
             return ResponseEntity.ok().build();
 
         } catch (PeticionNoValida e) {
@@ -140,10 +140,10 @@ public class ControladorCentro {
 
     // Permite eliminar una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
     @DeleteMapping("/{idCentro}/gerente")
-    public ResponseEntity<?> eliminarGerenteCentro(@PathVariable Integer idCentro, @RequestParam(value= "gerente", required = false) Integer gerente) {
+    public ResponseEntity<?> eliminarGerenteCentro(@PathVariable Integer idCentro, @RequestParam(value= "gerente", required = false) Integer gerente, @RequestHeader("Authorization") String authHeader) {
         try {
             // CODE 200: Devuelve el centro al que se ha asociado el gerente (CREO QUE ES ERRATA DE LA API)
-            centroService.eliminarGerenteCentroById(idCentro,gerente) ;
+            centroService.eliminarGerenteCentroById(idCentro,gerente,authHeader) ;
             return ResponseEntity.ok().build();
 
         } catch (PeticionNoValida e) {
@@ -169,12 +169,12 @@ public class ControladorCentro {
     // Permite crear un centro nuevo a un administrador (Lo hace un usuario Administrador)
     // Duda: ¿Cómo que crea un centro y lo DEVUELVE? ¿Cómo lo devuelvo?
     @PostMapping()
-    public ResponseEntity<CentroDTO> addCentro(@RequestBody CentroNuevoDTO centroNuevoDTO, UriComponentsBuilder builder) {
+    public ResponseEntity<CentroDTO> addCentro(@RequestBody CentroNuevoDTO centroNuevoDTO, UriComponentsBuilder builder,@RequestHeader("Authorization") String authHeader) {
 
         try {
 
             // CODE 201: Se crea el centro y lo devuelve
-            Centro centro = centroService.postCentro(Mapper.toCentro(centroNuevoDTO)) ;
+            Centro centro = centroService.postCentro(Mapper.toCentro(centroNuevoDTO),authHeader) ;
             URI uri = builder
                     .path("/centro")
                     .path(String.format("/%d",centro.getIdCentro()))
@@ -205,12 +205,12 @@ public class ControladorCentro {
     // Actualiza un centro (por la id) (CREO que lo hace un usuario Gerente me parece)
     // Duda: El profe no devuelve un ResponseEntity sino un CentroDTO
     @PutMapping("/{idCentro}")
-    public ResponseEntity<CentroDTO> editarCentro(@PathVariable Integer idCentro, @RequestBody CentroDTO centroDTO) {
+    public ResponseEntity<CentroDTO> editarCentro(@PathVariable Integer idCentro, @RequestBody CentroDTO centroDTO, @RequestHeader("Authorization") String authHeader) {
 
         try {
 
             // CODE 200: El centro se ha actualizado
-            centroService.modificarCentro(idCentro, Mapper.toCentro(centroDTO)) ;
+            centroService.modificarCentro(idCentro, Mapper.toCentro(centroDTO),authHeader) ;
             return ResponseEntity.ok().build();
 
         } catch (PeticionNoValida e) {
@@ -229,10 +229,10 @@ public class ControladorCentro {
 
     // Permite añadir una asociación entre un centro y un gerente. (CREO que lo hace un usuario Administrador)
     @PutMapping("/{idCentro}/gerente")
-    public ResponseEntity<CentroDTO> editarGerenteCentro (@PathVariable Integer idCentro, @RequestBody IdGerenteDTO idgerenteDTO) {
+    public ResponseEntity<CentroDTO> editarGerenteCentro (@PathVariable Integer idCentro, @RequestBody IdGerenteDTO idgerenteDTO, @RequestHeader("Authorization") String authHeader) {
         try {
             // CODE 200: Devuelve el centro al que se ha asociado el gerente
-            CentroDTO centroDTO = Mapper.toCentroDTO(centroService.modificarGerenteCentroById(idCentro,Mapper.toGerente(idgerenteDTO)));
+            CentroDTO centroDTO = Mapper.toCentroDTO(centroService.modificarGerenteCentroById(idCentro,Mapper.toGerente(idgerenteDTO),authHeader));
             return ResponseEntity.ok(centroDTO);
 
         } catch (PeticionNoValida e) {

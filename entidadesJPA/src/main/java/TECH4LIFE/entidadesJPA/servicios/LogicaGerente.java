@@ -27,31 +27,36 @@ public class LogicaGerente {
     private GerenteRepository repo;
     private final JwtUtil jwtUtil;
 
+    
     public LogicaGerente(GerenteRepository gerenterepo, JwtUtil jwtUtil){
         this.repo = gerenterepo;
-        this.jwtUtil=jwtUtil;
+        this.jwtUtil = jwtUtil;
     }  
 
     //Devuelve lista de gerentes
-    public List<Gerente> getGerentes() {
+    public List<Gerente> getGerentes(String authHeader) {
+        
 
-        //Optional<UserDetails>userDetailsOpt= SecurityConfguration.getAuthenticatedUser();
+        String token =jwtUtil.extractToken(authHeader);
+
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
         List<Gerente> gerentes = repo.findAll() ;
-        if (gerentes.isEmpty()/*||userDetailsOpt.isEmpty()*/){
+        if (gerentes.isEmpty()){
             throw new GerenteNoExistente();
         } 
-        //UserDetails userDetails = userDetailsOpt.get();
-
-        // Verifica si el usuario tiene el rol de administrador
-        //boolean isAdmin = userDetails.getUsername().
-        /*if(!isAdmin){
-            throw new UsuarioNoAutorizado();
-        }*/
+       
         return gerentes;
     }
     //Devuelve un gerente por id
-    public Gerente getGerente(Integer id) {
-        if(id==null || id<0){
+    public Gerente getGerente(Integer id, String authHeader) {
+        
+        String token =jwtUtil.extractToken(authHeader);
+
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
             throw new UsuarioNoAutorizado();
         }
         Optional<Gerente> gerente = repo.findById(id);
@@ -62,8 +67,13 @@ public class LogicaGerente {
     }
 
     //Modificar Gerente
-    public void modificarGerente(Integer id, Gerente gerente) {
-        //HAY QUE MANEJAR LA EXCEPCION DE USUARIONOAUTORIZADO
+    public void modificarGerente(Integer id, Gerente gerente,String authHeader) {
+        String token =jwtUtil.extractToken(authHeader);
+
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
         Optional<Gerente> gerenteExistente = repo.findById(id);
 
         if( gerenteExistente.isEmpty()){
@@ -75,8 +85,14 @@ public class LogicaGerente {
     }
 
     //Eliminar un gerente
-    public void eliminarGerente(Integer id) {
-        //HAY QUE MANEJAR LA EXCEPCION DE USUARIONOAUTORIZADO
+    public void eliminarGerente(Integer id,String authHeader) {
+        
+        String token =jwtUtil.extractToken(authHeader);
+
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
         Optional<Gerente> gerenteOptional = repo.findById(id);
         if(gerenteOptional.isPresent()){
             repo.deleteById(id);
@@ -86,7 +102,13 @@ public class LogicaGerente {
     }
 
     //Añadir un Gerente
-    public Gerente addGerente(Gerente gerente) {
+    public Gerente addGerente(Gerente gerente,String authHeader) {
+        String token =jwtUtil.extractToken(authHeader);
+
+        // Verificar si el usuario es administrador
+        if (token==null || !jwtUtil.isAdmin(token)) {
+            throw new UsuarioNoAutorizado();
+        }
         return repo.save(gerente);
     }
 

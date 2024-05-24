@@ -93,6 +93,7 @@ public class EntidadesJpaApplicationTests {
 	private GerenteRepository gerenteRepository;
 	@Autowired
 	private MensajeRepository mensajeRepository;
+
 	@Autowired
 	private JwtUtil jwtUtil;
 	String token;
@@ -108,7 +109,7 @@ public class EntidadesJpaApplicationTests {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
-		token = jwtUtil.generateToken("usuario1");
+		// token = jwtUtil.generateToken("usuario1"); //COMENTADO PARA TEST MARTIN
 	}
 
 	/*
@@ -129,7 +130,7 @@ public class EntidadesJpaApplicationTests {
 		return ub.build();
 	}
 
-	private RequestEntity<Void> get(String scheme, String host, int port, String path) {
+	private RequestEntity<Void> get(String scheme, String host, int port, String path, String token) {
 		URI uri = uri(scheme, host, port, path);
 
 		// Tenemos que generar un token
@@ -142,7 +143,8 @@ public class EntidadesJpaApplicationTests {
 		return peticion;
 	}
 
-	private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
+	// AGREGADO STRING TOKEN PARA TEST MARTIN
+	private RequestEntity<Void> delete(String scheme, String host, int port, String path, String token) {
 		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.delete(uri)
 				.header("Authorization", "Bearer " + token)
@@ -150,7 +152,7 @@ public class EntidadesJpaApplicationTests {
 		return peticion;
 	}
 
-	private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
+	private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object, String token) {
 		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.post(uri)
 				.header("Authorization", "Bearer " + token)
@@ -159,7 +161,7 @@ public class EntidadesJpaApplicationTests {
 		return peticion;
 	}
 
-	private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object) {
+	private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object, String token) {
 		URI uri = uri(scheme, host, port, path);
 		var peticion = RequestEntity.put(uri)
 				.header("Authorization", "Bearer " + token)
@@ -189,6 +191,7 @@ public class EntidadesJpaApplicationTests {
 		assertThat(actual.getDireccion()).isEqualTo(expected.getDireccion());
 		assertThat(actual.getNombre()).isEqualTo(expected.getNombre());
 	}
+
 	private void compruebaCamposGerente(GerenteDTO expected, GerenteDTO actual) {
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
 	}
@@ -201,10 +204,24 @@ public class EntidadesJpaApplicationTests {
 		assertThat(actual.getEmpresa()).isEqualTo(expected.getEmpresa());
 	}
 
-
 	@Nested
 	@DisplayName("En cuanto a los centros")
 	public class PruebasCentros {
+
+		@BeforeEach
+		public void security() {
+			boolean admin = true;
+			token = jwtUtil.doGenerateToken("1", admin);
+		}
+		private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
+					.empresa("Gerente")
+					.idUsuario(1)
+					.build();
+
+		@BeforeEach
+		public void introduceDatosGerente() {
+			gerenteRepository.save(Mapper.toGerente(gerente));
+		}
 
 		@Nested
 		@DisplayName("Cuando no hay centros")
@@ -218,7 +235,7 @@ public class EntidadesJpaApplicationTests {
 				@DisplayName("Devuelve la lista de centros vacía")
 				public void devuelveListaCentro() {
 
-					var peticion = get("http", "localhost", port, "/centro"); // Revisar el path
+					var peticion = get("http", "localhost", port, "/centro",token); // Revisar el path
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -231,7 +248,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("Devuelve error cuando se pide un centro concreto")
 				public void devuelveErrorAlConsultarCentro() {
-					var peticion = get("http", "localhost", port, "/centro");
+					var peticion = get("http", "localhost", port, "/centro",token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -244,7 +261,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("Devuelve error cuando se pide el gerente de un centro concreto")
 				public void devuelveErrorAlConsultarGerenteDeCentro() {
-					var peticion = get("http", "localhost", port, "/centro/1/gerente");
+					var peticion = get("http", "localhost", port, "/centro/1/gerente",token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -257,7 +274,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("Devuelve error cuando se pide el gerente de un centro con id no valida")
 				public void devuelveErrorAlConsultarGerenteDeCentroNoValido() {
-					var peticion = get("http", "localhost", port, "/centro/-1/gerente");
+					var peticion = get("http", "localhost", port, "/centro/-1/gerente",token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -280,7 +297,7 @@ public class EntidadesJpaApplicationTests {
 							.nombre("egeFIT")
 							.direccion("Calle merluza, 56")
 							.build();
-					var peticion = post("http", "localhost", port, "/centro", centro);
+					var peticion = post("http", "localhost", port, "/centro", centro,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -312,7 +329,7 @@ public class EntidadesJpaApplicationTests {
 							.nombre(null)
 							.build();
 
-					var peticion = post("http", "localhost", port, "/centro", centro);
+					var peticion = post("http", "localhost", port, "/centro", centro,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -332,7 +349,7 @@ public class EntidadesJpaApplicationTests {
 							.nombre("KKFit")
 							.direccion("Calle la calle KK, 56")
 							.build();
-					var peticion = put("http", "localhost", port, "/centro/2", centro);
+					var peticion = put("http", "localhost", port, "/centro/2", centro,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -345,7 +362,7 @@ public class EntidadesJpaApplicationTests {
 					var idGerente = IdGerenteDTO.builder()
 							.idGerente(1)
 							.build();
-					var peticion = put("http", "localhost", port, "/centro/1/gerente", idGerente);
+					var peticion = put("http", "localhost", port, "/centro/1/gerente", idGerente,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -358,7 +375,7 @@ public class EntidadesJpaApplicationTests {
 					var idGerente = IdGerenteDTO.builder()
 							.idGerente(1)
 							.build();
-					var peticion = put("http", "localhost", port, "/centro/-1/gerente", idGerente);
+					var peticion = put("http", "localhost", port, "/centro/-1/gerente", idGerente,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -372,7 +389,7 @@ public class EntidadesJpaApplicationTests {
 							.nombre("FitFit")
 							.direccion("Calle Fit, 8")
 							.build();
-					var peticion = put("http", "localhost", port, "/centro/-2", centro);
+					var peticion = put("http", "localhost", port, "/centro/-2", centro,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -387,7 +404,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("devuelve error cuando se elimina un centro concreto")
 				public void devuelveErrorAlEliminarCentro() {
-					var peticion = delete("http", "localhost", port, "/centro/2");
+					var peticion = delete("http", "localhost", port, "/centro/2",token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -397,7 +414,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("devuelve error cuando se elimina un centro con id no valida")
 				public void devuelveErrorAlEliminarCentroNoValidoVacio() {
-					var peticion = delete("http", "localhost", port, "/centro/-2");
+					var peticion = delete("http", "localhost", port, "/centro/-2",token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -407,7 +424,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("devuelve error cuando se elimina una asociacion de un centro concreto")
 				public void devuelveErrorAlEliminarAsociacionCentro() {
-					var peticion = delete("http", "localhost", port, "/centro/1/gerente");
+					var peticion = delete("http", "localhost", port, "/centro/1/gerente",token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -475,7 +492,7 @@ public class EntidadesJpaApplicationTests {
 				@DisplayName("Devuelve la lista de centros correctamente")
 				public void devuelveListaCentro() {
 
-					var peticion = get("http", "localhost", port, "/centro"); // Revisar el path
+					var peticion = get("http", "localhost", port, "/centro",token); // Revisar el path
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -524,7 +541,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("devuelve un centro concreto cuando existe")
 				public void devuelveCentro() {
-					var peticion = get("http", "localhost", port, "/centro/1");
+					var peticion = get("http", "localhost", port, "/centro/1",token);
 
 					var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
@@ -537,7 +554,7 @@ public class EntidadesJpaApplicationTests {
 				@DisplayName("devuelve el gerente de un centro concreto cuando existe")
 				public void devuelveGerenteCentro() {
 					// (Mapper.toCentroDTO(Mapper.toCentro(null))).
-					var peticion = get("http", "localhost", port, "/centro/3/gerente");
+					var peticion = get("http", "localhost", port, "/centro/3/gerente",token);
 
 					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
 
@@ -549,7 +566,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("da error cuando no existe el centro concreto")
 				public void errorCuandoCentroNoExiste() {
-					var peticion = get("http", "localhost", port, "/centro/28");
+					var peticion = get("http", "localhost", port, "/centro/28",token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -562,7 +579,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("da error cuando el id del centro no es valido")
 				public void errorCuandoCentroNoValido() {
-					var peticion = get("http", "localhost", port, "/centro/-3");
+					var peticion = get("http", "localhost", port, "/centro/-3",token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -585,7 +602,7 @@ public class EntidadesJpaApplicationTests {
 							.nombre("egergdrgFIT")
 							.direccion("Calle pescaito, 54")
 							.build();
-					var peticion = post("http", "localhost", port, "/centro", centro);
+					var peticion = post("http", "localhost", port, "/centro", centro,token);
 					// La petición necesita una query string
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
@@ -599,7 +616,7 @@ public class EntidadesJpaApplicationTests {
 				@DisplayName("pero da error cuando el centro a insertar es null")
 				public void centroNull() {
 					CentroNuevoDTO centro = null;
-					var peticion = post("http", "localhost", port, "/centro", centro);
+					var peticion = post("http", "localhost", port, "/centro", centro,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -641,7 +658,7 @@ public class EntidadesJpaApplicationTests {
 							.direccion("Calle la gaviota, 56")
 							.build();
 
-					var peticion = put("http", "localhost", port, "/centro/1", centro);
+					var peticion = put("http", "localhost", port, "/centro/1", centro,token);
 
 					var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
@@ -657,7 +674,7 @@ public class EntidadesJpaApplicationTests {
 							.nombre("PepeitoFit")
 							.direccion("Calle la gata, 56")
 							.build();
-					var peticion = put("http", "localhost", port, "/centro/28", centro);
+					var peticion = put("http", "localhost", port, "/centro/28", centro,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -675,7 +692,7 @@ public class EntidadesJpaApplicationTests {
 				public void eliminaCorrectamenteCentro() {
 					// List<Centro> centrosAntes = centroRepository.findAll();
 					// centrosAntes.forEach(c->System.out.println(c));
-					var peticion = delete("http", "localhost", port, "/centro/1");
+					var peticion = delete("http", "localhost", port, "/centro/1",token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -688,7 +705,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("da error cuando no existe")
 				public void errorCuandoNoExisteCentro() {
-					var peticion = delete("http", "localhost", port, "/centro/28");
+					var peticion = delete("http", "localhost", port, "/centro/28",token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -755,7 +772,7 @@ public class EntidadesJpaApplicationTests {
 							.idGerente(1)
 							.build();
 
-					var peticion = put("http", "localhost", port, "/centro/2/gerente", id);
+					var peticion = put("http", "localhost", port, "/centro/2/gerente", id,token);
 
 					var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
@@ -780,7 +797,7 @@ public class EntidadesJpaApplicationTests {
 					var idGerenteDTO = IdGerenteDTO.builder()
 							.idGerente(gerente.getIdUsuario())
 							.build();
-					var peticion = put("http", "localhost", port, "/centro/28", idGerenteDTO);
+					var peticion = put("http", "localhost", port, "/centro/28", idGerenteDTO,token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -800,8 +817,14 @@ public class EntidadesJpaApplicationTests {
 	 * 
 	 */
 	@Nested
-	@DisplayName("En cuanto a los gerentes")
-	public class PruebasGerente {
+	@DisplayName("En cuanto a los gerentes. Cuando Acceso con admin")
+	public class PruebasGerenteAdministrador {
+		@BeforeEach
+		public void security() {
+			boolean admin = true;
+			token = jwtUtil.doGenerateToken("1", admin);
+		}
+
 		@Nested
 		@DisplayName("Cuando no hay Gerentes")
 		public class ListaGerentesVacia {
@@ -811,9 +834,8 @@ public class EntidadesJpaApplicationTests {
 
 				@Test
 				@DisplayName("Devuelve la lista de gerentes vacía")
-				// @WithMockUser(username = "admin", roles = {"ROLE_ADMIN"})
 				public void devuelveListaGerentes() {
-					var peticion = get("http", "localhost", port, "/gerente");
+					var peticion = get("http", "localhost", port, "/gerente", token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -826,7 +848,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("Devuelve error cuando se pide un Gerente concreto")
 				public void devuelveErrorAlConsultarGerente() {
-					var peticion = get("http", "localhost", port, "/gerente");
+					var peticion = get("http", "localhost", port, "/gerente", token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -848,7 +870,7 @@ public class EntidadesJpaApplicationTests {
 							.empresa("patatas")
 							.idUsuario(6)
 							.build();
-					var peticion = post("http", "localhost", port, "/gerente", gerente);
+					var peticion = post("http", "localhost", port, "/gerente", gerente, token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -866,7 +888,7 @@ public class EntidadesJpaApplicationTests {
 					var gerente = GerenteNuevoDTO.builder()
 							.empresa("kfc")
 							.build();
-					var peticion = put("http", "localhost", port, "/gerente/2", gerente);
+					var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -880,7 +902,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("devuelve error cuando se elimina un Gerente concreto")
 				public void devuelveErrorAlEliminarGerente() {
-					var peticion = delete("http", "localhost", port, "/gerente/40");
+					var peticion = delete("http", "localhost", port, "/gerente/40", token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -915,7 +937,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("Devuelve la lista de Gerentes correctamente")
 				public void devuelveListaGerente() {
-					var peticion = get("http", "localhost", port, "/gerente");
+					var peticion = get("http", "localhost", port, "/gerente", token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -928,7 +950,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("lo devuelve cuando existe")
 				public void devuelveGerente() {
-					var peticion = get("http", "localhost", port, "/gerente/1");
+					var peticion = get("http", "localhost", port, "/gerente/1", token);
 
 					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
 
@@ -940,7 +962,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("da error cuando no existe")
 				public void errorCuandoGerenteNoExiste() {
-					var peticion = get("http", "localhost", port, "/gerente/40");
+					var peticion = get("http", "localhost", port, "/gerente/40", token);
 
 					var respuesta = restTemplate.exchange(peticion,
 							new ParameterizedTypeReference<List<GerenteDTO>>() {
@@ -964,7 +986,7 @@ public class EntidadesJpaApplicationTests {
 							.empresa("yeehaw")
 							.build();
 
-					var peticion = put("http", "localhost", port, "/gerente/1", gerente);
+					var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
 
 					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
 
@@ -979,7 +1001,7 @@ public class EntidadesJpaApplicationTests {
 					var gerente = GerenteNuevoDTO.builder()
 							.empresa("yeehow")
 							.build();
-					var peticion = put("http", "localhost", port, "/gerente/40", gerente);
+					var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -995,7 +1017,7 @@ public class EntidadesJpaApplicationTests {
 				@DisplayName("Lo elimina cuando existe")
 				public void eliminaCorrectamenteGerente() {
 
-					var peticion = delete("http", "localhost", port, "/gerente/1");
+					var peticion = delete("http", "localhost", port, "/gerente/1", token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -1008,7 +1030,7 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("da error cuando no existe")
 				public void errorCuandoNoExisteGerente() {
-					var peticion = delete("http", "localhost", port, "/gerente/40");
+					var peticion = delete("http", "localhost", port, "/gerente/40", token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
@@ -1027,11 +1049,246 @@ public class EntidadesJpaApplicationTests {
 							.empresa("patatas")
 							.idUsuario(6)
 							.build();
-					var peticion = post("http", "localhost", port, "/gerente", gerente);
+					var peticion = post("http", "localhost", port, "/gerente", gerente, token);
 
 					var respuesta = restTemplate.exchange(peticion, Void.class);
 
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+				}
+
+			}
+
+		}
+	}
+
+	@Nested
+	@DisplayName("En cuanto a los gerentes. Cuando Acceso no admin")
+	public class PruebasGerenteNoAdministrador {
+		@BeforeEach
+		public void security() {
+			boolean admin = false;
+			token = jwtUtil.doGenerateToken("1", admin);
+		}
+
+		@Nested
+		@DisplayName("Cuando no hay Gerentes")
+		public class ListaGerentesVacia {
+			@Nested
+			@DisplayName("Metodos GET gerente lista vacia")
+			public class GetGerentesVacia {
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO Devuelve la lista de gerentes vacía")
+				public void devuelveListaGerentes() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+					// Verifica la respuesta
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO Devuelve error cuando se pide un Gerente concreto")
+				public void devuelveErrorAlConsultarGerente() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
+			}
+
+			@Nested
+			@DisplayName("Metodos POST gerente lista vacia")
+			public class PostGerentesVacia {
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO Intenta crear un gerente cuando no hay gerentes")
+				public void CrearGerenteBien() {
+					var gerente = Gerente.builder()
+							.empresa("patatas")
+							.idUsuario(6)
+							.build();
+					var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+			}
+
+			@Nested
+			@DisplayName("Metodos PUT gerente lista vacia")
+			public class PutGerentesVacia {
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO devuelve error cuando se modifica un gerente concreto")
+				public void devuelveErrorAlModificarGerente() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("kfc")
+							.build();
+					var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+			}
+
+			@Nested
+			@DisplayName("Metodos DELETE gerente lista vacia")
+			public class DeleteGerentesVacia {
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO devuelve error cuando se elimina un Gerente concreto")
+				public void devuelveErrorAlEliminarGerente() {
+					var peticion = delete("http", "localhost", port, "/gerente/40", token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+			}
+		}
+
+		@Nested
+		@DisplayName("Cuando hay Gerentes")
+		public class ListaGerentesConDatos {
+
+			private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
+					.empresa("patatas")
+					.idUsuario(1)
+					.build();
+
+			private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
+					.empresa("brocoli")
+					.idUsuario(2)
+					.build();
+
+			@BeforeEach
+			public void introduceDatosGerente() {
+				gerenteRepository.save(Mapper.toGerente(gerente1));
+				gerenteRepository.save(Mapper.toGerente(gerente2));
+			}
+
+			@Nested
+			@DisplayName("Metodos Get gerente en Lista llena")
+			public class GetGerente {
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO Devuelve la lista de Gerentes correctamente")
+				public void devuelveListaGerente() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO lo devuelve cuando existe")
+				public void devuelveGerente() {
+					var peticion = get("http", "localhost", port, "/gerente/1", token);
+
+					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
+				public void errorCuandoGerenteNoExiste() {
+					var peticion = get("http", "localhost", port, "/gerente/40", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+			}
+
+			@Nested
+			@DisplayName("Metodos PUT gerente lista llena")
+			public class PutGerentes {
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO Lo modifica correctamente cuando existe")
+				@DirtiesContext
+				public void modificaCorrectamenteGerente() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("yeehaw")
+							.build();
+
+					var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO Da error cuando no existe")
+				public void errorCuandoNoExiste() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("yeehow")
+							.build();
+					var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+			}
+
+			@Nested
+			@DisplayName("Metodos DELETE un gerente lista llena")
+			public class DeleteGerentes {
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO Lo elimina cuando existe")
+				public void eliminaCorrectamenteGerente() {
+
+					var peticion = delete("http", "localhost", port, "/gerente/1", token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
+				public void errorCuandoNoExisteGerente() {
+					var peticion = delete("http", "localhost", port, "/gerente/40", token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+			}
+
+			@Nested
+			@DisplayName("Metodos POST gerente en lista llena")
+			public class PostGerente {
+				@Test
+				@DisplayName("ACCESO DENEGADO. NO Crea un gerente bien")
+				public void CrearGerenteBien() {
+					var gerente = Gerente.builder()
+							.empresa("patatas")
+							.idUsuario(6)
+							.build();
+					var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 				}
 
 			}
@@ -1051,6 +1308,6 @@ public class EntidadesJpaApplicationTests {
 	public class PruebasMensajes {
 
 		// TO DO
-		
+
 	}
 }

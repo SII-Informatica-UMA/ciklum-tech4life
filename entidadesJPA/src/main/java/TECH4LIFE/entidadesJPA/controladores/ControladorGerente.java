@@ -1,4 +1,5 @@
 package TECH4LIFE.entidadesJPA.controladores;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class ControladorGerente {
     
     private LogicaGerente servicio;
 
+
     //Constructor
     public ControladorGerente(LogicaGerente servicioGerente){
         this.servicio = servicioGerente;
@@ -26,10 +28,10 @@ public class ControladorGerente {
 
     //GET Lista Gerentes
     @GetMapping
-    public ResponseEntity<List<GerenteDTO>> listaGerentes(){
+    public ResponseEntity<List<GerenteDTO>> listaGerentes(@RequestHeader("Authorization") String authHeader){
 
         try {
-            List<GerenteDTO> gerentes = servicio.getGerentes().stream().map(Mapper::toGerenteDTO).toList();
+            List<GerenteDTO> gerentes = servicio.getGerentes(authHeader).stream().map(Mapper::toGerenteDTO).toList();
             return ResponseEntity.ok(gerentes);
         } catch (GerenteNoExistente e) {
              //No encontrado 404
@@ -38,13 +40,11 @@ public class ControladorGerente {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-    // DUDA CORREO --------------------------------------------------------------------------------------------!  
-    //////////QUITAR ERROR 404 3N EL POST!!!!!
     //GET Gerente {idGerente}
     @GetMapping("/{idGerente}")
-    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="idGerente") Integer idGerente){
+    public ResponseEntity<GerenteDTO> obtenerGerentePorId(@PathVariable(name="idGerente") Integer idGerente,@RequestHeader("Authorization") String authHeader){
         try{  
-            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(idGerente));
+            GerenteDTO gerenteDTO = Mapper.toGerenteDTO(servicio.getGerente(idGerente,authHeader));
                 //Todo bien 200
                 return ResponseEntity.ok(gerenteDTO);
         }catch(UsuarioNoAutorizado e){
@@ -59,10 +59,10 @@ public class ControladorGerente {
     
     //PUT Gerente {idGerente}
     @PutMapping("/{idGerente}")
-    public ResponseEntity<GerenteDTO> modificarGerente(@PathVariable(name="idGerente") Integer idGerente, @RequestBody GerenteDTO gerente){
+    public ResponseEntity<GerenteDTO> modificarGerente(@PathVariable(name="idGerente") Integer idGerente, @RequestBody GerenteDTO gerente,@RequestHeader("Authorization") String authHeader){
 
         try{
-            servicio.modificarGerente(idGerente, Mapper.toGerente(gerente));
+            servicio.modificarGerente(idGerente, Mapper.toGerente(gerente),authHeader);
            // [200] El gerente se ha actualizado
             return ResponseEntity.ok().build();
         }catch (GerenteNoExistente e){
@@ -74,9 +74,9 @@ public class ControladorGerente {
     }
     //DELETE Gerente {idGerente}
     @DeleteMapping("/{idGerente}")
-    public ResponseEntity<?> eliminarGerentePorId(@PathVariable(name="idGerente") Integer idGerente){
+    public ResponseEntity<?> eliminarGerentePorId(@PathVariable(name="idGerente") Integer idGerente,@RequestHeader("Authorization") String authHeader){
         try{
-            servicio.eliminarGerente(idGerente);
+            servicio.eliminarGerente(idGerente,authHeader);
              // [200] El gerente se ha borrado con éxito
             return ResponseEntity.ok().build();
         }catch (GerenteNoExistente e){
@@ -92,10 +92,10 @@ public class ControladorGerente {
     //POST Lista Gerentes
      
     @PostMapping
-    public ResponseEntity<GerenteDTO> addGerente(@RequestBody GerenteNuevoDTO gerente, UriComponentsBuilder builder ){
+    public ResponseEntity<GerenteDTO> addGerente(@RequestBody GerenteNuevoDTO gerente, UriComponentsBuilder builder,@RequestHeader("Authorization") String authHeader ){
 
         try{
-            Gerente nuevoGerente = servicio.addGerente(Mapper.toGerente(gerente));
+            Gerente nuevoGerente = servicio.addGerente(Mapper.toGerente(gerente),authHeader);
             URI uri= builder
                 .path(String.format("/%d",nuevoGerente.getId()))
                 .build()
