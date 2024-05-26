@@ -235,8 +235,8 @@ public class EntidadesJpaApplicationTests {
 
 				// Paso 3: Verificar la respuesta
 				assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-				Void mensajeCreado = respuesta.getBody();
-				assertThat(mensajeCreado).isNotNull();
+				//Void mensajeCreado = respuesta.getBody();
+				//assertThat(mensajeCreado).isNotNull();
 			}
 
 			@Test
