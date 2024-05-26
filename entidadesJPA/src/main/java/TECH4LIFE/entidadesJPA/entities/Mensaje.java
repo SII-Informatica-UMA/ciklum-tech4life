@@ -22,16 +22,17 @@ import org.springframework.boot.context.properties.bind.Name;
 public class Mensaje {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer idMensaje ;
     private String asunto ;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany
     private Set<Destinatario> destinatarios;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany
     private Set<Destinatario> copia;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany
     private Set<Destinatario> copiaOculta;
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn (name = "remitente_fk", nullable = false)
     private Destinatario remitente;
     private String contenido;
 }

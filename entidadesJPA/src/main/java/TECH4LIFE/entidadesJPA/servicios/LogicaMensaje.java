@@ -35,14 +35,12 @@ public class LogicaMensaje {
 
 //-----------------------------------------------------------------------------------------------
     //Get todos los mensajes de un centro
-    public List<Mensaje> getMensajesByCentro(Long idCentro) throws MensajeNoExistente, UsuarioNoAutorizado {
-        List<Mensaje> mensajes;
+    public List<Mensaje> getMensajesByCentro(Integer idCentro) throws MensajeNoExistente, UsuarioNoAutorizado {
+        List<Mensaje> mensajesCentro = mensajeRepo.bandejaTodos(idCentro);
 
-        mensajes = mensajeRepo.bandejaTodos(idCentro);
+        if(mensajesCentro.isEmpty()) throw new MensajeNoExistente();
 
-            if(mensajes.isEmpty()) throw new MensajeNoExistente();
-
-        return mensajes;
+        return mensajesCentro;
     }
 
 //----------------------------------------------------------------------------------------
@@ -57,14 +55,8 @@ public class LogicaMensaje {
 
 //----------------------------------------------------------------------------------------
     //Post un nuevo mensaje
-    public Mensaje postMensaje(MensajeNuevoDTO mensajeCrear, Integer idCentro) throws MensajeNoExistente, UsuarioNoAutorizado{
-        //if(mensajeCrear == null) throw new MensajeNoExistente();
-
-        Destinatario remite = destinatarioRepo.findById(idCentro).get();
-        DestinatarioDTO remitente = Mapper.toDestinatarioDTO(remite);
-        mensajeCrear.setRemitente(remitente);
-
-        Mensaje mensajeCreado = mensajeRepo.save(Mapper.toMensaje(mensajeCrear));
+    public Mensaje postMensaje(Mensaje mensajeCrear) throws UsuarioNoAutorizado{
+        Mensaje mensajeCreado = mensajeRepo.save(mensajeCrear);
         return mensajeCreado;
     }
 

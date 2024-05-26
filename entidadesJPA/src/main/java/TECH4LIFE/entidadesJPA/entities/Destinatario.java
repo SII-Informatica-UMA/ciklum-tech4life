@@ -1,6 +1,7 @@
 package TECH4LIFE.entidadesJPA.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import lombok.*;
 @ToString
 @Entity
 public class Destinatario {
-    @Id
+    @Id @GeneratedValue
     private Integer id ;
     private TipoDestinatario tipo;
 }

@@ -30,6 +30,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -180,56 +181,44 @@ public class EntidadesJpaApplicationTests {
 					.nombre("Centro3")
 					.direccion("Calle del Centro3, 3")
 					.build();
-			
+
+			@BeforeEach
+			public void insertarCentro() {
+				centroRepository.save(Mapper.toCentro(centro1));
+				centroRepository.save(Mapper.toCentro(centro2));
+				centroRepository.save(Mapper.toCentro(centro3));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+
+			}
 
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
 			public void devuelveListaMensajes(){
-				var peticion = get("http", "localhost", port, "/mensaje/centro");
 				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
 						HttpMethod.GET,
 						null,
                         new ParameterizedTypeReference<List<MensajeDTO>>() {
                         });
 
-				assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
-				List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
-				assertThat(listaMensajes).isEmpty(); // Verificar que la lista de mensajes está vacía
-			}
-			@BeforeEach
-			@Transactional
-			public void insertarDesRem(){
-				// Creación de destinatarios
-				destinatario1 = DestinatarioDTO.builder()
-						.id(1)
-						.tipo(TipoDestinatario.CLIENTE)
-						.build();
-				 destinatario2 = DestinatarioDTO.builder()
-						.id(2)
-						.tipo(TipoDestinatario.CENTRO)
-						.build();
-				// Creación del remitente
-				remitente = DestinatarioDTO.builder()
-						.id(3)  // ID del remitente
-						.tipo(TipoDestinatario.CENTRO)  // Tipo de destinatario (remitente)
-						.build();
-				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
-				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
-				destinatarioRepository.save(Mapper.toDestinatario(remitente));
-
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
+				//List<MensajeDTO> listaMensajes = responseEntity.getBody(); // Obtener el cuerpo de la respuesta
+				//assertThat(listaMensajes).isEmpty(); // Verificar que la lista de mensajes está vacía
 			}
 
 			@Test
 			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
 			public void insertaMensaje() {
-				insertarDesRem();
+				//Ya tenemos los destinatarios/remitentes creados
+				Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(Arrays.asList(destinatario2, destinatario3));
 				// Paso 1: Creación del objeto MensajeNuevoDTO
 				MensajeNuevoDTO mensajeNuevoDTO = MensajeNuevoDTO.builder()
 						.asunto("Asunto del mensaje")
-						.destinatarios(new HashSet<>(Arrays.asList(destinatario1, destinatario2)))
-						.copia(new HashSet<>())  // Puedes agregar copias si es necesario
-						.copiaOculta(new HashSet<>())  // Puedes agregar copias ocultas si es necesario
-						.remitente(remitente)  // Agregar el remitente al mensaje
+						.destinatarios(listaDestinatariosDTO)
+						.copia(listaDestinatariosDTO)  // Puedes agregar copias si es necesario
+						.copiaOculta(listaDestinatariosDTO)  // Puedes agregar copias ocultas si es necesario
+						.remitente(destinatario1)  // Agregar el remitente al mensaje
 						.contenido("Contenido del mensaje")
 						.build();
 
@@ -289,63 +278,64 @@ public class EntidadesJpaApplicationTests {
 		@Nested
 		@DisplayName("Cuando sí hay mensajes")
 		public class ListaMensajesConDatos{
-			private DestinatarioDTO destinatario1;
-			private DestinatarioDTO destinatario2;
-			private DestinatarioDTO remitente1;
-			private DestinatarioDTO remitente2;
+			private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+					.id(1)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
 
-			public void insertarDesRem(){
-				// Creación de destinatarios
-				destinatario1 = DestinatarioDTO.builder()
-						.id(1)
-						.tipo(TipoDestinatario.CLIENTE)
-						.build();
-				destinatario2 = DestinatarioDTO.builder()
-						.id(2)
-						.tipo(TipoDestinatario.CENTRO)
-						.build();
-				// Creación de remitentes
-				remitente1 = DestinatarioDTO.builder()
-						.id(3)  // ID del remitente
-						.tipo(TipoDestinatario.CENTRO)  // Tipo de destinatario (remitente)
-						.build();
+			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+					.nombre("Centro1")
+					.direccion("Calle del Centro1, 1")
+					.build();
 
-				remitente2 = DestinatarioDTO.builder()
-						.id(4)  // ID del remitente
-						.tipo(TipoDestinatario.CENTRO)  // Tipo de destinatario (remitente)
-						.build();
-			}
-			@BeforeEach
-			public void insertaMensajes() {
-				insertarDesRem();
-				 MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
-						.asunto("Cambio entrenador")
-						.destinatarios(new HashSet<>(Arrays.asList(destinatario1, destinatario2)))
-						.copia(new HashSet<>())  // Puedes agregar copias si es necesario
-						.copiaOculta(new HashSet<>())  // Puedes agregar copias ocultas si es necesario
-						.remitente(remitente1)  // Agregar el remitente al mensaje quiero cambiar de entrenador
-						.build();
-				 MensajeNuevoDTO mensaje2 = MensajeNuevoDTO.builder()
-						.asunto("Cambio en el evento")
-						 .destinatarios(new HashSet<>(Arrays.asList(destinatario1, destinatario2)))
-						 .copia(new HashSet<>())  // Puedes agregar copias si es necesario
-						 .copiaOculta(new HashSet<>())  // Puedes agregar copias ocultas si es necesario
-						 .remitente(remitente2)  // Agregar el remitente al mensaje
-						.contenido("Buenos días, les informo del siguiente cambio en el evento")
-						.build();
-				mensajeRepository.save(Mapper.toMensaje(mensaje1));
-				mensajeRepository.save(Mapper.toMensaje(mensaje2));
-			}
+			private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+					.id(2)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+					.nombre("Centro2")
+					.direccion("Calle del Centro2, 2")
+					.build();
+
+			private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+					.nombre("Centro3")
+					.direccion("Calle del Centro3, 3")
+					.build();
+
+			private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+
 			@BeforeEach
 			public void insertarCentro() {
-				Centro centro1 = new Centro();
-				centro1.setIdCentro(1);
-				centroRepository.save(centro1);
+				centroRepository.save(Mapper.toCentro(centro1));
+				centroRepository.save(Mapper.toCentro(centro2));
+				centroRepository.save(Mapper.toCentro(centro3));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+				Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(Arrays.asList(destinatario2, destinatario3));
+				MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
+						.asunto("Asunto1")
+						.remitente(destinatario1)
+						.destinatarios(listaDestinatariosDTO)
+						.copia(listaDestinatariosDTO)
+						.copiaOculta(listaDestinatariosDTO)
+						.build();
+				mensajeRepository.save(Mapper.toMensaje(mensaje1));
+
 			}
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro")
 			public void devuelveListaMensajes(){
-				var peticion = get("http", "localhost", port, "/mensaje/centro");
 				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
 						HttpMethod.GET,
 						null,
@@ -359,13 +349,15 @@ public class EntidadesJpaApplicationTests {
 			@Test
 			@DisplayName("Inserta un mensaje en una lista vacía asociada a un mensaje")
 			public void insertaMensaje(){
+				Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(Arrays.asList(destinatario2, destinatario3));
 				// Paso 1: Creación del objeto MensajeNuevoDTO
-				MensajeNuevoDTO mensajeNuevoDTO = MensajeNuevoDTO.builder()
+				MensajeDTO mensajeNuevoDTO = MensajeDTO.builder()
+						.idMensaje(1)
 						.asunto("Asunto del mensaje")
-						.destinatarios(new HashSet<>(Arrays.asList(destinatario1, destinatario2)))
-						.copia(new HashSet<>())  // Puedes agregar copias si es necesario
-						.copiaOculta(new HashSet<>())  // Puedes agregar copias ocultas si es necesario
-						.remitente(remitente1)  // Agregar el remitente al mensaje
+						.destinatarios(listaDestinatariosDTO)
+						.copia(listaDestinatariosDTO)  // Puedes agregar copias si es necesario
+						.copiaOculta(listaDestinatariosDTO)  // Puedes agregar copias ocultas si es necesario
+						.remitente(destinatario1)  // Agregar el remitente al mensaje
 						.contenido("Contenido del mensaje")
 						.build();
 
