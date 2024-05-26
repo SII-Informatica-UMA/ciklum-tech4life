@@ -156,17 +156,31 @@ public class EntidadesJpaApplicationTests {
 		@Nested
 		@DisplayName("Cuando no hay mensajes")
 		public class ListaMensajesVacia{
-			private DestinatarioDTO destinatario1;
-			private DestinatarioDTO destinatario2;
-			private DestinatarioDTO remitente;
-
-
-			@BeforeEach
-			public void insertarCentro() {
-				Centro centro1 = new Centro();
-				centro1.setIdCentro(1);
-				centroRepository.save(centro1);
-			}
+			private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+					.id(1)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+					.nombre("Centro1")
+					.direccion("Calle del Centro1, 1")
+					.build();
+			private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+					.id(2)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+					.nombre("Centro2")
+					.direccion("Calle del Centro2, 2")
+					.build();
+			private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+			private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+					.nombre("Centro3")
+					.direccion("Calle del Centro3, 3")
+					.build();
+			
 
 			@Test
 			@DisplayName("Devuelve la lista de mensajes asociada a un centro vacía")
