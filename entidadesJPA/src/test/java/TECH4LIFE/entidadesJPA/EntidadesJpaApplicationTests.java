@@ -254,7 +254,7 @@ public class EntidadesJpaApplicationTests {
 
 			}
 
-			/*@Test
+			@Test
 			@DisplayName("Inserta correctamente un mensaje nuevo")
 			public void InsertaMensaje(){
 
@@ -274,7 +274,7 @@ public class EntidadesJpaApplicationTests {
 						Void.class);
 
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-			}*/
+			}
 
 
 			// TO DO
