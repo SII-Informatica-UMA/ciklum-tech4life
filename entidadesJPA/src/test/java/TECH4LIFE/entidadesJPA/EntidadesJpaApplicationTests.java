@@ -1,16 +1,14 @@
 package TECH4LIFE.entidadesJPA;
 
 import TECH4LIFE.entidadesJPA.controladores.Mapper;
-import TECH4LIFE.entidadesJPA.dtos.CentroDTO;
-import TECH4LIFE.entidadesJPA.dtos.CentroNuevoDTO;
-import TECH4LIFE.entidadesJPA.dtos.GerenteDTO;
-import TECH4LIFE.entidadesJPA.dtos.GerenteNuevoDTO;
-import TECH4LIFE.entidadesJPA.dtos.IdGerenteDTO;
+import TECH4LIFE.entidadesJPA.dtos.*;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.entities.Gerente;
+import TECH4LIFE.entidadesJPA.entities.TipoDestinatario;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.GerenteRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
+import TECH4LIFE.entidadesJPA.repositories.DestinatarioRepository;
 import jakarta.transaction.Transactional;
 
 import TECH4LIFE.entidadesJPA.security.JwtUtil;
@@ -25,10 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -36,8 +31,7 @@ import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -93,6 +87,9 @@ public class EntidadesJpaApplicationTests {
 	private GerenteRepository gerenteRepository;
 	@Autowired
 	private MensajeRepository mensajeRepository;
+	@Autowired
+	private DestinatarioRepository destinatarioRepository;
+
 
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -109,6 +106,7 @@ public class EntidadesJpaApplicationTests {
 		centroRepository.deleteAll();
 		gerenteRepository.deleteAll();
 		mensajeRepository.deleteAll();
+		destinatarioRepository.deleteAll();
 		// token = jwtUtil.generateToken("usuario1"); //COMENTADO PARA TEST MARTIN
 	}
 
@@ -1310,10 +1308,226 @@ public class EntidadesJpaApplicationTests {
 	 */
 
 	@Nested
-	@DisplayName("En cuanto a los mensajes")
+	@DisplayName("Tests de Mensajes")
 	public class PruebasMensajes {
+		@Nested
+		@DisplayName("Cuando no hay mensajes")
+		public class ListaMensajesVacia {
+			private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+					.id(1)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
 
-		// TO DO
+			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+					.nombre("Centro1")
+					.direccion("Calle del Centro1, 1")
+					.build();
+
+			private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+					.id(2)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+					.nombre("Centro2")
+					.direccion("Calle del Centro2, 2")
+					.build();
+
+			private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+					.nombre("Centro3")
+					.direccion("Calle del Centro3, 3")
+					.build();
+
+			@BeforeEach
+			public void insertarCentro() {
+				centroRepository.save(Mapper.toCentro(centro1));
+				centroRepository.save(Mapper.toCentro(centro2));
+				centroRepository.save(Mapper.toCentro(centro3));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+			}
+
+			@Test
+			@DisplayName("Da error al pedir una lista de mensajes vacía")
+			public void devuelveListaMensajesError() {
+
+				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
+						HttpMethod.GET,
+						null,
+						new ParameterizedTypeReference<List<MensajeDTO>>() {
+						});
+
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
+				//List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el cuerpo de la respuesta
+				//assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de mensajes está vacía
+			}
+
+			@Test
+			@DisplayName("Da error al pedir un mensaje no existente")
+			public void errordevuelveMensajeById() {
+
+				var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
+
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<MensajeDTO>() {
+						});
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+
+			}
+
+			@Test
+			@DisplayName("Da error al eliminar un mensaje no existente")
+			public void errorEliminaMensajeById() {
+
+				var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<MensajeDTO>() {
+						});
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+
+			}
+
+			@Test
+			@DisplayName("Inserta correctamente un mensaje nuevo")
+			public void InsertaMensaje(){
+
+				Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(Arrays.asList(destinatario2,destinatario3));
+
+				MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
+						.asunto("Saludos")
+						.contenido("Hola hola")
+						.destinatarios(listaDestinatarios)
+						.copia(listaDestinatarios)
+						.copiaOculta(listaDestinatarios)
+						.build();
+				// ¿Posible cambio en petición?
+				//var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1", mensajeNuevo);
+				String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
+				HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
+
+				ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<MensajeDTO>() {
+				});
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+			}
+
+
+			// TO DO
+
+		}
+		@Nested
+		@DisplayName("Cuando hay mensajes")
+		public class ListaMensajesLlena{
+			private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+					.id(1)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+					.nombre("Centro1")
+					.direccion("Calle del Centro1, 1")
+					.build();
+
+			private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+					.id(2)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+			private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+					.nombre("Centro2")
+					.direccion("Calle del Centro2, 2")
+					.build();
+
+			private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+					.nombre("Centro3")
+					.direccion("Calle del Centro3, 3")
+					.build();
+
+			private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
+					.id(3)
+					.tipo(TipoDestinatario.CENTRO)
+					.build();
+
+
+			@BeforeEach
+			public void insertarCentro() {
+				centroRepository.save(Mapper.toCentro(centro1));
+				centroRepository.save(Mapper.toCentro(centro2));
+				centroRepository.save(Mapper.toCentro(centro3));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+				destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+				Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(Arrays.asList(destinatario2, destinatario3));
+				//listaDestinatariosDTO.add(destinatario2);
+				//listaDestinatariosDTO.add(destinatario3);
+				MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
+						.asunto("Asunto1")
+						.remitente(destinatario1)
+						.destinatarios(listaDestinatariosDTO)
+						.copia(listaDestinatariosDTO)
+						.copiaOculta(listaDestinatariosDTO)
+						.build();
+				mensajeRepository.save(Mapper.toMensaje(mensaje1));
+
+			}
+
+			@Test
+			@DisplayName("Devuelve correctamente el mensaje")
+			public void devuelveMensajeById() {
+
+				var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
+
+				var respuesta = restTemplate.exchange(peticion,
+						new ParameterizedTypeReference<MensajeDTO>() {
+						});
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+			}
+
+			@Test
+			@DisplayName("Elimina correctamente un mensaje existente")
+			public void EliminaMensajeById() {
+
+				var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+
+				var respuesta = restTemplate.exchange(peticion,
+						Void.class
+				);
+
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+			}
+
+			@Test
+			@DisplayName("Devuelve la lista de mensajes de un centro correctamente")
+			public void devuelveListaMensajes() {
+
+				ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange("http://localhost:" + port + "/mensaje/centro?centro=1",
+						HttpMethod.GET,
+						null,
+						new ParameterizedTypeReference<List<MensajeDTO>>() {
+						});
+
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
+
+			}
+
+		}
 
 	}
 }
+
