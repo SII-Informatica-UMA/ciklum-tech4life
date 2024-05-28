@@ -716,13 +716,17 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("Elimina una asociacion de un gerente de un centro concreto correctamente")
 				public void devuelveErrorAlEliminarAsociacionCentro() {
-					String url = String.format("http://localhost:%d/centro/3/gerente?gerente=%d", port, 3);
+					/*String url = String.format("http://localhost:%d/centro/3/gerente?gerente=%d", port, 3);
 
 					var respuesta = restTemplate.exchange(
 							url,
 							HttpMethod.DELETE,
 							null,
 							Void.class);
+					*/
+					//Hacer esto en vez?:
+					var peticion = delete("http", "localhost", port, "/centro/3/gerente?gerente=3", token);
+					var respuesta = restTemplate.exchange(peticion, Void.class);
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 					Optional<Centro> centro = centroRepository.findById(3);
 					assertThat(centro.get().getGerente()).isEqualTo(null);
@@ -731,13 +735,15 @@ public class EntidadesJpaApplicationTests {
 				@Test
 				@DisplayName("Da error al eliminar una asociacion de un gerente de un centro concreto no valido")
 				public void devuelveErrorAlEliminarAsociacionCentroNoValido() {
-					String url = String.format("http://localhost:%d/centro/-3/gerente?gerente=%d", port, 1);
+					/*String url = String.format("http://localhost:%d/centro/-3/gerente?gerente=%d", port, 1);
 
 					var respuesta = restTemplate.exchange(
 							url,
 							HttpMethod.DELETE,
 							null,
-							Void.class);
+							Void.class);*/
+					var peticion = delete("http", "localhost", port, "centro/-3/gerente?gerente=1", token);
+					var respuesta = restTemplate.exchange(peticion, Void.class);
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 
 				}
