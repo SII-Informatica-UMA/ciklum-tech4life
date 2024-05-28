@@ -1,9 +1,11 @@
 package TECH4LIFE.entidadesJPA.controladores;
 
+import TECH4LIFE.entidadesJPA.dtos.DestinatarioDTO;
 import TECH4LIFE.entidadesJPA.dtos.MensajeDTO;
 import TECH4LIFE.entidadesJPA.dtos.MensajeNuevoDTO;
 import TECH4LIFE.entidadesJPA.entities.Centro;
 import TECH4LIFE.entidadesJPA.entities.Mensaje;
+import TECH4LIFE.entidadesJPA.entities.TipoDestinatario;
 import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
 import TECH4LIFE.entidadesJPA.repositories.DestinatarioRepository;
@@ -80,10 +82,11 @@ public class ControladorMensaje {
     public ResponseEntity<MensajeDTO> crearMensaje(@RequestParam (value="centro", required = true) Integer centroId, @RequestBody MensajeNuevoDTO mensajeNuevoDTO, UriComponentsBuilder builder) {
         try{
             //CODE 201: Se crea el mensaje y lo devuelve
+            mensajeNuevoDTO.setRemitente(DestinatarioDTO.builder().tipo(TipoDestinatario.CENTRO).id(centroId).build());
             Mensaje mensaje  = servicio.postMensaje(Mapper.toMensaje(mensajeNuevoDTO));
             URI uri = builder
-                    .path("mensaje")
-                    .path("centro")
+                    .path("/mensaje")
+                    .path("/centro")
                     .queryParam("centro", centroId)
                     .build()
                     .toUri();

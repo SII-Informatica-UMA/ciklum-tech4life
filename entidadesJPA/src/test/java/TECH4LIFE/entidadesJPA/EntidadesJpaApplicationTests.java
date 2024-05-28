@@ -261,6 +261,7 @@ public class EntidadesJpaApplicationTests {
 				Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(Arrays.asList(destinatario2,destinatario3));
 
 				MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
+						.asunto("Saludos")
 						.contenido("Hola hola")
 						.destinatarios(listaDestinatarios)
 						.copia(listaDestinatarios)
@@ -268,11 +269,11 @@ public class EntidadesJpaApplicationTests {
 						.build();
 				// ¿Posible cambio en petición?
 				//var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1", mensajeNuevo);
-				var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1", mensajeNuevo);
+				String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
+				HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
 
-				var respuesta = restTemplate.exchange(peticion,
-						Void.class);
-
+				ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url, HttpMethod.POST, request, new ParameterizedTypeReference<MensajeDTO>() {
+				});
 				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 			}
 
