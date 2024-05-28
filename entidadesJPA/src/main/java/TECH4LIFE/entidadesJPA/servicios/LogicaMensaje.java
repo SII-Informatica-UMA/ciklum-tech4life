@@ -6,6 +6,8 @@ import TECH4LIFE.entidadesJPA.entities.Destinatario;
 import TECH4LIFE.entidadesJPA.entities.Mensaje;
 import TECH4LIFE.entidadesJPA.excepciones.MensajeNoExistente;
 import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
+import TECH4LIFE.entidadesJPA.repositories.CentroRepository;
+import TECH4LIFE.entidadesJPA.repositories.DestinatarioRepository;
 import TECH4LIFE.entidadesJPA.repositories.MensajeRepository;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +26,15 @@ public class LogicaMensaje {
 
     @Autowired
     private MensajeRepository mensajeRepo;
+    private CentroRepository centroRepo;
+    private DestinatarioRepository destinatarioRepo;
 
 //-----------------------------------------------------------------------------------------------
     //Get todos los mensajes de un centro
-    @RolesAllowed("Gerente")
-    public List<MensajeDTO> getMensajesByCentro(Centro centro) throws MensajeNoExistente, UsuarioNoAutorizado {
 
-        List<MensajeDTO> mensajesCentro = mensajeRepo.bandejaTodos(centro.getIdCentro());
+    public List<Mensaje> getMensajesByCentro(Integer centro) throws MensajeNoExistente, UsuarioNoAutorizado {
+
+        List<Mensaje> mensajesCentro = mensajeRepo.bandejaTodos(centro);
 
         if(mensajesCentro.isEmpty()) throw new MensajeNoExistente();
         return mensajesCentro;
@@ -38,7 +42,7 @@ public class LogicaMensaje {
 
 //----------------------------------------------------------------------------------------
     //Get un mensaje por su idMensaje
-    @RolesAllowed("Gerente")
+
     public Mensaje getMensajeById(Integer idMensaje) throws MensajeNoExistente, UsuarioNoAutorizado{
         Optional<Mensaje> mensaje = mensajeRepo.findById(idMensaje);
 
@@ -49,16 +53,15 @@ public class LogicaMensaje {
 
 //----------------------------------------------------------------------------------------
     //Post un nuevo mensaje
-    @RolesAllowed("Gerente")
-    public Mensaje postMensaje(Mensaje mensajeCrear) throws MensajeNoExistente, UsuarioNoAutorizado{
-        if(mensajeCrear == null) throw new MensajeNoExistente();
 
-        return mensajeRepo.save(mensajeCrear);
+    public Mensaje postMensaje(Mensaje mensajeCrear) throws UsuarioNoAutorizado{
+        Mensaje mensajeCreado = mensajeRepo.save(mensajeCrear);
+        return mensajeCreado;
     }
 
 //----------------------------------------------------------------------------------------
     //Delete un mensaje por su idMensaje
-    @RolesAllowed("Gerente")
+
     public void deleteMensaje(Integer idMensaje) throws MensajeNoExistente, UsuarioNoAutorizado {
         Optional<Mensaje> mensaje = mensajeRepo.findById(idMensaje);
 
