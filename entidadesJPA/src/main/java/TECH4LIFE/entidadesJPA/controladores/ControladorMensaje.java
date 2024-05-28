@@ -84,7 +84,7 @@ public class ControladorMensaje {
             URI uri = builder
                     .path("mensaje")
                     .path("centro")
-                    .queryParam("centro", 1)
+                    .queryParam("centro", centroId)
                     .build()
                     .toUri();
             return ResponseEntity.created(uri).body(Mapper.toMensajeDTO(mensaje));
