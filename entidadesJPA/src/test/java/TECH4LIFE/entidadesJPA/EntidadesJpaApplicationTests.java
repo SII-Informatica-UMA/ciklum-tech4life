@@ -1197,560 +1197,560 @@ public class EntidadesJpaApplicationTests {
 	 * ---------------------------------------------
 	 * 
 	 */
-	/*
-	 * 
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("En cuanto a los gerentes. Cuando Acceso con admin")
-	 * public class PruebasGerenteAdministrador {
-	 * 
-	 * @BeforeEach
-	 * public void security() {
-	 * boolean admin = true;
-	 * token = jwtUtil.doGenerateToken("1", admin);
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Cuando no hay Gerentes")
-	 * public class ListaGerentesVacia {
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos GET gerente lista vacia")
-	 * public class GetGerentesVacia {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("Devuelve la lista de gerentes vacía")
-	 * public void devuelveListaGerentes() {
-	 * var peticion = get("http", "localhost", port, "/gerente", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion,
-	 * new ParameterizedTypeReference<List<GerenteDTO>>() {
-	 * });
-	 * // Verifica la respuesta
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-	 * assertThat(respuesta.hasBody()).isEqualTo(false);
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("Devuelve error cuando se pide un Gerente concreto")
-	 * public void devuelveErrorAlConsultarGerente() {
-	 * var peticion = get("http", "localhost", port, "/gerente", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion,
-	 * new ParameterizedTypeReference<List<GerenteDTO>>() {
-	 * });
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-	 * assertThat(respuesta.hasBody()).isEqualTo(false);
-	 * }
-	 * 
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos POST gerente lista vacia")
-	 * public class PostGerentesVacia {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("Intenta crear un gerente cuando no hay gerentes")
-	 * public void CrearGerenteBien() {
-	 * var gerente = Gerente.builder()
-	 * .empresa("patatas")
-	 * .idUsuario(6)
-	 * .build();
-	 * var peticion = post("http", "localhost", port, "/gerente", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-	 * }
-	 * 
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos PUT gerente lista vacia")
-	 * public class PutGerentesVacia {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("devuelve error cuando se modifica un gerente concreto")
-	 * public void devuelveErrorAlModificarGerente() {
-	 * var gerente = GerenteNuevoDTO.builder()
-	 * .empresa("kfc")
-	 * .build();
-	 * var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos DELETE gerente lista vacia")
-	 * public class DeleteGerentesVacia {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("devuelve error cuando se elimina un Gerente concreto")
-	 * public void devuelveErrorAlEliminarGerente() {
-	 * var peticion = delete("http", "localhost", port, "/gerente/40", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-	 * }
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Cuando hay Gerentes")
-	 * public class ListaGerentesConDatos {
-	 * 
-	 * private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
-	 * .empresa("patatas")
-	 * .idUsuario(1)
-	 * .build();
-	 * 
-	 * private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
-	 * .empresa("brocoli")
-	 * .idUsuario(2)
-	 * .build();
-	 * 
-	 * @BeforeEach
-	 * public void introduceDatosGerente() {
-	 * gerenteRepository.save(Mapper.toGerente(gerente1));
-	 * gerenteRepository.save(Mapper.toGerente(gerente2));
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos Get gerente en Lista llena")
-	 * public class GetGerente {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("Devuelve la lista de Gerentes correctamente")
-	 * public void devuelveListaGerente() {
-	 * var peticion = get("http", "localhost", port, "/gerente", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion,
-	 * new ParameterizedTypeReference<List<GerenteDTO>>() {
-	 * });
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-	 * assertThat(respuesta.getBody()).hasSize(2);
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("lo devuelve cuando existe")
-	 * public void devuelveGerente() {
-	 * var peticion = get("http", "localhost", port, "/gerente/1", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-	 * assertThat(respuesta.hasBody()).isTrue();
-	 * assertThat(respuesta.getBody()).isNotNull();
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("da error cuando no existe")
-	 * public void errorCuandoGerenteNoExiste() {
-	 * var peticion = get("http", "localhost", port, "/gerente/40", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion,
-	 * new ParameterizedTypeReference<List<GerenteDTO>>() {
-	 * });
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-	 * assertThat(respuesta.hasBody()).isEqualTo(false);
-	 * }
-	 * 
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos PUT gerente lista llena")
-	 * public class PutGerentes {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("Lo modifica correctamente cuando existe")
-	 * 
-	 * @DirtiesContext
-	 * public void modificaCorrectamenteGerente() {
-	 * var gerente = GerenteNuevoDTO.builder()
-	 * .empresa("yeehaw")
-	 * .build();
-	 * 
-	 * var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-	 * Gerente gerenteBD = gerenteRepository.findById(1).get();
-	 * compruebaCamposGerente(gerente, gerenteBD);
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("Da error cuando no existe")
-	 * public void errorCuandoNoExiste() {
-	 * var gerente = GerenteNuevoDTO.builder()
-	 * .empresa("yeehow")
-	 * .build();
-	 * var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-	 * assertThat(respuesta.hasBody()).isEqualTo(false);
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos DELETE un gerente lista llena")
-	 * public class DeleteGerentes {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("Lo elimina cuando existe")
-	 * public void eliminaCorrectamenteGerente() {
-	 * 
-	 * var peticion = delete("http", "localhost", port, "/gerente/1", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-	 * List<Gerente> gerentes = gerenteRepository.findAll();
-	 * assertThat(gerentes).hasSize(1);
-	 * assertThat(gerentes).allMatch(c -> c.getId() != 1);
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("da error cuando no existe")
-	 * public void errorCuandoNoExisteGerente() {
-	 * var peticion = delete("http", "localhost", port, "/gerente/40", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-	 * assertThat(respuesta.hasBody()).isEqualTo(false);
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos POST gerente en lista llena")
-	 * public class PostGerente {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("Crea un gerente bien")
-	 * public void CrearGerenteBien() {
-	 * var gerente = Gerente.builder()
-	 * .empresa("patatas")
-	 * .idUsuario(6)
-	 * .build();
-	 * var peticion = post("http", "localhost", port, "/gerente", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-	 * }
-	 * 
-	 * }
-	 * 
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("En cuanto a los gerentes. Cuando Acceso no admin")
-	 * public class PruebasGerenteNoAdministrador {
-	 * 
-	 * @BeforeEach
-	 * public void security() {
-	 * boolean admin = false;
-	 * token = jwtUtil.doGenerateToken("1", admin);
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Cuando no hay Gerentes")
-	 * public class ListaGerentesVacia {
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos GET gerente lista vacia")
-	 * public class GetGerentesVacia {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO Devuelve la lista de gerentes vacía")
-	 * public void devuelveListaGerentes() {
-	 * var peticion = get("http", "localhost", port, "/gerente", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion,
-	 * new ParameterizedTypeReference<List<GerenteDTO>>() {
-	 * });
-	 * // Verifica la respuesta
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * assertThat(respuesta.hasBody()).isEqualTo(false);
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO Devuelve error cuando se pide un Gerente concreto"
-	 * )
-	 * public void devuelveErrorAlConsultarGerente() {
-	 * var peticion = get("http", "localhost", port, "/gerente", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion,
-	 * new ParameterizedTypeReference<List<GerenteDTO>>() {
-	 * });
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * assertThat(respuesta.hasBody()).isEqualTo(false);
-	 * }
-	 * 
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos POST gerente lista vacia")
-	 * public class PostGerentesVacia {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO Intenta crear un gerente cuando no hay gerentes"
-	 * )
-	 * public void CrearGerenteBien() {
-	 * var gerente = Gerente.builder()
-	 * .empresa("patatas")
-	 * .idUsuario(6)
-	 * .build();
-	 * var peticion = post("http", "localhost", port, "/gerente", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * 
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos PUT gerente lista vacia")
-	 * public class PutGerentesVacia {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO devuelve error cuando se modifica un gerente concreto"
-	 * )
-	 * public void devuelveErrorAlModificarGerente() {
-	 * var gerente = GerenteNuevoDTO.builder()
-	 * .empresa("kfc")
-	 * .build();
-	 * var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos DELETE gerente lista vacia")
-	 * public class DeleteGerentesVacia {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO devuelve error cuando se elimina un Gerente concreto"
-	 * )
-	 * public void devuelveErrorAlEliminarGerente() {
-	 * var peticion = delete("http", "localhost", port, "/gerente/40", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Cuando hay Gerentes")
-	 * public class ListaGerentesConDatos {
-	 * 
-	 * private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
-	 * .empresa("patatas")
-	 * .idUsuario(1)
-	 * .build();
-	 * 
-	 * private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
-	 * .empresa("brocoli")
-	 * .idUsuario(2)
-	 * .build();
-	 * 
-	 * @BeforeEach
-	 * public void introduceDatosGerente() {
-	 * gerenteRepository.save(Mapper.toGerente(gerente1));
-	 * gerenteRepository.save(Mapper.toGerente(gerente2));
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos Get gerente en Lista llena")
-	 * public class GetGerente {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO Devuelve la lista de Gerentes correctamente"
-	 * )
-	 * public void devuelveListaGerente() {
-	 * var peticion = get("http", "localhost", port, "/gerente", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion,
-	 * new ParameterizedTypeReference<List<GerenteDTO>>() {
-	 * });
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * 
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO lo devuelve cuando existe")
-	 * public void devuelveGerente() {
-	 * var peticion = get("http", "localhost", port, "/gerente/1", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
-	 * public void errorCuandoGerenteNoExiste() {
-	 * var peticion = get("http", "localhost", port, "/gerente/40", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion,
-	 * new ParameterizedTypeReference<List<GerenteDTO>>() {
-	 * });
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * 
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos PUT gerente lista llena")
-	 * public class PutGerentes {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO Lo modifica correctamente cuando existe")
-	 * 
-	 * @DirtiesContext
-	 * public void modificaCorrectamenteGerente() {
-	 * var gerente = GerenteNuevoDTO.builder()
-	 * .empresa("yeehaw")
-	 * .build();
-	 * 
-	 * var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO Da error cuando no existe")
-	 * public void errorCuandoNoExiste() {
-	 * var gerente = GerenteNuevoDTO.builder()
-	 * .empresa("yeehow")
-	 * .build();
-	 * var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos DELETE un gerente lista llena")
-	 * public class DeleteGerentes {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO Lo elimina cuando existe")
-	 * public void eliminaCorrectamenteGerente() {
-	 * 
-	 * var peticion = delete("http", "localhost", port, "/gerente/1", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
-	 * public void errorCuandoNoExisteGerente() {
-	 * var peticion = delete("http", "localhost", port, "/gerente/40", token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * }
-	 * 
-	 * @Nested
-	 * 
-	 * @DisplayName("Metodos POST gerente en lista llena")
-	 * public class PostGerente {
-	 * 
-	 * @Test
-	 * 
-	 * @DisplayName("ACCESO DENEGADO. NO Crea un gerente bien")
-	 * public void CrearGerenteBien() {
-	 * var gerente = Gerente.builder()
-	 * .empresa("patatas")
-	 * .idUsuario(6)
-	 * .build();
-	 * var peticion = post("http", "localhost", port, "/gerente", gerente, token);
-	 * 
-	 * var respuesta = restTemplate.exchange(peticion, Void.class);
-	 * 
-	 * assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	 * }
-	 * 
-	 * }
-	 * 
-	 * }
-	 * }
-	 */
+	
+	 
+	 
+	 @Nested
+	 
+	 @DisplayName("En cuanto a los gerentes. Cuando Acceso con admin")
+	 public class PruebasGerenteAdministrador {
+	 
+	 @BeforeEach
+	 public void security() {
+	 boolean admin = true;
+	 token = jwtUtil.doGenerateToken("1", admin);
+	 }
+	 
+	 @Nested
+	 
+	  @DisplayName("Cuando no hay Gerentes")
+	  public class ListaGerentesVacia {
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos GET gerente lista vacia")
+	  public class GetGerentesVacia {
+	  
+	  @Test
+	  
+	  @DisplayName("Devuelve la lista de gerentes vacía")
+	  public void devuelveListaGerentes() {
+	  var peticion = get("http", "localhost", port, "/gerente", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion,
+	  new ParameterizedTypeReference<List<GerenteDTO>>() {
+	  });
+	  // Verifica la respuesta
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+	  assertThat(respuesta.hasBody()).isEqualTo(false);
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("Devuelve error cuando se pide un Gerente concreto")
+	  public void devuelveErrorAlConsultarGerente() {
+	  var peticion = get("http", "localhost", port, "/gerente", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion,
+	  new ParameterizedTypeReference<List<GerenteDTO>>() {
+	  });
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+	  assertThat(respuesta.hasBody()).isEqualTo(false);
+	  }
+	  
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos POST gerente lista vacia")
+	  public class PostGerentesVacia {
+	  
+	  @Test
+	  
+	  @DisplayName("Intenta crear un gerente cuando no hay gerentes")
+	  public void CrearGerenteBien() {
+	  var gerente = Gerente.builder()
+	  .empresa("patatas")
+	  .idUsuario(6)
+	  .build();
+	  var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+	  }
+	  
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos PUT gerente lista vacia")
+	  public class PutGerentesVacia {
+	  
+	  @Test
+	  
+	  @DisplayName("devuelve error cuando se modifica un gerente concreto")
+	  public void devuelveErrorAlModificarGerente() {
+	  var gerente = GerenteNuevoDTO.builder()
+	  .empresa("kfc")
+	  .build();
+	  var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos DELETE gerente lista vacia")
+	  public class DeleteGerentesVacia {
+	  
+	  @Test
+	  
+	  @DisplayName("devuelve error cuando se elimina un Gerente concreto")
+	  public void devuelveErrorAlEliminarGerente() {
+	  var peticion = delete("http", "localhost", port, "/gerente/40", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+	  }
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Cuando hay Gerentes")
+	  public class ListaGerentesConDatos {
+	  
+	  private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
+	  .empresa("patatas")
+	  .idUsuario(1)
+	  .build();
+	  
+	  private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
+	  .empresa("brocoli")
+	  .idUsuario(2)
+	  .build();
+	  
+	  @BeforeEach
+	  public void introduceDatosGerente() {
+	  gerenteRepository.save(Mapper.toGerente(gerente1));
+	  gerenteRepository.save(Mapper.toGerente(gerente2));
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos Get gerente en Lista llena")
+	  public class GetGerente {
+	  
+	  @Test
+	  
+	  @DisplayName("Devuelve la lista de Gerentes correctamente")
+	  public void devuelveListaGerente() {
+	  var peticion = get("http", "localhost", port, "/gerente", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion,
+	  new ParameterizedTypeReference<List<GerenteDTO>>() {
+	  });
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+	  assertThat(respuesta.getBody()).hasSize(2);
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("lo devuelve cuando existe")
+	  public void devuelveGerente() {
+	  var peticion = get("http", "localhost", port, "/gerente/1", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+	  assertThat(respuesta.hasBody()).isTrue();
+	  assertThat(respuesta.getBody()).isNotNull();
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("da error cuando no existe")
+	  public void errorCuandoGerenteNoExiste() {
+	  var peticion = get("http", "localhost", port, "/gerente/40", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion,
+	  new ParameterizedTypeReference<List<GerenteDTO>>() {
+	  });
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+	  assertThat(respuesta.hasBody()).isEqualTo(false);
+	  }
+	  
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos PUT gerente lista llena")
+	  public class PutGerentes {
+	  
+	  @Test
+	  
+	  @DisplayName("Lo modifica correctamente cuando existe")
+	  
+	  @DirtiesContext
+	  public void modificaCorrectamenteGerente() {
+	  var gerente = GerenteNuevoDTO.builder()
+	  .empresa("yeehaw")
+	  .build();
+	  
+	  var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+	  Gerente gerenteBD = gerenteRepository.findById(1).get();
+	  compruebaCamposGerente(gerente, gerenteBD);
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("Da error cuando no existe")
+	  public void errorCuandoNoExiste() {
+	  var gerente = GerenteNuevoDTO.builder()
+	  .empresa("yeehow")
+	  .build();
+	  var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+	  assertThat(respuesta.hasBody()).isEqualTo(false);
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos DELETE un gerente lista llena")
+	  public class DeleteGerentes {
+	  
+	  @Test
+	  
+	  @DisplayName("Lo elimina cuando existe")
+	  public void eliminaCorrectamenteGerente() {
+	  
+	  var peticion = delete("http", "localhost", port, "/gerente/1", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+	  List<Gerente> gerentes = gerenteRepository.findAll();
+	  assertThat(gerentes).hasSize(1);
+	  assertThat(gerentes).allMatch(c -> c.getId() != 1);
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("da error cuando no existe")
+	  public void errorCuandoNoExisteGerente() {
+	  var peticion = delete("http", "localhost", port, "/gerente/40", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+	  assertThat(respuesta.hasBody()).isEqualTo(false);
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos POST gerente en lista llena")
+	  public class PostGerente {
+	  
+	  @Test
+	  
+	  @DisplayName("Crea un gerente bien")
+	  public void CrearGerenteBien() {
+	  var gerente = Gerente.builder()
+	  .empresa("patatas")
+	  .idUsuario(6)
+	  .build();
+	  var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+	  }
+	  
+	  }
+	  
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("En cuanto a los gerentes. Cuando Acceso no admin")
+	  public class PruebasGerenteNoAdministrador {
+	  
+	  @BeforeEach
+	  public void security() {
+	  boolean admin = false;
+	  token = jwtUtil.doGenerateToken("1", admin);
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Cuando no hay Gerentes")
+	  public class ListaGerentesVacia {
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos GET gerente lista vacia")
+	  public class GetGerentesVacia {
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO Devuelve la lista de gerentes vacía")
+	  public void devuelveListaGerentes() {
+	  var peticion = get("http", "localhost", port, "/gerente", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion,
+	  new ParameterizedTypeReference<List<GerenteDTO>>() {
+	  });
+	  // Verifica la respuesta
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  assertThat(respuesta.hasBody()).isEqualTo(false);
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO Devuelve error cuando se pide un Gerente concreto"
+	  )
+	  public void devuelveErrorAlConsultarGerente() {
+	  var peticion = get("http", "localhost", port, "/gerente", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion,
+	  new ParameterizedTypeReference<List<GerenteDTO>>() {
+	  });
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  assertThat(respuesta.hasBody()).isEqualTo(false);
+	  }
+	  
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos POST gerente lista vacia")
+	  public class PostGerentesVacia {
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO Intenta crear un gerente cuando no hay gerentes"
+	  )
+	  public void CrearGerenteBien() {
+	  var gerente = Gerente.builder()
+	  .empresa("patatas")
+	  .idUsuario(6)
+	  .build();
+	  var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos PUT gerente lista vacia")
+	  public class PutGerentesVacia {
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO devuelve error cuando se modifica un gerente concreto"
+	  )
+	  public void devuelveErrorAlModificarGerente() {
+	  var gerente = GerenteNuevoDTO.builder()
+	  .empresa("kfc")
+	  .build();
+	  var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos DELETE gerente lista vacia")
+	  public class DeleteGerentesVacia {
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO devuelve error cuando se elimina un Gerente concreto"
+	  )
+	  public void devuelveErrorAlEliminarGerente() {
+	  var peticion = delete("http", "localhost", port, "/gerente/40", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Cuando hay Gerentes")
+	  public class ListaGerentesConDatos {
+	  
+	  private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
+	  .empresa("patatas")
+	  .idUsuario(1)
+	  .build();
+	  
+	  private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
+	  .empresa("brocoli")
+	  .idUsuario(2)
+	  .build();
+	  
+	  @BeforeEach
+	  public void introduceDatosGerente() {
+	  gerenteRepository.save(Mapper.toGerente(gerente1));
+	  gerenteRepository.save(Mapper.toGerente(gerente2));
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos Get gerente en Lista llena")
+	  public class GetGerente {
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO Devuelve la lista de Gerentes correctamente"
+	  )
+	  public void devuelveListaGerente() {
+	  var peticion = get("http", "localhost", port, "/gerente", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion,
+	  new ParameterizedTypeReference<List<GerenteDTO>>() {
+	  });
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO lo devuelve cuando existe")
+	  public void devuelveGerente() {
+	  var peticion = get("http", "localhost", port, "/gerente/1", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
+	  public void errorCuandoGerenteNoExiste() {
+	  var peticion = get("http", "localhost", port, "/gerente/40", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion,
+	  new ParameterizedTypeReference<List<GerenteDTO>>() {
+	  });
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos PUT gerente lista llena")
+	  public class PutGerentes {
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO Lo modifica correctamente cuando existe")
+	  
+	  @DirtiesContext
+	  public void modificaCorrectamenteGerente() {
+	  var gerente = GerenteNuevoDTO.builder()
+	  .empresa("yeehaw")
+	  .build();
+	  
+	  var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO Da error cuando no existe")
+	  public void errorCuandoNoExiste() {
+	  var gerente = GerenteNuevoDTO.builder()
+	  .empresa("yeehow")
+	  .build();
+	  var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos DELETE un gerente lista llena")
+	  public class DeleteGerentes {
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO Lo elimina cuando existe")
+	  public void eliminaCorrectamenteGerente() {
+	  
+	  var peticion = delete("http", "localhost", port, "/gerente/1", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
+	  public void errorCuandoNoExisteGerente() {
+	  var peticion = delete("http", "localhost", port, "/gerente/40", token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  }
+	  
+	  @Nested
+	  
+	  @DisplayName("Metodos POST gerente en lista llena")
+	  public class PostGerente {
+	  
+	  @Test
+	  
+	  @DisplayName("ACCESO DENEGADO. NO Crea un gerente bien")
+	  public void CrearGerenteBien() {
+	  var gerente = Gerente.builder()
+	  .empresa("patatas")
+	  .idUsuario(6)
+	  .build();
+	  var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+	  
+	  var respuesta = restTemplate.exchange(peticion, Void.class);
+	  
+	  assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	  }
+	  
+	  }
+	  
+	  }
+	  }
+	 
 	/* 
 	 * ---------------------------------------------
 	 * Pruebas de ControladorMensaje y LogicaMensaje
@@ -2030,276 +2030,273 @@ public class EntidadesJpaApplicationTests {
 		}
 	}
 
-	// @Nested
-	// @DisplayName("En cuando Mensajes. Cuando Acceso no gerente")
-	// public class PruebasMensajesNoGerente {
-	// @Nested
-	// @DisplayName("Tests de Mensajes")
-	// public class PruebasMensajes {
+	@Nested
+	@DisplayName("En cuando Mensajes. Cuando Acceso no gerente")
+	public class PruebasMensajesNoGerente {
+	@Nested
+	@DisplayName("Tests de Mensajes")
+	public class PruebasMensajes {
 
-	// @BeforeEach
-	// public void security() {
-	// boolean admin =false;
-	// token = jwtUtil.doGenerateToken("200", admin);
-	// }
+	@BeforeEach
+	public void security() {
+	boolean admin =false;
+	token = jwtUtil.doGenerateToken("200", admin);
+	}
 
-	// private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
-	// .empresa("Gerente")
-	// .idUsuario(1)
-	// .build();
+	private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
+	.empresa("Gerente")
+	.idUsuario(1)
+	.build();
 
-	// @BeforeEach
-	// public void introduceDatosGerente() {
-	// gerenteRepository.save(Mapper.toGerente(gerente));
-	// }
+	@BeforeEach
+	public void introduceDatosGerente() {
+	gerenteRepository.save(Mapper.toGerente(gerente));
+	}
 
-	// @Nested
-	// @DisplayName("Cuando no hay mensajes")
-	// public class ListaMensajesVacia {
+	@Nested
+	@DisplayName("Cuando no hay mensajes")
+	public class ListaMensajesVacia {
 
-	// private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
-	// .id(1)
-	// .tipo(TipoDestinatario.CENTRO)
-	// .build();
+	private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+	.id(1)
+	.tipo(TipoDestinatario.CENTRO)
+	.build();
 
-	// private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-	// .nombre("Centro1")
-	// .direccion("Calle del Centro1, 1")
-	// .build();
+	private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+	.nombre("Centro1")
+	.direccion("Calle del Centro1, 1")
+	.build();
 
-	// private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
-	// .id(2)
-	// .tipo(TipoDestinatario.CENTRO)
-	// .build();
+	private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+	.id(2)
+	.tipo(TipoDestinatario.CENTRO)
+	.build();
 
-	// private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-	// .nombre("Centro2")
-	// .direccion("Calle del Centro2, 2")
-	// .build();
+	private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+	.nombre("Centro2")
+	.direccion("Calle del Centro2, 2")
+	.build();
 
-	// private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
-	// .id(3)
-	// .tipo(TipoDestinatario.CENTRO)
-	// .build();
+	private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+	.id(3)
+	.tipo(TipoDestinatario.CENTRO)
+	.build();
 
-	// private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
-	// .nombre("Centro3")
-	// .direccion("Calle del Centro3, 3")
-	// .build();
+	private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+	.nombre("Centro3")
+	.direccion("Calle del Centro3, 3")
+	.build();
 
-	// @BeforeEach
-	// public void insertarCentro() {
-	// centroRepository.save(Mapper.toCentro(centro1));
-	// centroRepository.save(Mapper.toCentro(centro2));
-	// centroRepository.save(Mapper.toCentro(centro3));
-	// destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
-	// destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
-	// destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
-	// }
+	@BeforeEach
+	public void insertarCentro() {
+	centroRepository.save(Mapper.toCentro(centro1));
+	centroRepository.save(Mapper.toCentro(centro2));
+	centroRepository.save(Mapper.toCentro(centro3));
+	destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+	destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+	destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+	}
 
-	// @Test
-	// @DisplayName("ACCESO DENEGADO. Da error al pedir una lista de mensajes
-	// vacía")
-	// public void devuelveListaMensajesError() {
+	@Test
+	@DisplayName("ACCESO DENEGADO. Da error al pedir una lista de mensajes vacía")
+	public void devuelveListaMensajesError() {
 
-	// var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1",
-	// token);
+	var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1",
+	token);
 
-	// var responseEntity = restTemplate.exchange(peticion,
-	// new ParameterizedTypeReference<MensajeDTO>() {
-	// });
-	// /*
-	// * ResponseEntity<List<MensajeDTO>> responseEntity =
-	// * restTemplate.exchange("http://localhost:" + port +
-	// * "/mensaje/centro?centro=1",
-	// * HttpMethod.GET,
-	// * null,
-	// * new ParameterizedTypeReference<List<MensajeDTO>>() {
-	// * });
-	// */
+	var responseEntity = restTemplate.exchange(peticion,
+	new ParameterizedTypeReference<MensajeDTO>() {
+	});
+	/*
+	* ResponseEntity<List<MensajeDTO>> responseEntity =
+	* restTemplate.exchange("http://localhost:" + port +
+	* "/mensaje/centro?centro=1",
+	* HttpMethod.GET,
+	* null,
+	* new ParameterizedTypeReference<List<MensajeDTO>>() {
+	* });
+	*/
 
-	// assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
-	// // List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el
-	// cuerpo
-	// // de la respuesta
-	// // assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de
-	// // mensajes está vacía
-	// }
+	assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
+	// List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el cuerpo
+	// de la respuesta
+	// assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de
+	// mensajes está vacía
+	}
 
-	// @Test
-	// @DisplayName("ACCESO DENEGADO. Da error al pedir un mensaje no existente")
-	// public void errordevuelveMensajeById() {
+	@Test
+	@DisplayName("ACCESO DENEGADO. Da error al pedir un mensaje no existente")
+	public void errordevuelveMensajeById() {
 
-	// var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
+	var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
 
-	// var respuesta = restTemplate.exchange(peticion,
-	// new ParameterizedTypeReference<MensajeDTO>() {
-	// });
+	var respuesta = restTemplate.exchange(peticion,
+	new ParameterizedTypeReference<MensajeDTO>() {
+	});
 
-	// assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 
-	// }
+	}
 
-	// @Test
-	// @DisplayName("ACCESO DENEGADO. Da error al eliminar un mensaje no existente")
-	// public void errorEliminaMensajeById() {
+	@Test
+	@DisplayName("ACCESO DENEGADO. Da error al eliminar un mensaje no existente")
+	public void errorEliminaMensajeById() {
 
-	// var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+	var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
 
-	// var respuesta = restTemplate.exchange(peticion,
-	// new ParameterizedTypeReference<MensajeDTO>() {
-	// });
+	var respuesta = restTemplate.exchange(peticion,
+	new ParameterizedTypeReference<MensajeDTO>() {
+	});
 
-	// assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 
-	// }
+	}
 
-	// @Test
-	// @DisplayName("ACCESO DENEGADO. Inserta correctamente un mensaje nuevo")
-	// public void InsertaMensaje() {
+	@Test
+	@DisplayName("ACCESO DENEGADO. Inserta correctamente un mensaje nuevo")
+	public void InsertaMensaje() {
 
-	// Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
-	// Arrays.asList(destinatario2, destinatario3));
+	Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
+	Arrays.asList(destinatario2, destinatario3));
 
-	// MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
-	// .asunto("Saludos")
-	// .contenido("Hola hola")
-	// .destinatarios(listaDestinatarios)
-	// .copia(listaDestinatarios)
-	// .copiaOculta(listaDestinatarios)
-	// .build();
-	// // ¿Posible cambio en petición?
-	// // var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1",
-	// // mensajeNuevo);
-	// String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
-	// HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
+	MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
+	.asunto("Saludos")
+	.contenido("Hola hola")
+	.destinatarios(listaDestinatarios)
+	.copia(listaDestinatarios)
+	.copiaOculta(listaDestinatarios)
+	.build();
+	// ¿Posible cambio en petición?
+	// var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1",
+	// mensajeNuevo);
+	String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
+	HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
 
-	// ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url,
-	// HttpMethod.POST, request,
-	// new ParameterizedTypeReference<MensajeDTO>() {
-	// });
-	// assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-	// }
+	ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url,
+	HttpMethod.POST, request,
+	new ParameterizedTypeReference<MensajeDTO>() {
+	});
+	assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	}
 
-	// // TO DO
+	// TO DO
 
-	// }
+	}
 
-	// @Nested
-	// @DisplayName("Cuando hay mensajes")
-	// public class ListaMensajesLlena {
-	// private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
-	// .id(1)
-	// .tipo(TipoDestinatario.CENTRO)
-	// .build();
+	@Nested
+	@DisplayName("Cuando hay mensajes")
+	public class ListaMensajesLlena {
+	private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+	.id(1)
+	.tipo(TipoDestinatario.CENTRO)
+	.build();
 
-	// private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-	// .nombre("Centro1")
-	// .direccion("Calle del Centro1, 1")
-	// .build();
+	private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+	.nombre("Centro1")
+	.direccion("Calle del Centro1, 1")
+	.build();
 
-	// private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
-	// .id(2)
-	// .tipo(TipoDestinatario.CENTRO)
-	// .build();
+	private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+	.id(2)
+	.tipo(TipoDestinatario.CENTRO)
+	.build();
 
-	// private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
-	// .id(3)
-	// .tipo(TipoDestinatario.CENTRO)
-	// .build();
+	private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+	.id(3)
+	.tipo(TipoDestinatario.CENTRO)
+	.build();
 
-	// private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-	// .nombre("Centro2")
-	// .direccion("Calle del Centro2, 2")
-	// .build();
+	private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+	.nombre("Centro2")
+	.direccion("Calle del Centro2, 2")
+	.build();
 
-	// private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
-	// .nombre("Centro3")
-	// .direccion("Calle del Centro3, 3")
-	// .build();
+	private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+	.nombre("Centro3")
+	.direccion("Calle del Centro3, 3")
+	.build();
 
-	// private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
-	// .id(3)
-	// .tipo(TipoDestinatario.CENTRO)
-	// .build();
+	private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
+	.id(3)
+	.tipo(TipoDestinatario.CENTRO)
+	.build();
 
-	// @BeforeEach
-	// public void insertarCentro() {
-	// centroRepository.save(Mapper.toCentro(centro1));
-	// centroRepository.save(Mapper.toCentro(centro2));
-	// centroRepository.save(Mapper.toCentro(centro3));
-	// destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
-	// destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
-	// destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
-	// Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(
-	// Arrays.asList(destinatario2, destinatario3));
-	// // listaDestinatariosDTO.add(destinatario2);
-	// // listaDestinatariosDTO.add(destinatario3);
-	// MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
-	// .asunto("Asunto1")
-	// .remitente(destinatario1)
-	// .destinatarios(listaDestinatariosDTO)
-	// .copia(listaDestinatariosDTO)
-	// .copiaOculta(listaDestinatariosDTO)
-	// .build();
-	// mensajeRepository.save(Mapper.toMensaje(mensaje1));
+	@BeforeEach
+	public void insertarCentro() {
+	centroRepository.save(Mapper.toCentro(centro1));
+	centroRepository.save(Mapper.toCentro(centro2));
+	centroRepository.save(Mapper.toCentro(centro3));
+	destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+	destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+	destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+	Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(
+	Arrays.asList(destinatario2, destinatario3));
+	// listaDestinatariosDTO.add(destinatario2);
+	// listaDestinatariosDTO.add(destinatario3);
+	MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
+	.asunto("Asunto1")
+	.remitente(destinatario1)
+	.destinatarios(listaDestinatariosDTO)
+	.copia(listaDestinatariosDTO)
+	.copiaOculta(listaDestinatariosDTO)
+	.build();
+	mensajeRepository.save(Mapper.toMensaje(mensaje1));
 
-	// }
+	}
 
-	// @Test
-	// @DisplayName("ACCESO DENEGADO. Devuelve correctamente el mensaje")
-	// public void devuelveMensajeById() {
+	@Test
+	@DisplayName("ACCESO DENEGADO. Devuelve correctamente el mensaje")
+	public void devuelveMensajeById() {
 
-	// var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
+	var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
 
-	// var respuesta = restTemplate.exchange(peticion,
-	// new ParameterizedTypeReference<MensajeDTO>() {
-	// });
+	var respuesta = restTemplate.exchange(peticion,
+	new ParameterizedTypeReference<MensajeDTO>() {
+	});
 
-	// assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 
-	// }
+	}
 
-	// @Test
-	// @DisplayName("ACCESO DENEGADO. Elimina correctamente un mensaje existente")
-	// public void EliminaMensajeById() {
+	@Test
+	@DisplayName("ACCESO DENEGADO. Elimina correctamente un mensaje existente")
+	public void EliminaMensajeById() {
 
-	// var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+	var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
 
-	// var respuesta = restTemplate.exchange(peticion,
-	// Void.class);
+	var respuesta = restTemplate.exchange(peticion,
+	Void.class);
 
-	// assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+	assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 
-	// }
+	}
 
-	// @Test
-	// @DisplayName("ACCESO DENEGADO. Devuelve la lista de mensajes de un centro
-	// correctamente")
-	// public void devuelveListaMensajes() {
+	@Test
+	@DisplayName("ACCESO DENEGADO. Devuelve la lista de mensajes de un centro correctamente")
+	public void devuelveListaMensajes() {
 
-	// var peticion = delete("http", "localhost", port, "/mensaje/centro?centro=1",
-	// token);
+	var peticion = delete("http", "localhost", port, "/mensaje/centro?centro=1",
+	token);
 
-	// var responseEntity = restTemplate.exchange(peticion,
-	// Void.class);
-	// /*
-	// * ResponseEntity<List<MensajeDTO>> responseEntity =
-	// * restTemplate.exchange("http://localhost:" + port +
-	// * "/mensaje/centro?centro=1",
-	// * HttpMethod.GET,
-	// * null,
-	// * new ParameterizedTypeReference<List<MensajeDTO>>() {
-	// * });
-	// */
+	var responseEntity = restTemplate.exchange(peticion,
+	Void.class);
+	/*
+	* ResponseEntity<List<MensajeDTO>> responseEntity =
+	* restTemplate.exchange("http://localhost:" + port +
+	* "/mensaje/centro?centro=1",
+	* HttpMethod.GET,
+	* null,
+	* new ParameterizedTypeReference<List<MensajeDTO>>() {
+	* });
+	*/
 
-	// assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
+	assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
 
-	// }
+	}
 
-	// }
+	}
 
-	// }
-	// }
+	}
+	}
 
 }
