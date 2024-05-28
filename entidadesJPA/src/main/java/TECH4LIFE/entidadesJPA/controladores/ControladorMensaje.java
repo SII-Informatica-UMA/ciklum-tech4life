@@ -41,11 +41,11 @@ public class ControladorMensaje {
  */
     //OBTENGO TODOS LOS MENSAJES DE UN CENTRO DADO EL CENTRO
     @GetMapping //capturo el objeto centro.
-    public ResponseEntity<List<MensajeDTO>> listaDeMensajes(@RequestParam (value="centro", required = true) Integer centroId){   //guardo en la variable centro el objeto Centro
+    public ResponseEntity<List<MensajeDTO>> listaDeMensajes(@RequestParam (value="centro", required = true) Integer centroId,@RequestHeader("Authorization") String authHeader){   //guardo en la variable centro el objeto Centro
         try{
             //CODE 200: Devuelve la lista de mensajes de cierto centro
             List<MensajeDTO> listaMensajesDTO =
-                    servicio.getMensajesByCentro(centroId).stream().map(Mapper::toMensajeDTO)
+                    servicio.getMensajesByCentro(centroId,authHeader).stream().map(Mapper::toMensajeDTO)
                             .collect(Collectors.toList());
             return ResponseEntity.ok(listaMensajesDTO);
         } catch(UsuarioNoAutorizado e){
@@ -61,10 +61,10 @@ public class ControladorMensaje {
 
     //OBTENGO UN MENSAJE CONCRETO POR EL IDMENSAJE
     @GetMapping("/{idMensaje}")
-    public ResponseEntity<MensajeDTO> getMensajeById(@PathVariable Integer idMensaje) {
+    public ResponseEntity<MensajeDTO> getMensajeById(@PathVariable Integer idMensaje,@RequestHeader("Authorization") String authHeader) {
         try{
             //CODE 200: Devuelve el mensaje
-            MensajeDTO mensaje = Mapper.toMensajeDTO(servicio.getMensajeById(idMensaje));
+            MensajeDTO mensaje = Mapper.toMensajeDTO(servicio.getMensajeById(idMensaje,authHeader));
             return ResponseEntity.ok(mensaje);
         } catch(UsuarioNoAutorizado e){
             //CODE 403: Acceso no autorizado
@@ -79,11 +79,11 @@ public class ControladorMensaje {
     POST
  */
     @PostMapping
-    public ResponseEntity<MensajeDTO> crearMensaje(@RequestParam (value="centro", required = true) Integer centroId, @RequestBody MensajeNuevoDTO mensajeNuevoDTO, UriComponentsBuilder builder) {
+    public ResponseEntity<MensajeDTO> crearMensaje(@RequestParam (value="centro", required = true) Integer centroId, @RequestBody MensajeNuevoDTO mensajeNuevoDTO, UriComponentsBuilder builder,@RequestHeader("Authorization") String authHeader) {
         try{
             //CODE 201: Se crea el mensaje y lo devuelve
             mensajeNuevoDTO.setRemitente(DestinatarioDTO.builder().tipo(TipoDestinatario.CENTRO).id(centroId).build());
-            Mensaje mensaje  = servicio.postMensaje(Mapper.toMensaje(mensajeNuevoDTO));
+            Mensaje mensaje  = servicio.postMensaje(Mapper.toMensaje(mensajeNuevoDTO),authHeader);
             URI uri = builder
                     .path("/mensaje")
                     .path("/centro")
@@ -102,10 +102,10 @@ public class ControladorMensaje {
  */
     //Eliminamos un mensaje por su idMensaje.
     @DeleteMapping("/{idMensaje}")
-    public ResponseEntity<?> eliminarMensaje(@PathVariable Integer idMensaje) {
+    public ResponseEntity<?> eliminarMensaje(@PathVariable Integer idMensaje,@RequestHeader("Authorization") String authHeader) {
         try{
             //CODE 200: Devuelve la lista de mensajes de cierto centro
-            servicio.deleteMensaje(idMensaje);
+            servicio.deleteMensaje(idMensaje,authHeader);
             return ResponseEntity.ok().build();
         } catch(UsuarioNoAutorizado e){
             //CODE 403: Acceso no autorizado
