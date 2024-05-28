@@ -859,7 +859,7 @@ public class EntidadesJpaApplicationTests {
 			@BeforeEach
 			public void security() {
 				boolean admin = false;
-				token = jwtUtil.doGenerateToken("4", admin);
+				token = jwtUtil.doGenerateToken("200", admin);
 			}
 
 			private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
@@ -1128,6 +1128,16 @@ public class EntidadesJpaApplicationTests {
 				@Nested
 				@DisplayName("y queremos obtenerlos")
 				public class GetCentrosLlena {
+
+					@Test
+					@DisplayName("devuelve un centro concreto cuando existe")
+					public void devuelveCentro() {
+						var peticion = get("http", "localhost", port, "/centro/1", token);
+
+						var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
 
 					@Test
 					@DisplayName("ACCESO DENEGADO. Da error cuando el id del gerente no esvalido")
@@ -2166,9 +2176,6 @@ public class EntidadesJpaApplicationTests {
 	.copia(listaDestinatarios)
 	.copiaOculta(listaDestinatarios)
 	.build();
-	// ¿Posible cambio en petición?
-	// var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1",
-	// mensajeNuevo);
 	String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
 	HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
 
@@ -2275,8 +2282,7 @@ public class EntidadesJpaApplicationTests {
 	@DisplayName("ACCESO DENEGADO. Devuelve la lista de mensajes de un centro correctamente")
 	public void devuelveListaMensajes() {
 
-	var peticion = delete("http", "localhost", port, "/mensaje/centro?centro=1",
-	token);
+	var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1", token);
 
 	var responseEntity = restTemplate.exchange(peticion,
 	Void.class);
