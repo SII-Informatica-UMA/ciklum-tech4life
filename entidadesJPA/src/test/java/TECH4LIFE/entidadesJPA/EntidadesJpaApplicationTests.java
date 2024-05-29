@@ -311,7 +311,7 @@ public class EntidadesJpaApplicationTests {
 					@Test
 					@DisplayName("Devuelve error cuando se pide un centro concreto")
 					public void devuelveErrorAlConsultarCentro() {
-						var peticion = get("http", "localhost", port, "/centro", token);
+						var peticion = get("http", "localhost", port, "/centro/2", token);
 
 						var respuesta = restTemplate.exchange(peticion,
 								new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -520,6 +520,8 @@ public class EntidadesJpaApplicationTests {
 						.idUsuario(3)
 						.build();
 
+
+
 				@BeforeEach
 				@Transactional
 				public void introduceDatosCentro() {
@@ -624,6 +626,22 @@ public class EntidadesJpaApplicationTests {
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 						assertThat(respuesta.getBody()).isNotNull();
 						assertThat(respuesta.getBody()).isNotEmpty();
+					}
+					//COPIADO: error
+					@Test
+					@DisplayName("Da error al pedir la lista de centros de un gerente sin centros")
+					public void devuelveListaCentroGerenteNoAsociado() {
+
+						Map<String, String> params = new TreeMap<>();
+						params.put("gerente", "1");
+
+						// Hacer esto en vez?:
+						var peticion = get("http", "localhost", port, "/centro", params, token);
+
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 					}
 
 					@Test
@@ -784,14 +802,14 @@ public class EntidadesJpaApplicationTests {
 					public void eliminaCorrectamenteCentro() {
 						// List<Centro> centrosAntes = centroRepository.findAll();
 						// centrosAntes.forEach(c->System.out.println(c));
-						var peticion = delete("http", "localhost", port, "/centro/1", token);
+						var peticion = delete("http", "localhost", port, "/centro/3", token);
 
 						var respuesta = restTemplate.exchange(peticion, Void.class);
 
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 						List<Centro> centros = centroRepository.findAll();
 						assertThat(centros).hasSize(2);
-						assertThat(centros).allMatch(c -> c.getIdCentro() != 1);
+						assertThat(centros).allMatch(c -> c.getIdCentro() != 3);
 					}
 
 					@Test
