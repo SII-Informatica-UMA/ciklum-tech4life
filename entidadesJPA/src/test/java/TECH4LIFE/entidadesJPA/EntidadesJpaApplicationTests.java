@@ -112,7 +112,6 @@ public class EntidadesJpaApplicationTests {
 	/*
 	 * ---------------------------------------------
 	 * Métodos comunes a todas las pruebas
-	 * Realizado por: Raúl García Balongo
 	 * ---------------------------------------------
 	 */
 
@@ -170,7 +169,6 @@ public class EntidadesJpaApplicationTests {
 	/*
 	 * ---------------------------------------------
 	 * Pruebas de ControladorCentro y LogicaCentro
-	 * Realizado por: Raúl García Balongo
 	 * ---------------------------------------------
 	 */
 
@@ -502,63 +500,62 @@ public class EntidadesJpaApplicationTests {
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 						assertThat(respuesta.getBody()).hasSize(3);
 					}
-					// ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-					// @Test
-					// @DisplayName("Da error cuando el id del gerente no es valido")
-					// public void ErrordevuelveListaCentroIdGerenteNoValido() {
-					// /*
-					// * var gerente = new Gerente().builder()
-					// * .id(-3)
-					// * .build();
-					// */
-					// var peticion = get("http", "localhost", port, "/centro?gerente=-3", token);
-					// // Revisar el path
-
-					// var respuesta = restTemplate.exchange(peticion,
-					// new ParameterizedTypeReference<List<CentroDTO>>() {
-					// });
-
-					// /*
-					// * String url = String.format("http://localhost:%d/centro?gerente=%d", port,
-					// * gerente.getId());
-					// *
-					// * ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
-					// * url,
-					// * HttpMethod.GET,
-					// * null,
-					// * new ParameterizedTypeReference<List<CentroDTO>>() {
-					// * });
-					// */
-
-					// assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
-					// }
-					// ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					// @Test
-					// @DisplayName("Devuelve la lista de centros de un gerente correctamente")
-					// public void devuelveListaCentroGerente() {
-
-					// var peticion = get("http", "localhost", port, "/centro?gerente=3", token); //
+// ESTE DA ERROR-----------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					@Test
+					@DisplayName("Da error cuando el id del gerente no es valido")
+					public void ErrordevuelveListaCentroIdGerenteNoValido() {
+					/*
+					* var gerente = new Gerente().builder()
+					* .id(-3)
+					* .build();
+					*/
+					var peticion = get("http", "localhost", port, "/centro?gerente=-3", token);
 					// Revisar el path
 
-					// var respuesta = restTemplate.exchange(peticion,
-					// new ParameterizedTypeReference<List<CentroDTO>>() {
-					// });
-					// /*
-					// * String url = String.format("http://localhost:%d/centro?gerente=%d", port,
-					// 3);
-					// *
-					// * ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
-					// * url,
-					// * HttpMethod.GET,
-					// * null,
-					// * new ParameterizedTypeReference<List<CentroDTO>>() {
-					// * });
-					// */
+					var respuesta = restTemplate.exchange(peticion,
+					new ParameterizedTypeReference<List<CentroDTO>>() {
+					});
 
-					// assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-					// assertThat(respuesta.getBody()).isNotNull();
-					// assertThat(respuesta.getBody()).isNotEmpty();
-					// }
+					/*
+					* String url = String.format("http://localhost:%d/centro?gerente=%d", port,
+					* gerente.getId());
+					*
+					* ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
+					* url,
+					* HttpMethod.GET,
+					* null,
+					* new ParameterizedTypeReference<List<CentroDTO>>() {
+					* });
+					*/
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+					}
+// -----------ESTE DA ERROR----------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					@Test
+					@DisplayName("Devuelve la lista de centros de un gerente correctamente")
+					public void devuelveListaCentroGerente() {
+
+					var peticion = get("http", "localhost", port, "/centro?gerente=3", token); //Revisar el path
+
+					var respuesta = restTemplate.exchange(peticion,
+					new ParameterizedTypeReference<List<CentroDTO>>() {
+					});
+					/*
+					* String url = String.format("http://localhost:%d/centro?gerente=%d", port,
+					3);
+					*
+					* ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
+					* url,
+					* HttpMethod.GET,
+					* null,
+					* new ParameterizedTypeReference<List<CentroDTO>>() {
+					* });
+					*/
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					assertThat(respuesta.getBody()).isNotNull();
+					assertThat(respuesta.getBody()).isNotEmpty();
+					}
 
 					@Test
 					@DisplayName("devuelve un centro concreto cuando existe")
@@ -633,19 +630,19 @@ public class EntidadesJpaApplicationTests {
 
 						compruebaRespuestaCentro(centro, respuesta);
 					}
-					// ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					// @Test
-					// @DisplayName("pero da error cuando el centro a insertar es null")
-					// public void centroNull() {
-					// CentroNuevoDTO centro = null;
-					// var peticion = post("http", "localhost", port, "/centro", centro, token);
+// --------------------ESTE DA ERROR-----------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					@Test
+					@DisplayName("pero da error cuando el centro a insertar es null")
+					public void centroNull() {
+					CentroNuevoDTO centro = null;
+					var peticion = post("http", "localhost", port, "/centro", centro, token);
 
-					// var respuesta = restTemplate.exchange(peticion, Void.class);
+					var respuesta = restTemplate.exchange(peticion, Void.class);
 
-					// assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 
-					// // compruebaRespuestaCentro(centro, respuesta);
-					// }
+					// compruebaRespuestaCentro(centro, respuesta);
+					}
 
 					private void compruebaRespuestaCentro(CentroNuevoDTO centro, ResponseEntity<Void> respuesta) {
 
@@ -734,51 +731,49 @@ public class EntidadesJpaApplicationTests {
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 						assertThat(respuesta.hasBody()).isEqualTo(false);
 					}
-					// ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					// @Test
-					// @DisplayName("Elimina una asociacion de un gerente de un centro concreto
-					// correctamente")
-					// public void devuelveErrorAlEliminarAsociacionCentro() {
-					// /*
-					// * String url =
-					// String.format("http://localhost:%d/centro/3/gerente?gerente=%d",
-					// * port, 3);
-					// *
-					// * var respuesta = restTemplate.exchange(
-					// * url,
-					// * HttpMethod.DELETE,
-					// * null,
-					// * Void.class);
-					// */
-					// // Hacer esto en vez?:
-					// var peticion = delete("http", "localhost", port,
-					// "/centro/3/gerente?gerente=3", token);
-					// var respuesta = restTemplate.exchange(peticion, Void.class);
-					// assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-					// Optional<Centro> centro = centroRepository.findById(3);
-					// assertThat(centro.get().getGerente()).isEqualTo(null);
-					// }
-					// ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!:
-					// @Test
-					// @DisplayName("Da error al eliminar una asociacion de un gerente de un centro
-					// concreto no valido")
-					// public void devuelveErrorAlEliminarAsociacionCentroNoValido() {
-					// /*
-					// * String url =
-					// * String.format("http://localhost:%d/centro/-3/gerente?gerente=%d", port, 1);
-					// *
-					// * var respuesta = restTemplate.exchange(
-					// * url,
-					// * HttpMethod.DELETE,
-					// * null,
-					// * Void.class);
-					// */
-					// var peticion = delete("http", "localhost", port,
-					// "/centro/-3/gerente?gerente=1", token);
-					// var respuesta = restTemplate.exchange(peticion, Void.class);
-					// assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+// -----------------------------------ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					@Test
+					@DisplayName("Elimina una asociacion de un gerente de un centro concreto correctamente")
+					public void devuelveErrorAlEliminarAsociacionCentro() {
+					/*
+					* String url =
+					String.format("http://localhost:%d/centro/3/gerente?gerente=%d",
+					* port, 3);
+					*
+					* var respuesta = restTemplate.exchange(
+					* url,
+					* HttpMethod.DELETE,
+					* null,
+					* Void.class);
+					*/
+					// Hacer esto en vez?:
+					var peticion = delete("http", "localhost", port,
+					"/centro/3/gerente?gerente=3", token);
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					Optional<Centro> centro = centroRepository.findById(3);
+					assertThat(centro.get().getGerente()).isEqualTo(null);
+					}
+//--------------------------------ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!:
+					@Test
+					@DisplayName("Da error al eliminar una asociacion de un gerente de un centro concreto no valido")
+					public void devuelveErrorAlEliminarAsociacionCentroNoValido() {
+					/*
+					* String url =
+					* String.format("http://localhost:%d/centro/-3/gerente?gerente=%d", port, 1);
+					*
+					* var respuesta = restTemplate.exchange(
+					* url,
+					* HttpMethod.DELETE,
+					* null,
+					* Void.class);
+					*/
+					var peticion = delete("http", "localhost", port,
+					"/centro/-3/gerente?gerente=1", token);
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 
-					// }
+					}
 
 				}
 
@@ -1835,34 +1830,33 @@ public class EntidadesJpaApplicationTests {
 					destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
 				}
 
-				// ESTE DA ERROR!!!!!!!!!!!!!!!!!!--------------------------------------------
-				// @Test
-				// @DisplayName("Da error al pedir una lista de mensajes vacía")
-				// public void devuelveListaMensajesError() {
+// ESTE DA ERROR!!!!!!!!!!!!!!!!!!--------------------------------------------
+				@Test
+				@DisplayName("Da error al pedir una lista de mensajes vacía")
+				public void devuelveListaMensajesError() {
 
-				// var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1",
-				// token);
+				var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1",
+				token);
 
-				// var responseEntity = restTemplate.exchange(peticion,
-				// new ParameterizedTypeReference<MensajeDTO>() {
-				// });
-				// /*
-				// * ResponseEntity<List<MensajeDTO>> responseEntity =
-				// * restTemplate.exchange("http://localhost:" + port +
-				// * "/mensaje/centro?centro=1",
-				// * HttpMethod.GET,
-				// * null,
-				// * new ParameterizedTypeReference<List<MensajeDTO>>() {
-				// * });
-				// */
+				var responseEntity = restTemplate.exchange(peticion,
+				new ParameterizedTypeReference<MensajeDTO>() {
+				});
+				/*
+				* ResponseEntity<List<MensajeDTO>> responseEntity =
+				* restTemplate.exchange("http://localhost:" + port +
+				* "/mensaje/centro?centro=1",
+				* HttpMethod.GET,
+				* null,
+				* new ParameterizedTypeReference<List<MensajeDTO>>() {
+				* });
+				*/
 
-				// assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
-				// // List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el
-				// cuerpo
-				// // de la respuesta
-				// // assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de
-				// // mensajes está vacía
-				// }
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
+				// List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el cuerpo
+				// de la respuesta
+				// assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de
+				// mensajes está vacía
+				}
 
 				@Test
 				@DisplayName("Da error al pedir un mensaje no existente")
@@ -1891,35 +1885,35 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 
 				}
-				// ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-				// @Test
-				// @DisplayName("Inserta correctamente un mensaje nuevo")
-				// public void InsertaMensaje() {
+//-------------- ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+				@Test
+				@DisplayName("Inserta correctamente un mensaje nuevo")
+				public void InsertaMensaje() {
 
-				// Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
-				// Arrays.asList(destinatario2, destinatario3));
+				Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
+				Arrays.asList(destinatario2, destinatario3));
 
-				// MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
-				// .asunto("Saludos")
-				// .contenido("Hola hola")
-				// .destinatarios(listaDestinatarios)
-				// .copia(listaDestinatarios)
-				// .copiaOculta(listaDestinatarios)
-				// .build();
-				// // ¿Posible cambio en petición?
-				// // var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1",
-				// // mensajeNuevo);
-				// String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
-				// HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
+				MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
+				.asunto("Saludos")
+				.contenido("Hola hola")
+				.destinatarios(listaDestinatarios)
+				.copia(listaDestinatarios)
+				.copiaOculta(listaDestinatarios)
+				.build();
+				// ¿Posible cambio en petición?
+				// var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1",
+				// mensajeNuevo);
+				String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
+				HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
 
-				// ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url,
-				// HttpMethod.POST, request,
-				// new ParameterizedTypeReference<MensajeDTO>() {
-				// });
-				// assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-				// }
+				ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url,
+				HttpMethod.POST, request,
+				new ParameterizedTypeReference<MensajeDTO>() {
+				});
+				assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+				}
 
-				// TO DO
+		
 
 			}
 
@@ -2010,30 +2004,30 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 
 				}
-				// ESTE DA
-				// FALLOS!!!!!----------------------------------------------------------------------
-				// @Test
-				// @DisplayName("Devuelve la lista de mensajes de un centro correctamente")
-				// public void devuelveListaMensajes() {
+// ESTE DA
+// FALLOS!!!!!----------------------------------------------------------------------
+				@Test
+				@DisplayName("Devuelve la lista de mensajes de un centro correctamente")
+				public void devuelveListaMensajes() {
 
-				// var peticion = delete("http", "localhost", port, "/mensaje/centro?centro=1",
-				// token);
+				var peticion = delete("http", "localhost", port, "/mensaje/centro?centro=1",
+				token);
 
-				// var responseEntity = restTemplate.exchange(peticion,
-				// Void.class);
-				// /*
-				// * ResponseEntity<List<MensajeDTO>> responseEntity =
-				// * restTemplate.exchange("http://localhost:" + port +
-				// * "/mensaje/centro?centro=1",
-				// * HttpMethod.GET,
-				// * null,
-				// * new ParameterizedTypeReference<List<MensajeDTO>>() {
-				// * });
-				// */
+				var responseEntity = restTemplate.exchange(peticion,
+				Void.class);
+				/*
+				* ResponseEntity<List<MensajeDTO>> responseEntity =
+				* restTemplate.exchange("http://localhost:" + port +
+				* "/mensaje/centro?centro=1",
+				* HttpMethod.GET,
+				* null,
+				* new ParameterizedTypeReference<List<MensajeDTO>>() {
+				* });
+				*/
 
-				// assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
+				assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
 
-				// }
+				}
 
 			}
 

@@ -31,6 +31,7 @@ package TECH4LIFE.entidadesJPA.security;
 
 
 
+import java.net.URI;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,6 +46,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriBuilderFactory;
 
 import TECH4LIFE.entidadesJPA.excepciones.UsuarioNoAutorizado;
 import io.jsonwebtoken.Claims;
@@ -164,7 +168,19 @@ public class JwtUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
     
-    
+
+    public static URI uriBuilder(String scheme, String host, int port, String path,
+        Map<String, String> queryParams) {
+        UriBuilderFactory ubf = new DefaultUriBuilderFactory();
+        UriBuilder ub = ubf.builder()
+                .scheme(scheme)
+                .host(host).port(port).path(path);
+        for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+            ub.queryParam(entry.getKey(), entry.getValue());
+        }
+        return ub.build();
+    }
+
     //AGREGADO PARA LOS TESTS:
 
     /*public UserDetails createUserDetails(String username, String password, List<String> roles){

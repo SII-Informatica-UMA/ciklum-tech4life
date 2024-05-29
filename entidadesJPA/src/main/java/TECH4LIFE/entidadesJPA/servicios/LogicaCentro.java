@@ -143,32 +143,16 @@ public class LogicaCentro {
         if (token == null || !jwtUtil.isAdmin(token)) {
             throw new UsuarioNoAutorizado();
         }
-
-        // ----------------------------------------------------
-        // Obtengo userDetails
-        // Optional<UserDetails> userDetails =
-        // SecurityConfguration.getAuthenticatedUser() ;
-
         if (id == null || id < 0)
             throw new PeticionNoValida();
 
-        // Generamos el token
-
-        // String token = jwtUtil.generateToken(userDetails.get());
-
-        // Llamada al método getUsernameFromToken de JwtUtil para obtener el nombre del
-        // usuario dado el token.
-
-        // String nombreUsuario = jwtUtil.getUsernameFromToken(token) ;
-
-        // Petición GET HTTP al microservicio del profe para obtener el valor del
-        // boolean admin dado un nombre de usuario
-
-        // boolean admin = true;
-
         if (!centroRepo.existsById(id))
             throw new CentroNoExistente();
-
+        
+        if(gerenteRepo.FindGerenteByCentro(id)!=null){
+            gerenteRepo.FindGerenteByCentro(id).setCentro(null);
+        }
+        
         centroRepo.deleteById(id);
     }
 
