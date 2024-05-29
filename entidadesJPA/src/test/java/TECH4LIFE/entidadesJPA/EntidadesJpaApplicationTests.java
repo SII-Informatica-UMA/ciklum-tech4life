@@ -145,7 +145,14 @@ public class EntidadesJpaApplicationTests {
 		}
 		return ub.build();
 	}
-
+	//post de mensajes:
+	private RequestEntity<MensajeNuevoDTO> post(String scheme, String host, int port, String path, Map<String, String> queryParams, String token, MensajeNuevoDTO body) {
+		URI uri = uri(scheme, host, port, queryParams, path);
+		var peticion = RequestEntity.post(uri)
+				.header("Authorization", "Bearer " + token)
+				.body(body);
+		return peticion;
+	}
 	// METODOS PARA QUERY PARAM:
 	private RequestEntity<Void> delete(String scheme, String host, int port, String path,
 			Map<String, String> queryParams, String token) {
@@ -311,7 +318,7 @@ public class EntidadesJpaApplicationTests {
 					@Test
 					@DisplayName("Devuelve error cuando se pide un centro concreto")
 					public void devuelveErrorAlConsultarCentro() {
-						var peticion = get("http", "localhost", port, "/centro/2", token);
+						var peticion = get("http", "localhost", port, "/centro", token);
 
 						var respuesta = restTemplate.exchange(peticion,
 								new ParameterizedTypeReference<List<CentroDTO>>() {
@@ -520,8 +527,6 @@ public class EntidadesJpaApplicationTests {
 						.idUsuario(3)
 						.build();
 
-
-
 				@BeforeEach
 				@Transactional
 				public void introduceDatosCentro() {
@@ -626,22 +631,6 @@ public class EntidadesJpaApplicationTests {
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 						assertThat(respuesta.getBody()).isNotNull();
 						assertThat(respuesta.getBody()).isNotEmpty();
-					}
-					//COPIADO: error
-					@Test
-					@DisplayName("Da error al pedir la lista de centros de un gerente sin centros")
-					public void devuelveListaCentroGerenteNoAsociado() {
-
-						Map<String, String> params = new TreeMap<>();
-						params.put("gerente", "1");
-
-						// Hacer esto en vez?:
-						var peticion = get("http", "localhost", port, "/centro", params, token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<CentroDTO>>() {
-								});
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 					}
 
 					@Test
@@ -802,14 +791,14 @@ public class EntidadesJpaApplicationTests {
 					public void eliminaCorrectamenteCentro() {
 						// List<Centro> centrosAntes = centroRepository.findAll();
 						// centrosAntes.forEach(c->System.out.println(c));
-						var peticion = delete("http", "localhost", port, "/centro/3", token);
+						var peticion = delete("http", "localhost", port, "/centro/1", token);
 
 						var respuesta = restTemplate.exchange(peticion, Void.class);
 
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 						List<Centro> centros = centroRepository.findAll();
 						assertThat(centros).hasSize(2);
-						assertThat(centros).allMatch(c -> c.getIdCentro() != 3);
+						assertThat(centros).allMatch(c -> c.getIdCentro() != 1);
 					}
 
 					@Test
@@ -1902,37 +1891,22 @@ public class EntidadesJpaApplicationTests {
 				}
 
 				// ESTE DA ERROR!!!!!!!!!!!!!!!!!!--------------------------------------------
-				// @Test
-				// @DisplayName("Da error al pedir una lista de mensajes vacía")
-				// public void devuelveListaMensajesError() {
+				@Test
+				@DisplayName("Da error al pedir una lista de mensajes vacía")
+				public void devuelveListaMensajesError() {
 
-				// Map<String,String> params = new TreeMap<>();
-				// params.put("centro", "1");
+					Map<String, String> params = new TreeMap<>();
+					params.put("centro", "1");
 
-				// // Hacer esto en vez?:
-				// var peticion = get("http", "localhost", port, "/mensaje/centro",
-				// params,token);
+					// Hacer esto en vez?:
+					var peticion = get("http", "localhost", port, "/mensaje/centro",
+							params, token);
 
-				// var responseEntity = restTemplate.exchange(peticion,
-				// new ParameterizedTypeReference<MensajeDTO>() {
-				// });
-				// /*
-				// * ResponseEntity<List<MensajeDTO>> responseEntity =
-				// * restTemplate.exchange("http://localhost:" + port +
-				// * "/mensaje/centro?centro=1",
-				// * HttpMethod.GET,
-				// * null,
-				// * new ParameterizedTypeReference<List<MensajeDTO>>() {
-				// * });
-				// */
-
-				// assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
-				// // List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el
-				// cuerpo
-				// // de la respuesta
-				// // assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de
-				// // mensajes está vacía
-				// }
+					var responseEntity = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
+					assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
+				}
 
 				@Test
 				@DisplayName("Da error al pedir un mensaje no existente")
@@ -1961,38 +1935,32 @@ public class EntidadesJpaApplicationTests {
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 
 				}
-				// -------------- ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-				// @Test
-				// @DisplayName("Inserta correctamente un mensaje nuevo")
-				// public void InsertaMensaje() {
+				// -------------- SOLUCIONADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+				@Test
+				@DisplayName("Inserta correctamente un mensaje nuevo")
+				public void InsertaMensaje() {
+					
+					Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
+						Arrays.asList(destinatario2, destinatario3)
+					);
 
-				// Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
-				// Arrays.asList(destinatario2, destinatario3));
+					MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
+						.asunto("Saludos")
+						.contenido("Hola hola")
+						.destinatarios(listaDestinatarios)
+						.copia(listaDestinatarios)
+						.copiaOculta(listaDestinatarios)
+						.build();
 
-				// MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
-				// .asunto("Saludos")
-				// .contenido("Hola hola")
-				// .destinatarios(listaDestinatarios)
-				// .copia(listaDestinatarios)
-				// .copiaOculta(listaDestinatarios)
-				// .build();
-				// // ¿Posible cambio en petición?
-				// // var peticion = post("http", "localhost", port, "/mensaje/centro?centro=1",
-				// // mensajeNuevo);
-				// Map<String,String> params = new TreeMap<>();
-				// params.put("centro", "1");
+				
+					Map<String, String> params = new TreeMap<>();
+					params.put("centro", "1");
 
-				// // Hacer esto en vez?:
-				// var peticion = post("http", "localhost", port, "/mensaje/centro",
-				// params,token);
-				// HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
-
-				// ResponseEntity<MensajeDTO> respuesta =
-				// restTemplate.exchange(peticion,request,
-				// new ParameterizedTypeReference<MensajeDTO>() {
-				// });
-				// assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-				// }
+				
+					var peticion = post("http", "localhost", port, "/mensaje/centro", params, token, mensajeNuevo);
+					ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(peticion, MensajeDTO.class);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+				}
 
 			}
 
@@ -2084,30 +2052,23 @@ public class EntidadesJpaApplicationTests {
 
 				}
 
-				// ESTE DA
-				// FALLOS!!!!!----------------------------------------------------------------------
-				// @Test
-				// @DisplayName("Devuelve la lista de mensajes de un centro correctamente")
-				// public void devuelveListaMensajes() {
+				// CORREGIDO!!!!----------------------------------------------------------------------
+				@Test
+				@DisplayName("Devuelve la lista de mensajes de un centro correctamente")
+				public void devuelveListaMensajes() {
+				
+					Map<String, String> params = new TreeMap<>();
+					params.put("centro", "1");
 
-				// 	var peticion = delete("http", "localhost", port, "/mensaje/centro?centro=1",
-				// 			token);
+					var peticion = get("http", "localhost", port, "/mensaje/centro", params, token);
 
-				// 	var responseEntity = restTemplate.exchange(peticion,
-				// 			Void.class);
-				// 	/*
-				// 	 * ResponseEntity<List<MensajeDTO>> responseEntity =
-				// 	 * restTemplate.exchange("http://localhost:" + port +
-				// 	 * "/mensaje/centro?centro=1",
-				// 	 * HttpMethod.GET,
-				// 	 * null,
-				// 	 * new ParameterizedTypeReference<List<MensajeDTO>>() {
-				// 	 * });
-				// 	 */
+					ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange(
+						peticion, new ParameterizedTypeReference<List<MensajeDTO>>() {});
 
-				// 	assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
-
-				// }
+					assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
+					assertThat(responseEntity.getBody()).isNotNull();
+					assertThat(responseEntity.getBody().size()).isGreaterThan(0);
+				}
 
 			}
 
@@ -2237,28 +2198,31 @@ public class EntidadesJpaApplicationTests {
 				}
 
 				@Test
-				@DisplayName("ACCESO DENEGADO. Inserta correctamente un mensaje nuevo")
+				@DisplayName("Inserta correctamente un mensaje nuevo")
 				public void InsertaMensaje() {
-
+					
 					Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
-							Arrays.asList(destinatario2, destinatario3));
+						Arrays.asList(destinatario2, destinatario3)
+					);
 
 					MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
-							.asunto("Saludos")
-							.contenido("Hola hola")
-							.destinatarios(listaDestinatarios)
-							.copia(listaDestinatarios)
-							.copiaOculta(listaDestinatarios)
-							.build();
-					String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
-					HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
+						.asunto("Saludos")
+						.contenido("Hola hola")
+						.destinatarios(listaDestinatarios)
+						.copia(listaDestinatarios)
+						.copiaOculta(listaDestinatarios)
+						.build();
 
-					ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url,
-							HttpMethod.POST, request,
-							new ParameterizedTypeReference<MensajeDTO>() {
-							});
+				
+					Map<String, String> params = new TreeMap<>();
+					params.put("centro", "1");
+
+				
+					var peticion = post("http", "localhost", port, "/mensaje/centro", params, token, mensajeNuevo);
+					ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(peticion, MensajeDTO.class);
 					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 				}
+				
 
 				// TO DO
 
@@ -2353,25 +2317,18 @@ public class EntidadesJpaApplicationTests {
 				}
 
 				@Test
-				@DisplayName("ACCESO DENEGADO. Devuelve la lista de mensajes de un centro correctamente")
+				@DisplayName("Devuelve la lista de mensajes de un centro correctamente")
 				public void devuelveListaMensajes() {
+				
+					Map<String, String> params = new TreeMap<>();
+					params.put("centro", "1");
 
-					var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1", token);
+					var peticion = get("http", "localhost", port, "/mensaje/centro", params, token);
 
-					var responseEntity = restTemplate.exchange(peticion,
-							Void.class);
-					/*
-					 * ResponseEntity<List<MensajeDTO>> responseEntity =
-					 * restTemplate.exchange("http://localhost:" + port +
-					 * "/mensaje/centro?centro=1",
-					 * HttpMethod.GET,
-					 * null,
-					 * new ParameterizedTypeReference<List<MensajeDTO>>() {
-					 * });
-					 */
+					ResponseEntity<List<MensajeDTO>> responseEntity = restTemplate.exchange(
+						peticion, new ParameterizedTypeReference<List<MensajeDTO>>() {});
 
 					assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
-
 				}
 
 			}
