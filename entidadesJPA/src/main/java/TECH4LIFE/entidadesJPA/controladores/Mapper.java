@@ -69,11 +69,6 @@ public class Mapper {
                 .build();
     }
 
-    public static IdGerenteDTO toIdGerenteDTO(GerenteDTO gerenteDTO){
-        return IdGerenteDTO.builder()
-                .idGerente(gerenteDTO.getId())
-                .build();
-    }
 
     public static DestinatarioDTO toDestinatarioDTO(Destinatario destinatario){
         return DestinatarioDTO.builder()
