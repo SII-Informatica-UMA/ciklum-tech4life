@@ -116,25 +116,25 @@ public class EntidadesJpaApplicationTests {
 	 */
 	// Método uri actualizado
 
-	//URI PARA QUERY PARAM
+	// URI PARA QUERY PARAM
 	private URI uri(String scheme, String host, int port, Map<String, String> queryParams, String... paths) {
-			UriBuilderFactory ubf = new DefaultUriBuilderFactory();
-			UriBuilder ub = ubf.builder()
-					.scheme(scheme)
-					.host(host)
-					.port(port);
-			for (String path : paths) {
-				ub = ub.path(path);
+		UriBuilderFactory ubf = new DefaultUriBuilderFactory();
+		UriBuilder ub = ubf.builder()
+				.scheme(scheme)
+				.host(host)
+				.port(port);
+		for (String path : paths) {
+			ub = ub.path(path);
+		}
+		if (queryParams != null) {
+			for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+				ub = ub.queryParam(entry.getKey(), entry.getValue());
 			}
-			if (queryParams != null) {
-				for (Map.Entry<String, String> entry : queryParams.entrySet()) {
-					ub = ub.queryParam(entry.getKey(), entry.getValue());
-				}
-			}
-			return ub.build();
+		}
+		return ub.build();
 	}
 
-	//URI PARA NORMAL
+	// URI PARA NORMAL
 	private URI uri(String scheme, String host, int port, String... paths) {
 		UriBuilderFactory ubf = new DefaultUriBuilderFactory();
 		UriBuilder ub = ubf.builder()
@@ -146,9 +146,9 @@ public class EntidadesJpaApplicationTests {
 		return ub.build();
 	}
 
-
-	//METODOS PARA QUERY PARAM:
-	private RequestEntity<Void> delete(String scheme, String host, int port, String path, Map<String, String> queryParams, String token) {
+	// METODOS PARA QUERY PARAM:
+	private RequestEntity<Void> delete(String scheme, String host, int port, String path,
+			Map<String, String> queryParams, String token) {
 		URI uri = uri(scheme, host, port, queryParams, path);
 		var peticion = RequestEntity.delete(uri)
 				.header("Authorization", "Bearer " + token)
@@ -156,8 +156,9 @@ public class EntidadesJpaApplicationTests {
 		return peticion;
 	}
 
-	private RequestEntity<Void> get(String scheme, String host, int port, String path, Map<String, String> queryParams,String token) {
-		URI uri = uri(scheme, host, port,queryParams, path);
+	private RequestEntity<Void> get(String scheme, String host, int port, String path, Map<String, String> queryParams,
+			String token) {
+		URI uri = uri(scheme, host, port, queryParams, path);
 
 		// Tenemos que generar un token
 		// No hay usuario autenticado DUDA CORREO
@@ -168,17 +169,20 @@ public class EntidadesJpaApplicationTests {
 				.build();
 		return peticion;
 	}
-	
-	private <T> RequestEntity<T> post(String scheme, String host, int port, String path,Map<String, String> queryParams, T object, String token) {
-		URI uri = uri(scheme, host, port,queryParams, path);
+
+	private <T> RequestEntity<T> post(String scheme, String host, int port, String path,
+			Map<String, String> queryParams, T object, String token) {
+		URI uri = uri(scheme, host, port, queryParams, path);
 		var peticion = RequestEntity.post(uri)
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(object);
 		return peticion;
 	}
-	private <T> RequestEntity<T> put(String scheme, String host, int port, String path,Map<String, String> queryParams, T object, String token) {
-		URI uri = uri(scheme, host, port,queryParams, path);
+
+	private <T> RequestEntity<T> put(String scheme, String host, int port, String path, Map<String, String> queryParams,
+			T object, String token) {
+		URI uri = uri(scheme, host, port, queryParams, path);
 		var peticion = RequestEntity.put(uri)
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -186,8 +190,7 @@ public class EntidadesJpaApplicationTests {
 		return peticion;
 	}
 
-
-	//METODOS PARA QUERY NORMAL
+	// METODOS PARA QUERY NORMAL
 	private RequestEntity<Void> get(String scheme, String host, int port, String path, String token) {
 		URI uri = uri(scheme, host, port, path);
 
@@ -200,7 +203,6 @@ public class EntidadesJpaApplicationTests {
 				.build();
 		return peticion;
 	}
-
 
 	private RequestEntity<Void> delete(String scheme, String host, int port, String path, String token) {
 		URI uri = uri(scheme, host, port, path);
@@ -562,66 +564,66 @@ public class EntidadesJpaApplicationTests {
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 						assertThat(respuesta.getBody()).hasSize(3);
 					}
-//SOLUCIONADO-----------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+					// SOLUCIONADO-----------------------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					@Test
 					@DisplayName("Da error cuando el id del gerente no es valido")
 					public void ErrordevuelveListaCentroIdGerenteNoValido() {
-					
-					Map<String,String> params = new TreeMap<>();
+
+						Map<String, String> params = new TreeMap<>();
 						params.put("gerente", "-3");
-						
-						
-					// Hacer esto en vez?:
-					var peticion = get("http", "localhost", port, "/centro", params,token);
 
-					var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<CentroDTO>>() {
-					});
+						// Hacer esto en vez?:
+						var peticion = get("http", "localhost", port, "/centro", params, token);
 
-					/*
-					* String url = String.format("http://localhost:%d/centro?gerente=%d", port,
-					* gerente.getId());
-					*
-					* ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
-					* url,
-					* HttpMethod.GET,
-					* null,
-					* new ParameterizedTypeReference<List<CentroDTO>>() {
-					* });
-					*/
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
 
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+						/*
+						 * String url = String.format("http://localhost:%d/centro?gerente=%d", port,
+						 * gerente.getId());
+						 *
+						 * ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
+						 * url,
+						 * HttpMethod.GET,
+						 * null,
+						 * new ParameterizedTypeReference<List<CentroDTO>>() {
+						 * });
+						 */
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 					}
-// -----------solucionado----------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+					// -----------solucionado----------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					@Test
 					@DisplayName("Devuelve la lista de centros de un gerente correctamente")
 					public void devuelveListaCentroGerente() {
-					
-					Map<String,String> params = new TreeMap<>();
-					params.put("gerente", "3");
-						
-						
-					// Hacer esto en vez?:
-					var peticion = get("http", "localhost", port, "/centro", params,token);
 
-					var respuesta = restTemplate.exchange(peticion,
-					new ParameterizedTypeReference<List<CentroDTO>>() {
-					});
-					/*
-					* String url = String.format("http://localhost:%d/centro?gerente=%d", port,
-					3);
-					*
-					* ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
-					* url,
-					* HttpMethod.GET,
-					* null,
-					* new ParameterizedTypeReference<List<CentroDTO>>() {
-					* });
-					*/
+						Map<String, String> params = new TreeMap<>();
+						params.put("gerente", "3");
 
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-					assertThat(respuesta.getBody()).isNotNull();
-					assertThat(respuesta.getBody()).isNotEmpty();
+						// Hacer esto en vez?:
+						var peticion = get("http", "localhost", port, "/centro", params, token);
+
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
+						/*
+						 * String url = String.format("http://localhost:%d/centro?gerente=%d", port,
+						 * 3);
+						 *
+						 * ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
+						 * url,
+						 * HttpMethod.GET,
+						 * null,
+						 * new ParameterizedTypeReference<List<CentroDTO>>() {
+						 * });
+						 */
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+						assertThat(respuesta.getBody()).isNotNull();
+						assertThat(respuesta.getBody()).isNotEmpty();
 					}
 
 					@Test
@@ -697,22 +699,22 @@ public class EntidadesJpaApplicationTests {
 
 						compruebaRespuestaCentro(centro, respuesta);
 					}
-// --------------------SOLUCIONADO-----------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+					// --------------------SOLUCIONADO-----------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					@Test
 					@DisplayName("pero da error cuando el centro a insertar es null")
 					public void centroNull() {
-					Map<String,String> params = new TreeMap<>();
-					params.put("centro", null);
-						
-						
-					// Hacer esto en vez?:
-					var peticion = post("http", "localhost", port, "/centro", params,token);
+						Map<String, String> params = new TreeMap<>();
+						params.put("centro", null);
 
-					var respuesta = restTemplate.exchange(peticion, Void.class);
+						// Hacer esto en vez?:
+						var peticion = post("http", "localhost", port, "/centro", params, token);
 
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+						var respuesta = restTemplate.exchange(peticion, Void.class);
 
-					// compruebaRespuestaCentro(centro, respuesta);
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+
+						// compruebaRespuestaCentro(centro, respuesta);
 					}
 
 					private void compruebaRespuestaCentro(CentroNuevoDTO centro, ResponseEntity<Void> respuesta) {
@@ -735,69 +737,56 @@ public class EntidadesJpaApplicationTests {
 					}
 				}
 
-					@Nested
-					@DisplayName("y queremos modificar un centro")
-					public class ModificaCentroLlena {
+				@Nested
+				@DisplayName("y queremos modificar un centro")
+				public class ModificaCentroLlena {
 
-						@Test
-						@DisplayName("Lo modifica correctamente cuando existe")
-						@DirtiesContext
-						public void modificaCorrectamenteCentro() {
-							var centro = CentroNuevoDTO.builder()
-									.nombre("PepeFit")
-									.direccion("Calle la gaviota, 56")
-									.build();
+					@Test
+					@DisplayName("Lo modifica correctamente cuando existe")
+					@DirtiesContext
+					public void modificaCorrectamenteCentro() {
+						var centro = CentroNuevoDTO.builder()
+								.nombre("PepeFit")
+								.direccion("Calle la gaviota, 56")
+								.build();
 
-							var peticion = put("http", "localhost", port, "/centro/1", centro, token);
+						var peticion = put("http", "localhost", port, "/centro/1", centro, token);
 
-							var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
+						var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-							Centro centroBD = centroRepository.findById(1).get();
-							compruebaCamposCentro(centro, centroBD);
-						}
-
-						@Test
-						@DisplayName("Da error cuando no existe")
-						public void errorCuandoNoExiste() {
-							var centro = CentroNuevoDTO.builder()
-									.nombre("PepeitoFit")
-									.direccion("Calle la gata, 56")
-									.build();
-							var peticion = put("http", "localhost", port, "/centro/28", centro, token);
-
-							var respuesta = restTemplate.exchange(peticion, Void.class);
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-							assertThat(respuesta.hasBody()).isEqualTo(false);
-						}
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+						Centro centroBD = centroRepository.findById(1).get();
+						compruebaCamposCentro(centro, centroBD);
 					}
 
-					@Nested
-					@DisplayName("y queremos eliminar un centro")
-					public class EliminaCentroLlena {
+					@Test
+					@DisplayName("Da error cuando no existe")
+					public void errorCuandoNoExiste() {
+						var centro = CentroNuevoDTO.builder()
+								.nombre("PepeitoFit")
+								.direccion("Calle la gata, 56")
+								.build();
+						var peticion = put("http", "localhost", port, "/centro/28", centro, token);
 
-						@Test
-						@DisplayName("Lo elimina cuando existe")
-						public void eliminaCorrectamenteCentro() {
-							// List<Centro> centrosAntes = centroRepository.findAll();
-							// centrosAntes.forEach(c->System.out.println(c));
-							var peticion = delete("http", "localhost", port, "/centro/1", token);
+						var respuesta = restTemplate.exchange(peticion, Void.class);
 
-							var respuesta = restTemplate.exchange(peticion, Void.class);
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+						assertThat(respuesta.hasBody()).isEqualTo(false);
+					}
+				}
 
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-							List<Centro> centros = centroRepository.findAll();
-							assertThat(centros).hasSize(2);
-							assertThat(centros).allMatch(c -> c.getIdCentro() != 1);
-						}
+				@Nested
+				@DisplayName("y queremos eliminar un centro")
+				public class EliminaCentroLlena {
 
-						@Test
-						@DisplayName("da error cuando no existe")
-						public void errorCuandoNoExisteCentro() {
-							var peticion = delete("http", "localhost", port, "/centro/28", token);
+					@Test
+					@DisplayName("Lo elimina cuando existe")
+					public void eliminaCorrectamenteCentro() {
+						// List<Centro> centrosAntes = centroRepository.findAll();
+						// centrosAntes.forEach(c->System.out.println(c));
+						var peticion = delete("http", "localhost", port, "/centro/1", token);
 
-							var respuesta = restTemplate.exchange(peticion, Void.class);
+						var respuesta = restTemplate.exchange(peticion, Void.class);
 
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 						List<Centro> centros = centroRepository.findAll();
@@ -815,468 +804,1024 @@ public class EntidadesJpaApplicationTests {
 						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 						assertThat(respuesta.hasBody()).isEqualTo(false);
 					}
-// -----------------------------------SOLUCIONADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+					// -----------------------------------SOLUCIONADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					@Test
 					@DisplayName("Elimina una asociacion de un gerente de un centro concreto correctamente")
 					public void devuelveErrorAlEliminarAsociacionCentro() {
-					
-					Map<String,String> params = new TreeMap<>();
-					params.put("gerente", "3");
-					
-					
-					// Hacer esto en vez?:
-					var peticion = delete("http", "localhost", port, "/centro/3/gerente", params,token);
-					var respuesta = restTemplate.exchange(peticion, Void.class);
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-					Optional<Centro> centro = centroRepository.findById(3);
-					assertThat(centro.get().getGerente()).isEqualTo(null);
+
+						Map<String, String> params = new TreeMap<>();
+						params.put("gerente", "3");
+
+						// Hacer esto en vez?:
+						var peticion = delete("http", "localhost", port, "/centro/3/gerente", params, token);
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+						Optional<Centro> centro = centroRepository.findById(3);
+						assertThat(centro.get().getGerente()).isEqualTo(null);
 					}
-//--------------------------------SOLUCIONADO!!!!!!!!!!!!!!!!!!!!!!!!!!:
+
+					// --------------------------------SOLUCIONADO!!!!!!!!!!!!!!!!!!!!!!!!!!:
 					@Test
 					@DisplayName("Da error al eliminar una asociacion de un gerente de un centro concreto no valido")
 					public void devuelveErrorAlEliminarAsociacionCentroNoValido() {
-						Map<String,String> params = new TreeMap<>();
+						Map<String, String> params = new TreeMap<>();
 						params.put("gerente", "3");
-						
-						
+
 						// Hacer esto en vez?:
-						var peticion = delete("http", "localhost", port, "/centro/-3/gerente", params,token);
-					var respuesta = restTemplate.exchange(peticion, Void.class);
-					assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+						var peticion = delete("http", "localhost", port, "/centro/-3/gerente", params, token);
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 
 					}
 
-					@Nested
-					@DisplayName("Y queremos añadir una asociacion entre un gerente y un centro")
-					public class AsociacionLlena {
-						// DA ERROR 500 ¿?
-						@Test
-						@DisplayName("Se añade correctamente")
-						public void añadeAsociacionGerenteCentro() {
-							/*
-							 * Gerente gerente = Gerente.builder()
-							 * .id(5)
-							 * .idUsuario(4)
-							 * .empresa("hola")
-							 * .build();
-							 * gerenteRepository.save(gerente);
-							 *
-							 * Centro centro = Centro.builder()
-							 * .nombre("Centro 6")
-							 * .direccion("Calle del centro 6, 6")
-							 * .idCentro(6)
-							 * .gerente(null)
-							 * .build();
-							 * centroRepository.save(centro);
-							 */
+				}
 
-							IdGerenteDTO id = IdGerenteDTO.builder()
-									.idGerente(1)
-									.build();
+				@Nested
+				@DisplayName("Y queremos añadir una asociacion entre un gerente y un centro")
+				public class AsociacionLlena {
+					// DA ERROR 500 ¿?
+					@Test
+					@DisplayName("Se añade correctamente")
+					public void añadeAsociacionGerenteCentro() {
+						/*
+						 * Gerente gerente = Gerente.builder()
+						 * .id(5)
+						 * .idUsuario(4)
+						 * .empresa("hola")
+						 * .build();
+						 * gerenteRepository.save(gerente);
+						 * 
+						 * Centro centro = Centro.builder()
+						 * .nombre("Centro 6")
+						 * .direccion("Calle del centro 6, 6")
+						 * .idCentro(6)
+						 * .gerente(null)
+						 * .build();
+						 * centroRepository.save(centro);
+						 */
 
-							var peticion = put("http", "localhost", port, "/centro/2/gerente", id, token);
+						IdGerenteDTO id = IdGerenteDTO.builder()
+								.idGerente(1)
+								.build();
 
-							var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
+						var peticion = put("http", "localhost", port, "/centro/2/gerente", id, token);
 
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-							var centroBD = centroRepository.findById(2).get();
-							assertThat(centroBD.getGerente().getId()).isEqualTo(1);
-							var gerenteBD = gerenteRepository.findById(1).get();
-							assertThat(gerenteBD.getCentro().getIdCentro()).isEqualTo(2);
-						}
+						var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
-						@Test
-						@DisplayName("Da error cuando no existe")
-						public void errorCuandoNoExiste() {
-							var centro = CentroNuevoDTO.builder()
-									.nombre("PepeitoFit")
-									.direccion("Calle la gata, 56")
-									.build();
-							var gerente = GerenteNuevoDTO.builder()
-									.idUsuario(1)
-									.empresa("hola")
-									.build();
-							var idGerenteDTO = IdGerenteDTO.builder()
-									.idGerente(gerente.getIdUsuario())
-									.build();
-							var peticion = put("http", "localhost", port, "/centro/28", idGerenteDTO, token);
-
-							var respuesta = restTemplate.exchange(peticion, Void.class);
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-							assertThat(respuesta.hasBody()).isEqualTo(false);
-						}
-
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+						var centroBD = centroRepository.findById(2).get();
+						assertThat(centroBD.getGerente().getId()).isEqualTo(1);
+						var gerenteBD = gerenteRepository.findById(1).get();
+						assertThat(gerenteBD.getCentro().getIdCentro()).isEqualTo(2);
 					}
+
+					@Test
+					@DisplayName("Da error cuando no existe")
+					public void errorCuandoNoExiste() {
+						var centro = CentroNuevoDTO.builder()
+								.nombre("PepeitoFit")
+								.direccion("Calle la gata, 56")
+								.build();
+						var gerente = GerenteNuevoDTO.builder()
+								.idUsuario(1)
+								.empresa("hola")
+								.build();
+						var idGerenteDTO = IdGerenteDTO.builder()
+								.idGerente(gerente.getIdUsuario())
+								.build();
+						var peticion = put("http", "localhost", port, "/centro/28", idGerenteDTO, token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+						assertThat(respuesta.hasBody()).isEqualTo(false);
+					}
+
+				}
+			}
+		}
+
+	}
+
+	@Nested
+	@DisplayName("En cuando Centros. Cuando Acceso no gerente y/o administrador")
+	public class PruebasCentroNoAdminGerente {
+		@Nested
+		@DisplayName("En cuanto a los centros")
+		public class PruebasCentros {
+
+			@BeforeEach
+			public void security() {
+				boolean admin = false;
+				token = jwtUtil.doGenerateToken("200", admin);
+			}
+
+			private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
+					.empresa("Gerente")
+					.idUsuario(1)
+					.build();
+
+			@BeforeEach
+			public void introduceDatosGerente() {
+				gerenteRepository.save(Mapper.toGerente(gerente));
+			}
+
+			@Nested
+			@DisplayName("Cuando no hay centros")
+			public class ListaCentrosVacia {
+
+				@Nested
+				@DisplayName("y queremos obtenerlos")
+				public class GetCentrosVacia {
+
+					@Test
+					@DisplayName("Devuelve la lista de centros vacía")
+					public void devuelveListaCentro() {
+
+						var peticion = get("http", "localhost", port, "/centro", token); // Revisar el path
+
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+						assertThat(respuesta.hasBody()).isEqualTo(false);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO.Devuelve error cuando se pide un centro concreto")
+					public void devuelveErrorAlConsultarCentro() {
+						var peticion = get("http", "localhost", port, "/centro", token);
+
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+						// assertThat(respuesta.hasBody()).isEqualTo(false);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. Devuelve error cuando se pide el gerente de uncentro concreto")
+					public void devuelveErrorAlConsultarGerenteDeCentro() {
+						var peticion = get("http", "localhost", port, "/centro/1/gerente", token);
+
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+						// assertThat(respuesta.hasBody()).isEqualTo(false);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. Devuelve error cuando se pide el gerente de uncentro con id no valida")
+					public void devuelveErrorAlConsultarGerenteDeCentroNoValido() {
+						var peticion = get("http", "localhost", port, "/centro/-1/gerente", token);
+
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+						// assertThat(respuesta.hasBody()).isEqualTo(false);
+					}
+
+				}
+
+				@Nested
+				@DisplayName("y queremos insertar un centro")
+				public class InsertaCentroVacia {
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. y se guarda con éxito")
+					public void crearCentro() {
+						var centro = CentroNuevoDTO.builder()
+								.nombre("egeFIT")
+								.direccion("Calle merluza, 56")
+								.build();
+						var peticion = post("http", "localhost", port, "/centro", centro, token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+
+						// Yo creo que faltaría verificar si se ha añadido, no solo el código
+						// Y esto se haría con el método compruebaRespuestaCentro que habría que
+						// corregirlo
+						// compruebaRespuestaCentro(centro, respuesta);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. Da error cuando la peticion no es valida")
+					public void crearCentroNoValido() {
+
+						var centro = CentroNuevoDTO.builder()
+								.nombre(null)
+								.build();
+
+						var peticion = post("http", "localhost", port, "/centro", centro, token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
+
+				}
+
+				@Nested
+				@DisplayName("ACCESO DENEGADO. y queremos modificar un centro")
+				public class ModificaCentroVacia {
+
+					@Test
+					@DisplayName("devuelve error cuando se modifica un centro concreto")
+					public void devuelveErrorAlModificarCentro() {
+						var centro = CentroNuevoDTO.builder()
+								.nombre("KKFit")
+								.direccion("Calle la calle KK, 56")
+								.build();
+						var peticion = put("http", "localhost", port, "/centro/2", centro, token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. devuelve error cuando se intenta añadir una asociacion a un centro no existente")
+					public void devuelveErrorAlAñadirAsociacionNoExistente() {
+						var idGerente = IdGerenteDTO.builder()
+								.idGerente(1)
+								.build();
+						var peticion = put("http", "localhost", port, "/centro/1/gerente", idGerente,
+								token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. devuelve error cuando se intenta añadir una asociacion a un centro no valido")
+					public void devuelveErrorAlAñadirAsociacionNoValido() {
+						var idGerente = IdGerenteDTO.builder()
+								.idGerente(1)
+								.build();
+						var peticion = put("http", "localhost", port, "/centro/-1/gerente",
+								idGerente, token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. devuelve error cuando se realiza una peticionno valida")
+					public void devuelveErrorAlModificarCentroNoValida() {
+						var centro = CentroNuevoDTO.builder()
+								.nombre("FitFit")
+								.direccion("Calle Fit, 8")
+								.build();
+						var peticion = put("http", "localhost", port, "/centro/-2", centro, token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
+				}
+
+				@Nested
+				@DisplayName("ACCESO DENEGADO. y queremos eliminar un centro")
+				public class EliminaCentroVacia {
+
+					@Test
+					@DisplayName("devuelve error cuando se elimina un centro concreto")
+					public void devuelveErrorAlEliminarCentro() {
+						var peticion = delete("http", "localhost", port, "/centro/2", token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. devuelve error cuando se elimina un centro conid no valida")
+
+					public void devuelveErrorAlEliminarCentroNoValidoVacio() {
+						var peticion = delete("http", "localhost", port, "/centro/-2", token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
+
+					@Test
+					@DisplayName("ACCESO DENEGADO. devuelve error cuando se elimina unaasociacion de un centro concreto")
+
+					public void devuelveErrorAlEliminarAsociacionCentro() {
+						var peticion = delete("http", "localhost", port, "/centro/1/gerente", token);
+
+						var respuesta = restTemplate.exchange(peticion, Void.class);
+
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					}
+
 				}
 			}
 
-		}
-
-		@Nested
-		@DisplayName("En cuando Centros. Cuando Acceso no gerente y/o administrador")
-		public class PruebasCentroNoAdminGerente {
 			@Nested
-			@DisplayName("En cuanto a los centros")
-			public class PruebasCentros {
+			@DisplayName("Cuando hay centros")
+			public class ListaCentrosConDatos {
+				private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+						.nombre("BasicFit")
+						.direccion("Calle la calle bonita, 56")
+						.build();
 
-				@BeforeEach
-				public void security() {
-					boolean admin = false;
-					token = jwtUtil.doGenerateToken("200", admin);
-				}
+				private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+						.nombre("ProGYM")
+						.direccion("Calle avestruz, 44")
+						.build();
 
-				private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
-						.empresa("Gerente")
+				private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
 						.idUsuario(1)
 						.build();
 
+				private Gerente gerente2 = Gerente.builder()
+						.id(2)
+						.idUsuario(3)
+						.build();
+
 				@BeforeEach
-				public void introduceDatosGerente() {
-					gerenteRepository.save(Mapper.toGerente(gerente));
+				@Transactional
+				public void introduceDatosCentro() {
+
+					centroRepository.save(Mapper.toCentro(centro1));
+					centroRepository.save(Mapper.toCentro(centro2));
+					gerenteRepository.save(Mapper.toGerente(gerente1));
+					gerenteRepository.save(gerente2);
+
+					Gerente gerente3 = Gerente.builder()
+							.id(3)
+							.idUsuario(4)
+							.build();
+
+					Centro centro3 = Centro.builder()
+							.nombre("Centro 3")
+							.idCentro(3)
+							.direccion("Calle del centro3, 3")
+							.build();
+
+					gerenteRepository.save(gerente3);
+					centroRepository.save(centro3);
+					centro3.setGerente(gerente3);
+					gerente3.setCentro(centro3);
+					centroRepository.save(centro3);
+					gerenteRepository.save(gerente3);
 				}
 
 				@Nested
-				@DisplayName("Cuando no hay centros")
-				public class ListaCentrosVacia {
+				@DisplayName("y queremos obtenerlos")
+				public class GetCentrosLlena {
 
-					@Nested
-					@DisplayName("y queremos obtenerlos")
-					public class GetCentrosVacia {
+					@Test
+					@DisplayName("devuelve un centro concreto cuando existe")
+					public void devuelveCentro() {
+						var peticion = get("http", "localhost", port, "/centro/1", token);
 
-						@Test
-						@DisplayName("Devuelve la lista de centros vacía")
-						public void devuelveListaCentro() {
+						var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
 
-							var peticion = get("http", "localhost", port, "/centro", token); // Revisar el path
-
-							var respuesta = restTemplate.exchange(peticion,
-									new ParameterizedTypeReference<List<CentroDTO>>() {
-									});
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-							assertThat(respuesta.hasBody()).isEqualTo(false);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO.Devuelve error cuando se pide un centro concreto")
-						public void devuelveErrorAlConsultarCentro() {
-							var peticion = get("http", "localhost", port, "/centro", token);
-
-							var respuesta = restTemplate.exchange(peticion,
-									new ParameterizedTypeReference<List<CentroDTO>>() {
-									});
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-							// assertThat(respuesta.hasBody()).isEqualTo(false);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO. Devuelve error cuando se pide el gerente de uncentro concreto")
-						public void devuelveErrorAlConsultarGerenteDeCentro() {
-							var peticion = get("http", "localhost", port, "/centro/1/gerente", token);
-
-							var respuesta = restTemplate.exchange(peticion,
-									new ParameterizedTypeReference<List<CentroDTO>>() {
-									});
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-							// assertThat(respuesta.hasBody()).isEqualTo(false);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO. Devuelve error cuando se pide el gerente de uncentro con id no valida")
-						public void devuelveErrorAlConsultarGerenteDeCentroNoValido() {
-							var peticion = get("http", "localhost", port, "/centro/-1/gerente", token);
-
-							var respuesta = restTemplate.exchange(peticion,
-									new ParameterizedTypeReference<List<CentroDTO>>() {
-									});
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-							// assertThat(respuesta.hasBody()).isEqualTo(false);
-						}
-
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 					}
 
-					@Nested
-					@DisplayName("y queremos insertar un centro")
-					public class InsertaCentroVacia {
+					@Test
+					@DisplayName("ACCESO DENEGADO. Da error cuando el id del gerente no esvalido")
+					public void ErrordevuelveListaCentroIdGerenteNoValido() {
+						/*
+						 * var gerente = new Gerente().builder()
+						 * .id(-3)
+						 * .build();
+						 */
+						var peticion = get("http", "localhost", port, "/centro?gerente=-3", token);
+						// Revisar el path
 
-						@Test
-						@DisplayName("ACCESO DENEGADO. y se guarda con éxito")
-						public void crearCentro() {
-							var centro = CentroNuevoDTO.builder()
-									.nombre("egeFIT")
-									.direccion("Calle merluza, 56")
-									.build();
-							var peticion = post("http", "localhost", port, "/centro", centro, token);
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
 
-							var respuesta = restTemplate.exchange(peticion, Void.class);
+						/*
+						 * String url = String.format("http://localhost:%d/centro?gerente=%d", port,
+						 * gerente.getId());
+						 *
+						 * ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
+						 * url,
+						 * HttpMethod.GET,
+						 * null,
+						 * new ParameterizedTypeReference<List<CentroDTO>>() {
+						 * });
+						 */
 
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-
-							// Yo creo que faltaría verificar si se ha añadido, no solo el código
-							// Y esto se haría con el método compruebaRespuestaCentro que habría que
-							// corregirlo
-							// compruebaRespuestaCentro(centro, respuesta);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO. Da error cuando la peticion no es valida")
-						public void crearCentroNoValido() {
-
-							var centro = CentroNuevoDTO.builder()
-									.nombre(null)
-									.build();
-
-							var peticion = post("http", "localhost", port, "/centro", centro, token);
-
-							var respuesta = restTemplate.exchange(peticion, Void.class);
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
-
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 					}
 
-					@Nested
-					@DisplayName("ACCESO DENEGADO. y queremos modificar un centro")
-					public class ModificaCentroVacia {
+					@Test
+					@DisplayName("ACCESO DENEGADO. Devuelve la lista de centros de un gerentecorrectamente")
+					public void devuelveListaCentroGerente() {
 
-						@Test
-						@DisplayName("devuelve error cuando se modifica un centro concreto")
-						public void devuelveErrorAlModificarCentro() {
-							var centro = CentroNuevoDTO.builder()
-									.nombre("KKFit")
-									.direccion("Calle la calle KK, 56")
-									.build();
-							var peticion = put("http", "localhost", port, "/centro/2", centro, token);
+						var peticion = get("http", "localhost", port, "/centro?gerente=3", token); // Revisar el path
 
-							var respuesta = restTemplate.exchange(peticion, Void.class);
+						var respuesta = restTemplate.exchange(peticion,
+								new ParameterizedTypeReference<List<CentroDTO>>() {
+								});
+						/*
+						 * String url = String.format("http://localhost:%d/centro?gerente=%d", port,
+						 * 3);
+						 *
+						 * ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
+						 * url,
+						 * HttpMethod.GET,
+						 * null,
+						 * new ParameterizedTypeReference<List<CentroDTO>>() {
+						 * });
+						 */
 
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO. devuelve error cuando se intenta añadir una asociacion a un centro no existente")
-						public void devuelveErrorAlAñadirAsociacionNoExistente() {
-							var idGerente = IdGerenteDTO.builder()
-									.idGerente(1)
-									.build();
-							var peticion = put("http", "localhost", port, "/centro/1/gerente", idGerente,
-									token);
-
-							var respuesta = restTemplate.exchange(peticion, Void.class);
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO. devuelve error cuando se intenta añadir una asociacion a un centro no valido")
-						public void devuelveErrorAlAñadirAsociacionNoValido() {
-							var idGerente = IdGerenteDTO.builder()
-									.idGerente(1)
-									.build();
-							var peticion = put("http", "localhost", port, "/centro/-1/gerente",
-									idGerente, token);
-
-							var respuesta = restTemplate.exchange(peticion, Void.class);
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO. devuelve error cuando se realiza una peticionno valida")
-						public void devuelveErrorAlModificarCentroNoValida() {
-							var centro = CentroNuevoDTO.builder()
-									.nombre("FitFit")
-									.direccion("Calle Fit, 8")
-									.build();
-							var peticion = put("http", "localhost", port, "/centro/-2", centro, token);
-
-							var respuesta = restTemplate.exchange(peticion, Void.class);
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
+						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+						// assertThat(respuesta.getBody()).isNotNull();
+						// assertThat(respuesta.getBody()).isNotEmpty();
 					}
 
-					@Nested
-					@DisplayName("ACCESO DENEGADO. y queremos eliminar un centro")
-					public class EliminaCentroVacia {
+				}
+			}
+		}
+	}
 
-						@Test
-						@DisplayName("devuelve error cuando se elimina un centro concreto")
-						public void devuelveErrorAlEliminarCentro() {
-							var peticion = delete("http", "localhost", port, "/centro/2", token);
+	/*
+	 * ---------------------------------------------
+	 * Pruebas de ControladorGerente y LogicaGerente
+	 * Realizado por:
+	 * ---------------------------------------------
+	 * 
+	 */
 
-							var respuesta = restTemplate.exchange(peticion, Void.class);
+	@Nested
 
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
+	@DisplayName("En cuanto a los gerentes. Cuando Acceso con admin")
+	public class PruebasGerenteAdministrador {
 
-						@Test
-						@DisplayName("ACCESO DENEGADO. devuelve error cuando se elimina un centro conid no valida")
+		@BeforeEach
+		public void security() {
+			boolean admin = true;
+			token = jwtUtil.doGenerateToken("1", admin);
+		}
 
-						public void devuelveErrorAlEliminarCentroNoValidoVacio() {
-							var peticion = delete("http", "localhost", port, "/centro/-2", token);
+		@Nested
 
-							var respuesta = restTemplate.exchange(peticion, Void.class);
+		@DisplayName("Cuando no hay Gerentes")
+		public class ListaGerentesVacia {
 
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
+			@Nested
 
-						@Test
-						@DisplayName("ACCESO DENEGADO. devuelve error cuando se elimina unaasociacion de un centro concreto")
+			@DisplayName("Metodos GET gerente lista vacia")
+			public class GetGerentesVacia {
 
-						public void devuelveErrorAlEliminarAsociacionCentro() {
-							var peticion = delete("http", "localhost", port, "/centro/1/gerente", token);
+				@Test
 
-							var respuesta = restTemplate.exchange(peticion, Void.class);
+				@DisplayName("Devuelve la lista de gerentes vacía")
+				public void devuelveListaGerentes() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
 
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
-
-					}
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+					// Verifica la respuesta
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
 				}
 
-				@Nested
-				@DisplayName("Cuando hay centros")
-				public class ListaCentrosConDatos {
-					private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-							.nombre("BasicFit")
-							.direccion("Calle la calle bonita, 56")
+				@Test
+
+				@DisplayName("Devuelve error cuando se pide un Gerente concreto")
+				public void devuelveErrorAlConsultarGerente() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
+			}
+
+			@Nested
+
+			@DisplayName("Metodos POST gerente lista vacia")
+			public class PostGerentesVacia {
+
+				@Test
+
+				@DisplayName("Intenta crear un gerente cuando no hay gerentes")
+				public void CrearGerenteBien() {
+					var gerente = Gerente.builder()
+							.empresa("patatas")
+							.idUsuario(6)
 							.build();
+					var peticion = post("http", "localhost", port, "/gerente", gerente, token);
 
-					private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-							.nombre("ProGYM")
-							.direccion("Calle avestruz, 44")
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+				}
+
+			}
+
+			@Nested
+
+			@DisplayName("Metodos PUT gerente lista vacia")
+			public class PutGerentesVacia {
+
+				@Test
+
+				@DisplayName("devuelve error cuando se modifica un gerente concreto")
+				public void devuelveErrorAlModificarGerente() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("kfc")
 							.build();
+					var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
 
-					private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
-							.idUsuario(1)
-							.build();
+					var respuesta = restTemplate.exchange(peticion, Void.class);
 
-					private Gerente gerente2 = Gerente.builder()
-							.id(2)
-							.idUsuario(3)
-							.build();
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				}
+			}
 
-					@BeforeEach
-					@Transactional
-					public void introduceDatosCentro() {
+			@Nested
 
-						centroRepository.save(Mapper.toCentro(centro1));
-						centroRepository.save(Mapper.toCentro(centro2));
-						gerenteRepository.save(Mapper.toGerente(gerente1));
-						gerenteRepository.save(gerente2);
+			@DisplayName("Metodos DELETE gerente lista vacia")
+			public class DeleteGerentesVacia {
 
-						Gerente gerente3 = Gerente.builder()
-								.id(3)
-								.idUsuario(4)
-								.build();
+				@Test
 
-						Centro centro3 = Centro.builder()
-								.nombre("Centro 3")
-								.idCentro(3)
-								.direccion("Calle del centro3, 3")
-								.build();
+				@DisplayName("devuelve error cuando se elimina un Gerente concreto")
+				public void devuelveErrorAlEliminarGerente() {
+					var peticion = delete("http", "localhost", port, "/gerente/40", token);
 
-						gerenteRepository.save(gerente3);
-						centroRepository.save(centro3);
-						centro3.setGerente(gerente3);
-						gerente3.setCentro(centro3);
-						centroRepository.save(centro3);
-						gerenteRepository.save(gerente3);
-					}
+					var respuesta = restTemplate.exchange(peticion, Void.class);
 
-					@Nested
-					@DisplayName("y queremos obtenerlos")
-					public class GetCentrosLlena {
-
-						@Test
-						@DisplayName("devuelve un centro concreto cuando existe")
-						public void devuelveCentro() {
-							var peticion = get("http", "localhost", port, "/centro/1", token);
-
-							var respuesta = restTemplate.exchange(peticion, CentroDTO.class);
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO. Da error cuando el id del gerente no esvalido")
-						public void ErrordevuelveListaCentroIdGerenteNoValido() {
-							/*
-							 * var gerente = new Gerente().builder()
-							 * .id(-3)
-							 * .build();
-							 */
-							var peticion = get("http", "localhost", port, "/centro?gerente=-3", token);
-							// Revisar el path
-
-							var respuesta = restTemplate.exchange(peticion,
-									new ParameterizedTypeReference<List<CentroDTO>>() {
-									});
-
-							/*
-							 * String url = String.format("http://localhost:%d/centro?gerente=%d", port,
-							 * gerente.getId());
-							 *
-							 * ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
-							 * url,
-							 * HttpMethod.GET,
-							 * null,
-							 * new ParameterizedTypeReference<List<CentroDTO>>() {
-							 * });
-							 */
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						}
-
-						@Test
-						@DisplayName("ACCESO DENEGADO. Devuelve la lista de centros de un gerentecorrectamente")
-						public void devuelveListaCentroGerente() {
-
-							var peticion = get("http", "localhost", port, "/centro?gerente=3", token); // Revisar el path
-
-							var respuesta = restTemplate.exchange(peticion,
-									new ParameterizedTypeReference<List<CentroDTO>>() {
-									});
-							/*
-							 * String url = String.format("http://localhost:%d/centro?gerente=%d", port,
-							 * 3);
-							 *
-							 * ResponseEntity<List<CentroDTO>> respuesta = restTemplate.exchange(
-							 * url,
-							 * HttpMethod.GET,
-							 * null,
-							 * new ParameterizedTypeReference<List<CentroDTO>>() {
-							 * });
-							 */
-
-							assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-							// assertThat(respuesta.getBody()).isNotNull();
-							// assertThat(respuesta.getBody()).isNotEmpty();
-						}
-
-					}
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 				}
 			}
 		}
 
-		/*
-		 * ---------------------------------------------
-		 * Pruebas de ControladorGerente y LogicaGerente
-		 * Realizado por:
-		 * ---------------------------------------------
-		 *
-		 */
+		@Nested
 
+		@DisplayName("Cuando hay Gerentes")
+		public class ListaGerentesConDatos {
+
+			private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
+					.empresa("patatas")
+					.idUsuario(1)
+					.build();
+
+			private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
+					.empresa("brocoli")
+					.idUsuario(2)
+					.build();
+
+			@BeforeEach
+			public void introduceDatosGerente() {
+				gerenteRepository.save(Mapper.toGerente(gerente1));
+				gerenteRepository.save(Mapper.toGerente(gerente2));
+			}
+
+			@Nested
+
+			@DisplayName("Metodos Get gerente en Lista llena")
+			public class GetGerente {
+
+				@Test
+
+				@DisplayName("Devuelve la lista de Gerentes correctamente")
+				public void devuelveListaGerente() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					assertThat(respuesta.getBody()).hasSize(2);
+				}
+
+				@Test
+
+				@DisplayName("lo devuelve cuando existe")
+				public void devuelveGerente() {
+					var peticion = get("http", "localhost", port, "/gerente/1", token);
+
+					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					assertThat(respuesta.hasBody()).isTrue();
+					assertThat(respuesta.getBody()).isNotNull();
+				}
+
+				@Test
+
+				@DisplayName("da error cuando no existe")
+				public void errorCuandoGerenteNoExiste() {
+					var peticion = get("http", "localhost", port, "/gerente/40", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
+			}
+
+			@Nested
+
+			@DisplayName("Metodos PUT gerente lista llena")
+			public class PutGerentes {
+
+				@Test
+
+				@DisplayName("Lo modifica correctamente cuando existe")
+
+				@DirtiesContext
+				public void modificaCorrectamenteGerente() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("yeehaw")
+							.build();
+
+					var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					Gerente gerenteBD = gerenteRepository.findById(1).get();
+					compruebaCamposGerente(gerente, gerenteBD);
+				}
+
+				@Test
+
+				@DisplayName("Da error cuando no existe")
+				public void errorCuandoNoExiste() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("yeehow")
+							.build();
+					var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+			}
+
+			@Nested
+
+			@DisplayName("Metodos DELETE un gerente lista llena")
+			public class DeleteGerentes {
+
+				@Test
+
+				@DisplayName("Lo elimina cuando existe")
+				public void eliminaCorrectamenteGerente() {
+
+					var peticion = delete("http", "localhost", port, "/gerente/1", token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+					List<Gerente> gerentes = gerenteRepository.findAll();
+					assertThat(gerentes).hasSize(1);
+					assertThat(gerentes).allMatch(c -> c.getId() != 1);
+				}
+
+				@Test
+
+				@DisplayName("da error cuando no existe")
+				public void errorCuandoNoExisteGerente() {
+					var peticion = delete("http", "localhost", port, "/gerente/40", token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+			}
+
+			@Nested
+
+			@DisplayName("Metodos POST gerente en lista llena")
+			public class PostGerente {
+
+				@Test
+
+				@DisplayName("Crea un gerente bien")
+				public void CrearGerenteBien() {
+					var gerente = Gerente.builder()
+							.empresa("patatas")
+							.idUsuario(6)
+							.build();
+					var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
+				}
+
+			}
+
+		}
+	}
+
+	@Nested
+
+	@DisplayName("En cuanto a los gerentes. Cuando Acceso no admin")
+	public class PruebasGerenteNoAdministrador {
+
+		@BeforeEach
+		public void security() {
+			boolean admin = false;
+			token = jwtUtil.doGenerateToken("1", admin);
+		}
 
 		@Nested
 
-		@DisplayName("En cuanto a los gerentes. Cuando Acceso con admin")
-		public class PruebasGerenteAdministrador {
+		@DisplayName("Cuando no hay Gerentes")
+		public class ListaGerentesVacia {
+
+			@Nested
+
+			@DisplayName("Metodos GET gerente lista vacia")
+			public class GetGerentesVacia {
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO Devuelve la lista de gerentes vacía")
+				public void devuelveListaGerentes() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+					// Verifica la respuesta
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO Devuelve error cuando se pide un Gerente concreto")
+				public void devuelveErrorAlConsultarGerente() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+					assertThat(respuesta.hasBody()).isEqualTo(false);
+				}
+
+			}
+
+			@Nested
+
+			@DisplayName("Metodos POST gerente lista vacia")
+			public class PostGerentesVacia {
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO Intenta crear un gerente cuando no hay gerentes")
+				public void CrearGerenteBien() {
+					var gerente = Gerente.builder()
+							.empresa("patatas")
+							.idUsuario(6)
+							.build();
+					var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+			}
+
+			@Nested
+
+			@DisplayName("Metodos PUT gerente lista vacia")
+			public class PutGerentesVacia {
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO devuelve error cuando se modifica un gerente concreto")
+				public void devuelveErrorAlModificarGerente() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("kfc")
+							.build();
+					var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+			}
+
+			@Nested
+
+			@DisplayName("Metodos DELETE gerente lista vacia")
+			public class DeleteGerentesVacia {
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO devuelve error cuando se elimina un Gerente concreto")
+				public void devuelveErrorAlEliminarGerente() {
+					var peticion = delete("http", "localhost", port, "/gerente/40", token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+			}
+		}
+
+		@Nested
+
+		@DisplayName("Cuando hay Gerentes")
+		public class ListaGerentesConDatos {
+
+			private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
+					.empresa("patatas")
+					.idUsuario(1)
+					.build();
+
+			private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
+					.empresa("brocoli")
+					.idUsuario(2)
+					.build();
+
+			@BeforeEach
+			public void introduceDatosGerente() {
+				gerenteRepository.save(Mapper.toGerente(gerente1));
+				gerenteRepository.save(Mapper.toGerente(gerente2));
+			}
+
+			@Nested
+
+			@DisplayName("Metodos Get gerente en Lista llena")
+			public class GetGerente {
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO Devuelve la lista de Gerentes correctamente")
+				public void devuelveListaGerente() {
+					var peticion = get("http", "localhost", port, "/gerente", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+
+				}
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO lo devuelve cuando existe")
+				public void devuelveGerente() {
+					var peticion = get("http", "localhost", port, "/gerente/1", token);
+
+					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
+				public void errorCuandoGerenteNoExiste() {
+					var peticion = get("http", "localhost", port, "/gerente/40", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<List<GerenteDTO>>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+			}
+
+			@Nested
+
+			@DisplayName("Metodos PUT gerente lista llena")
+			public class PutGerentes {
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO Lo modifica correctamente cuando existe")
+
+				@DirtiesContext
+				public void modificaCorrectamenteGerente() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("yeehaw")
+							.build();
+
+					var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO Da error cuando no existe")
+				public void errorCuandoNoExiste() {
+					var gerente = GerenteNuevoDTO.builder()
+							.empresa("yeehow")
+							.build();
+					var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+			}
+
+			@Nested
+
+			@DisplayName("Metodos DELETE un gerente lista llena")
+			public class DeleteGerentes {
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO Lo elimina cuando existe")
+				public void eliminaCorrectamenteGerente() {
+
+					var peticion = delete("http", "localhost", port, "/gerente/1", token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
+				public void errorCuandoNoExisteGerente() {
+					var peticion = delete("http", "localhost", port, "/gerente/40", token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+			}
+
+			@Nested
+
+			@DisplayName("Metodos POST gerente en lista llena")
+			public class PostGerente {
+
+				@Test
+
+				@DisplayName("ACCESO DENEGADO. NO Crea un gerente bien")
+				public void CrearGerenteBien() {
+					var gerente = Gerente.builder()
+							.empresa("patatas")
+							.idUsuario(6)
+							.build();
+					var peticion = post("http", "localhost", port, "/gerente", gerente, token);
+
+					var respuesta = restTemplate.exchange(peticion, Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+			}
+
+		}
+	}
+
+	/*
+	 * ---------------------------------------------
+	 * Pruebas de ControladorMensaje y LogicaMensaje
+	 * Realizado por:
+	 * ---------------------------------------------
+	 */
+
+	@Nested
+	@DisplayName("En cuando Mensajes. Cuando Acceso con gerente")
+	public class PruebasMensajesGerente {
+		@Nested
+		@DisplayName("Tests de Mensajes")
+		public class PruebasMensajes {
 
 			@BeforeEach
 			public void security() {
@@ -1284,630 +1829,71 @@ public class EntidadesJpaApplicationTests {
 				token = jwtUtil.doGenerateToken("1", admin);
 			}
 
-			@Nested
-
-			@DisplayName("Cuando no hay Gerentes")
-			public class ListaGerentesVacia {
-
-				@Nested
-
-				@DisplayName("Metodos GET gerente lista vacia")
-				public class GetGerentesVacia {
-
-					@Test
-
-					@DisplayName("Devuelve la lista de gerentes vacía")
-					public void devuelveListaGerentes() {
-						var peticion = get("http", "localhost", port, "/gerente", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<GerenteDTO>>() {
-								});
-						// Verifica la respuesta
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-						assertThat(respuesta.hasBody()).isEqualTo(false);
-					}
-
-					@Test
-
-					@DisplayName("Devuelve error cuando se pide un Gerente concreto")
-					public void devuelveErrorAlConsultarGerente() {
-						var peticion = get("http", "localhost", port, "/gerente", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<GerenteDTO>>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-						assertThat(respuesta.hasBody()).isEqualTo(false);
-					}
-
-				}
-
-				@Nested
-
-				@DisplayName("Metodos POST gerente lista vacia")
-				public class PostGerentesVacia {
-
-					@Test
-
-					@DisplayName("Intenta crear un gerente cuando no hay gerentes")
-					public void CrearGerenteBien() {
-						var gerente = Gerente.builder()
-								.empresa("patatas")
-								.idUsuario(6)
-								.build();
-						var peticion = post("http", "localhost", port, "/gerente", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-					}
-
-				}
-
-				@Nested
-
-				@DisplayName("Metodos PUT gerente lista vacia")
-				public class PutGerentesVacia {
-
-					@Test
-
-					@DisplayName("devuelve error cuando se modifica un gerente concreto")
-					public void devuelveErrorAlModificarGerente() {
-						var gerente = GerenteNuevoDTO.builder()
-								.empresa("kfc")
-								.build();
-						var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-					}
-				}
-
-				@Nested
-
-				@DisplayName("Metodos DELETE gerente lista vacia")
-				public class DeleteGerentesVacia {
-
-					@Test
-
-					@DisplayName("devuelve error cuando se elimina un Gerente concreto")
-					public void devuelveErrorAlEliminarGerente() {
-						var peticion = delete("http", "localhost", port, "/gerente/40", token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-					}
-				}
-			}
-
-			@Nested
-
-			@DisplayName("Cuando hay Gerentes")
-			public class ListaGerentesConDatos {
-
-				private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
-						.empresa("patatas")
-						.idUsuario(1)
-						.build();
-
-				private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
-						.empresa("brocoli")
-						.idUsuario(2)
-						.build();
-
-				@BeforeEach
-				public void introduceDatosGerente() {
-					gerenteRepository.save(Mapper.toGerente(gerente1));
-					gerenteRepository.save(Mapper.toGerente(gerente2));
-				}
-
-				@Nested
-
-				@DisplayName("Metodos Get gerente en Lista llena")
-				public class GetGerente {
-
-					@Test
-
-					@DisplayName("Devuelve la lista de Gerentes correctamente")
-					public void devuelveListaGerente() {
-						var peticion = get("http", "localhost", port, "/gerente", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<GerenteDTO>>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-						assertThat(respuesta.getBody()).hasSize(2);
-					}
-
-					@Test
-
-					@DisplayName("lo devuelve cuando existe")
-					public void devuelveGerente() {
-						var peticion = get("http", "localhost", port, "/gerente/1", token);
-
-						var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-						assertThat(respuesta.hasBody()).isTrue();
-						assertThat(respuesta.getBody()).isNotNull();
-					}
-
-					@Test
-
-					@DisplayName("da error cuando no existe")
-					public void errorCuandoGerenteNoExiste() {
-						var peticion = get("http", "localhost", port, "/gerente/40", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<GerenteDTO>>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-						assertThat(respuesta.hasBody()).isEqualTo(false);
-					}
-
-				}
-
-				@Nested
-
-				@DisplayName("Metodos PUT gerente lista llena")
-				public class PutGerentes {
-
-					@Test
-
-					@DisplayName("Lo modifica correctamente cuando existe")
-
-					@DirtiesContext
-					public void modificaCorrectamenteGerente() {
-						var gerente = GerenteNuevoDTO.builder()
-								.empresa("yeehaw")
-								.build();
-
-						var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-						Gerente gerenteBD = gerenteRepository.findById(1).get();
-						compruebaCamposGerente(gerente, gerenteBD);
-					}
-
-					@Test
-
-					@DisplayName("Da error cuando no existe")
-					public void errorCuandoNoExiste() {
-						var gerente = GerenteNuevoDTO.builder()
-								.empresa("yeehow")
-								.build();
-						var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-						assertThat(respuesta.hasBody()).isEqualTo(false);
-					}
-				}
-
-				@Nested
-
-				@DisplayName("Metodos DELETE un gerente lista llena")
-				public class DeleteGerentes {
-
-					@Test
-
-					@DisplayName("Lo elimina cuando existe")
-					public void eliminaCorrectamenteGerente() {
-
-						var peticion = delete("http", "localhost", port, "/gerente/1", token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-						List<Gerente> gerentes = gerenteRepository.findAll();
-						assertThat(gerentes).hasSize(1);
-						assertThat(gerentes).allMatch(c -> c.getId() != 1);
-					}
-
-					@Test
-
-					@DisplayName("da error cuando no existe")
-					public void errorCuandoNoExisteGerente() {
-						var peticion = delete("http", "localhost", port, "/gerente/40", token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
-						assertThat(respuesta.hasBody()).isEqualTo(false);
-					}
-				}
-
-				@Nested
-
-				@DisplayName("Metodos POST gerente en lista llena")
-				public class PostGerente {
-
-					@Test
-
-					@DisplayName("Crea un gerente bien")
-					public void CrearGerenteBien() {
-						var gerente = Gerente.builder()
-								.empresa("patatas")
-								.idUsuario(6)
-								.build();
-						var peticion = post("http", "localhost", port, "/gerente", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
-					}
-
-				}
-
-			}
-		}
-
-		@Nested
-
-		@DisplayName("En cuanto a los gerentes. Cuando Acceso no admin")
-		public class PruebasGerenteNoAdministrador {
+			private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
+					.empresa("Gerente")
+					.idUsuario(1)
+					.build();
 
 			@BeforeEach
-			public void security() {
-				boolean admin = false;
-				token = jwtUtil.doGenerateToken("1", admin);
+			public void introduceDatosGerente() {
+				gerenteRepository.save(Mapper.toGerente(gerente));
 			}
 
 			@Nested
+			@DisplayName("Cuando no hay mensajes")
+			public class ListaMensajesVacia {
 
-			@DisplayName("Cuando no hay Gerentes")
-			public class ListaGerentesVacia {
-
-				@Nested
-
-				@DisplayName("Metodos GET gerente lista vacia")
-				public class GetGerentesVacia {
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO Devuelve la lista de gerentes vacía")
-					public void devuelveListaGerentes() {
-						var peticion = get("http", "localhost", port, "/gerente", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<GerenteDTO>>() {
-								});
-						// Verifica la respuesta
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						assertThat(respuesta.hasBody()).isEqualTo(false);
-					}
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO Devuelve error cuando se pide un Gerente concreto"
-					)
-					public void devuelveErrorAlConsultarGerente() {
-						var peticion = get("http", "localhost", port, "/gerente", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<GerenteDTO>>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-						assertThat(respuesta.hasBody()).isEqualTo(false);
-					}
-
-				}
-
-				@Nested
-
-				@DisplayName("Metodos POST gerente lista vacia")
-				public class PostGerentesVacia {
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO Intenta crear un gerente cuando no hay gerentes"
-					)
-					public void CrearGerenteBien() {
-						var gerente = Gerente.builder()
-								.empresa("patatas")
-								.idUsuario(6)
-								.build();
-						var peticion = post("http", "localhost", port, "/gerente", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-
-				}
-
-				@Nested
-
-				@DisplayName("Metodos PUT gerente lista vacia")
-				public class PutGerentesVacia {
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO devuelve error cuando se modifica un gerente concreto"
-					)
-					public void devuelveErrorAlModificarGerente() {
-						var gerente = GerenteNuevoDTO.builder()
-								.empresa("kfc")
-								.build();
-						var peticion = put("http", "localhost", port, "/gerente/2", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-				}
-
-				@Nested
-
-				@DisplayName("Metodos DELETE gerente lista vacia")
-				public class DeleteGerentesVacia {
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO devuelve error cuando se elimina un Gerente concreto"
-					)
-					public void devuelveErrorAlEliminarGerente() {
-						var peticion = delete("http", "localhost", port, "/gerente/40", token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-				}
-			}
-
-			@Nested
-
-			@DisplayName("Cuando hay Gerentes")
-			public class ListaGerentesConDatos {
-
-				private GerenteNuevoDTO gerente1 = GerenteNuevoDTO.builder()
-						.empresa("patatas")
-						.idUsuario(1)
+				private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+						.id(1)
+						.tipo(TipoDestinatario.CENTRO)
 						.build();
 
-				private GerenteNuevoDTO gerente2 = GerenteNuevoDTO.builder()
-						.empresa("brocoli")
-						.idUsuario(2)
+				private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+						.nombre("Centro1")
+						.direccion("Calle del Centro1, 1")
+						.build();
+
+				private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+						.id(2)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+						.nombre("Centro2")
+						.direccion("Calle del Centro2, 2")
+						.build();
+
+				private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+						.id(3)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+						.nombre("Centro3")
+						.direccion("Calle del Centro3, 3")
 						.build();
 
 				@BeforeEach
-				public void introduceDatosGerente() {
-					gerenteRepository.save(Mapper.toGerente(gerente1));
-					gerenteRepository.save(Mapper.toGerente(gerente2));
+				public void insertarCentro() {
+					centroRepository.save(Mapper.toCentro(centro1));
+					centroRepository.save(Mapper.toCentro(centro2));
+					centroRepository.save(Mapper.toCentro(centro3));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
 				}
 
-				@Nested
-
-				@DisplayName("Metodos Get gerente en Lista llena")
-				public class GetGerente {
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO Devuelve la lista de Gerentes correctamente"
-					)
-					public void devuelveListaGerente() {
-						var peticion = get("http", "localhost", port, "/gerente", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<GerenteDTO>>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-
-					}
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO lo devuelve cuando existe")
-					public void devuelveGerente() {
-						var peticion = get("http", "localhost", port, "/gerente/1", token);
-
-						var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
-					public void errorCuandoGerenteNoExiste() {
-						var peticion = get("http", "localhost", port, "/gerente/40", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<List<GerenteDTO>>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-
-				}
-
-				@Nested
-
-				@DisplayName("Metodos PUT gerente lista llena")
-				public class PutGerentes {
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO Lo modifica correctamente cuando existe")
-
-					@DirtiesContext
-					public void modificaCorrectamenteGerente() {
-						var gerente = GerenteNuevoDTO.builder()
-								.empresa("yeehaw")
-								.build();
-
-						var peticion = put("http", "localhost", port, "/gerente/1", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, GerenteDTO.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO Da error cuando no existe")
-					public void errorCuandoNoExiste() {
-						var gerente = GerenteNuevoDTO.builder()
-								.empresa("yeehow")
-								.build();
-						var peticion = put("http", "localhost", port, "/gerente/40", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-				}
-
-				@Nested
-
-				@DisplayName("Metodos DELETE un gerente lista llena")
-				public class DeleteGerentes {
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO Lo elimina cuando existe")
-					public void eliminaCorrectamenteGerente() {
-
-						var peticion = delete("http", "localhost", port, "/gerente/1", token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO da error cuando no existe")
-					public void errorCuandoNoExisteGerente() {
-						var peticion = delete("http", "localhost", port, "/gerente/40", token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-				}
-
-				@Nested
-
-				@DisplayName("Metodos POST gerente en lista llena")
-				public class PostGerente {
-
-					@Test
-
-					@DisplayName("ACCESO DENEGADO. NO Crea un gerente bien")
-					public void CrearGerenteBien() {
-						var gerente = Gerente.builder()
-								.empresa("patatas")
-								.idUsuario(6)
-								.build();
-						var peticion = post("http", "localhost", port, "/gerente", gerente, token);
-
-						var respuesta = restTemplate.exchange(peticion, Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-
-				}
-
-			}
-		}
-
-		/*
-		 * ---------------------------------------------
-		 * Pruebas de ControladorMensaje y LogicaMensaje
-		 * Realizado por:
-		 * ---------------------------------------------
-		 */
-
-		@Nested
-		@DisplayName("En cuando Mensajes. Cuando Acceso con gerente")
-		public class PruebasMensajesGerente {
-			@Nested
-			@DisplayName("Tests de Mensajes")
-			public class PruebasMensajes {
-
-				@BeforeEach
-				public void security() {
-					boolean admin = true;
-					token = jwtUtil.doGenerateToken("1", admin);
-				}
-
-				private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
-						.empresa("Gerente")
-						.idUsuario(1)
-						.build();
-
-				@BeforeEach
-				public void introduceDatosGerente() {
-					gerenteRepository.save(Mapper.toGerente(gerente));
-				}
-
-				@Nested
-				@DisplayName("Cuando no hay mensajes")
-				public class ListaMensajesVacia {
-
-					private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
-							.id(1)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-							.nombre("Centro1")
-							.direccion("Calle del Centro1, 1")
-							.build();
-
-					private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
-							.id(2)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-							.nombre("Centro2")
-							.direccion("Calle del Centro2, 2")
-							.build();
-
-					private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
-							.id(3)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
-							.nombre("Centro3")
-							.direccion("Calle del Centro3, 3")
-							.build();
-
-					@BeforeEach
-					public void insertarCentro() {
-						centroRepository.save(Mapper.toCentro(centro1));
-						centroRepository.save(Mapper.toCentro(centro2));
-						centroRepository.save(Mapper.toCentro(centro3));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
-					}
-
-// ESTE DA ERROR!!!!!!!!!!!!!!!!!!--------------------------------------------
+				// ESTE DA ERROR!!!!!!!!!!!!!!!!!!--------------------------------------------
 				// @Test
 				// @DisplayName("Da error al pedir una lista de mensajes vacía")
 				// public void devuelveListaMensajesError() {
-				
+
 				// Map<String,String> params = new TreeMap<>();
 				// params.put("centro", "1");
-					
+
 				// // Hacer esto en vez?:
-				// var peticion = get("http", "localhost", port, "/mensaje/centro", params,token);
+				// var peticion = get("http", "localhost", port, "/mensaje/centro",
+				// params,token);
 
 				// var responseEntity = restTemplate.exchange(peticion,
 				// new ParameterizedTypeReference<MensajeDTO>() {
@@ -1923,37 +1909,48 @@ public class EntidadesJpaApplicationTests {
 				// */
 
 				// assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
-				// // List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el cuerpo
+				// // List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el
+				// cuerpo
 				// // de la respuesta
 				// // assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de
 				// // mensajes está vacía
 				// }
 
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				@Test
+				@DisplayName("Da error al pedir un mensaje no existente")
+				public void errordevuelveMensajeById() {
 
-					}
+					var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
 
-					@Test
-					@DisplayName("Da error al eliminar un mensaje no existente")
-					public void errorEliminaMensajeById() {
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
 
-						var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
 
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<MensajeDTO>() {
-								});
+				}
 
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+				@Test
+				@DisplayName("Da error al eliminar un mensaje no existente")
+				public void errorEliminaMensajeById() {
 
-					}
-//-------------- ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+					var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
+
+				}
+				// -------------- ESTE DA ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 				// @Test
 				// @DisplayName("Inserta correctamente un mensaje nuevo")
 				// public void InsertaMensaje() {
-					
+
 				// Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
 				// Arrays.asList(destinatario2, destinatario3));
-					
+
 				// MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
 				// .asunto("Saludos")
 				// .contenido("Hola hola")
@@ -1966,399 +1963,402 @@ public class EntidadesJpaApplicationTests {
 				// // mensajeNuevo);
 				// Map<String,String> params = new TreeMap<>();
 				// params.put("centro", "1");
-			
-					
-					
-				// 	// Hacer esto en vez?:
-				// var peticion = post("http", "localhost", port, "/mensaje/centro", params,token);
+
+				// // Hacer esto en vez?:
+				// var peticion = post("http", "localhost", port, "/mensaje/centro",
+				// params,token);
 				// HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
-					
-				// ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(peticion,request,
+
+				// ResponseEntity<MensajeDTO> respuesta =
+				// restTemplate.exchange(peticion,request,
 				// new ParameterizedTypeReference<MensajeDTO>() {
 				// });
 				// assertThat(respuesta.getStatusCode().value()).isEqualTo(201);
 				// }
 
-				@Nested
-				@DisplayName("Cuando hay mensajes")
-				public class ListaMensajesLlena {
-					private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
-							.id(1)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-							.nombre("Centro1")
-							.direccion("Calle del Centro1, 1")
-							.build();
-
-					private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
-							.id(2)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
-							.id(3)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-							.nombre("Centro2")
-							.direccion("Calle del Centro2, 2")
-							.build();
-
-					private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
-							.nombre("Centro3")
-							.direccion("Calle del Centro3, 3")
-							.build();
-
-					private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
-							.id(3)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					@BeforeEach
-					public void insertarCentro() {
-						centroRepository.save(Mapper.toCentro(centro1));
-						centroRepository.save(Mapper.toCentro(centro2));
-						centroRepository.save(Mapper.toCentro(centro3));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
-						Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(
-								Arrays.asList(destinatario2, destinatario3));
-						// listaDestinatariosDTO.add(destinatario2);
-						// listaDestinatariosDTO.add(destinatario3);
-						MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
-								.asunto("Asunto1")
-								.remitente(destinatario1)
-								.destinatarios(listaDestinatariosDTO)
-								.copia(listaDestinatariosDTO)
-								.copiaOculta(listaDestinatariosDTO)
-								.build();
-						mensajeRepository.save(Mapper.toMensaje(mensaje1));
-
-					}
-
-					@Test
-					@DisplayName("Devuelve correctamente el mensaje")
-					public void devuelveMensajeById() {
-
-						var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<MensajeDTO>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-
-					}
-
-					@Test
-					@DisplayName("Elimina correctamente un mensaje existente")
-					public void EliminaMensajeById() {
-
-						var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
-
-					}
-// ESTE DA
-// FALLOS!!!!!----------------------------------------------------------------------
-
-//				@Test
-//				@DisplayName("Devuelve la lista de mensajes de un centro correctamente")
-//				public void devuelveListaMensajes() {
-//
-//				var peticion = delete("http", "localhost", port, "/mensaje/centro?centro=1",
-//				token);
-//
-//				var responseEntity = restTemplate.exchange(peticion,
-//				Void.class);
-//				/*
-//				* ResponseEntity<List<MensajeDTO>> responseEntity =
-//				* restTemplate.exchange("http://localhost:" + port +
-//				* "/mensaje/centro?centro=1",
-//				* HttpMethod.GET,
-//				* null,
-//				* new ParameterizedTypeReference<List<MensajeDTO>>() {
-//				* });
-//				*/
-//
-//				assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
-//
-//				}
-
-				}
-
 			}
-		}
 
-		@Nested
-		@DisplayName("En cuando Mensajes. Cuando Acceso no gerente")
-		public class PruebasMensajesNoGerente {
 			@Nested
-			@DisplayName("Tests de Mensajes")
-			public class PruebasMensajes {
+			@DisplayName("Cuando hay mensajes")
+			public class ListaMensajesLlena {
+				private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+						.id(1)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
 
-				@BeforeEach
-				public void security() {
-					boolean admin = false;
-					token = jwtUtil.doGenerateToken("200", admin);
-				}
+				private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+						.nombre("Centro1")
+						.direccion("Calle del Centro1, 1")
+						.build();
 
-				private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
-						.empresa("Gerente")
-						.idUsuario(1)
+				private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+						.id(2)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+						.id(3)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+						.nombre("Centro2")
+						.direccion("Calle del Centro2, 2")
+						.build();
+
+				private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+						.nombre("Centro3")
+						.direccion("Calle del Centro3, 3")
+						.build();
+
+				private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
+						.id(3)
+						.tipo(TipoDestinatario.CENTRO)
 						.build();
 
 				@BeforeEach
-				public void introduceDatosGerente() {
-					gerenteRepository.save(Mapper.toGerente(gerente));
-				}
-
-				@Nested
-				@DisplayName("Cuando no hay mensajes")
-				public class ListaMensajesVacia {
-
-					private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
-							.id(1)
-							.tipo(TipoDestinatario.CENTRO)
+				public void insertarCentro() {
+					centroRepository.save(Mapper.toCentro(centro1));
+					centroRepository.save(Mapper.toCentro(centro2));
+					centroRepository.save(Mapper.toCentro(centro3));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+					Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(
+							Arrays.asList(destinatario2, destinatario3));
+					// listaDestinatariosDTO.add(destinatario2);
+					// listaDestinatariosDTO.add(destinatario3);
+					MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
+							.asunto("Asunto1")
+							.remitente(destinatario1)
+							.destinatarios(listaDestinatariosDTO)
+							.copia(listaDestinatariosDTO)
+							.copiaOculta(listaDestinatariosDTO)
 							.build();
-
-					private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-							.nombre("Centro1")
-							.direccion("Calle del Centro1, 1")
-							.build();
-
-					private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
-							.id(2)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-							.nombre("Centro2")
-							.direccion("Calle del Centro2, 2")
-							.build();
-
-					private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
-							.id(3)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
-
-					private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
-							.nombre("Centro3")
-							.direccion("Calle del Centro3, 3")
-							.build();
-
-					@BeforeEach
-					public void insertarCentro() {
-						centroRepository.save(Mapper.toCentro(centro1));
-						centroRepository.save(Mapper.toCentro(centro2));
-						centroRepository.save(Mapper.toCentro(centro3));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
-					}
-
-					@Test
-					@DisplayName("ACCESO DENEGADO. Da error al pedir una lista de mensajes vacía")
-					public void devuelveListaMensajesError() {
-
-						var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1",
-								token);
-
-						var responseEntity = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<MensajeDTO>() {
-								});
-						/*
-						 * ResponseEntity<List<MensajeDTO>> responseEntity =
-						 * restTemplate.exchange("http://localhost:" + port +
-						 * "/mensaje/centro?centro=1",
-						 * HttpMethod.GET,
-						 * null,
-						 * new ParameterizedTypeReference<List<MensajeDTO>>() {
-						 * });
-						 */
-
-						assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
-						// List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el cuerpo
-						// de la respuesta
-						// assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de
-						// mensajes está vacía
-					}
-
-					@Test
-					@DisplayName("ACCESO DENEGADO. Da error al pedir un mensaje no existente")
-					public void errordevuelveMensajeById() {
-
-						var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<MensajeDTO>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-
-					}
-
-					@Test
-					@DisplayName("ACCESO DENEGADO. Da error al eliminar un mensaje no existente")
-					public void errorEliminaMensajeById() {
-
-						var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
-
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<MensajeDTO>() {
-								});
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-
-					}
-
-					@Test
-					@DisplayName("ACCESO DENEGADO. Inserta correctamente un mensaje nuevo")
-					public void InsertaMensaje() {
-
-						Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
-								Arrays.asList(destinatario2, destinatario3));
-
-						MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
-								.asunto("Saludos")
-								.contenido("Hola hola")
-								.destinatarios(listaDestinatarios)
-								.copia(listaDestinatarios)
-								.copiaOculta(listaDestinatarios)
-								.build();
-						String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
-						HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
-
-						ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url,
-								HttpMethod.POST, request,
-								new ParameterizedTypeReference<MensajeDTO>() {
-								});
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-					}
-
-					// TO DO
+					mensajeRepository.save(Mapper.toMensaje(mensaje1));
 
 				}
 
-				@Nested
-				@DisplayName("Cuando hay mensajes")
-				public class ListaMensajesLlena {
-					private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
-							.id(1)
-							.tipo(TipoDestinatario.CENTRO)
+				@Test
+				@DisplayName("Devuelve correctamente el mensaje")
+				public void devuelveMensajeById() {
+
+					var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+				}
+
+				@Test
+				@DisplayName("Elimina correctamente un mensaje existente")
+				public void EliminaMensajeById() {
+
+					var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							Void.class);
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+				}
+
+				// ESTE DA
+				// FALLOS!!!!!----------------------------------------------------------------------
+				// @Test
+				// @DisplayName("Devuelve la lista de mensajes de un centro correctamente")
+				// public void devuelveListaMensajes() {
+
+				// 	var peticion = delete("http", "localhost", port, "/mensaje/centro?centro=1",
+				// 			token);
+
+				// 	var responseEntity = restTemplate.exchange(peticion,
+				// 			Void.class);
+				// 	/*
+				// 	 * ResponseEntity<List<MensajeDTO>> responseEntity =
+				// 	 * restTemplate.exchange("http://localhost:" + port +
+				// 	 * "/mensaje/centro?centro=1",
+				// 	 * HttpMethod.GET,
+				// 	 * null,
+				// 	 * new ParameterizedTypeReference<List<MensajeDTO>>() {
+				// 	 * });
+				// 	 */
+
+				// 	assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
+
+				// }
+
+			}
+
+		}
+	}
+
+	@Nested
+	@DisplayName("En cuando Mensajes. Cuando Acceso no gerente")
+	public class PruebasMensajesNoGerente {
+		@Nested
+		@DisplayName("Tests de Mensajes")
+		public class PruebasMensajes {
+
+			@BeforeEach
+			public void security() {
+				boolean admin = false;
+				token = jwtUtil.doGenerateToken("200", admin);
+			}
+
+			private GerenteNuevoDTO gerente = GerenteNuevoDTO.builder()
+					.empresa("Gerente")
+					.idUsuario(1)
+					.build();
+
+			@BeforeEach
+			public void introduceDatosGerente() {
+				gerenteRepository.save(Mapper.toGerente(gerente));
+			}
+
+			@Nested
+			@DisplayName("Cuando no hay mensajes")
+			public class ListaMensajesVacia {
+
+				private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+						.id(1)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+						.nombre("Centro1")
+						.direccion("Calle del Centro1, 1")
+						.build();
+
+				private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+						.id(2)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+						.nombre("Centro2")
+						.direccion("Calle del Centro2, 2")
+						.build();
+
+				private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+						.id(3)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+						.nombre("Centro3")
+						.direccion("Calle del Centro3, 3")
+						.build();
+
+				@BeforeEach
+				public void insertarCentro() {
+					centroRepository.save(Mapper.toCentro(centro1));
+					centroRepository.save(Mapper.toCentro(centro2));
+					centroRepository.save(Mapper.toCentro(centro3));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. Da error al pedir una lista de mensajes vacía")
+				public void devuelveListaMensajesError() {
+
+					var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1",
+							token);
+
+					var responseEntity = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
+					/*
+					 * ResponseEntity<List<MensajeDTO>> responseEntity =
+					 * restTemplate.exchange("http://localhost:" + port +
+					 * "/mensaje/centro?centro=1",
+					 * HttpMethod.GET,
+					 * null,
+					 * new ParameterizedTypeReference<List<MensajeDTO>>() {
+					 * });
+					 */
+
+					assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
+					// List<MensajeDTO> listaMensajes = responseEntity.getBody(); Obtener el cuerpo
+					// de la respuesta
+					// assertThat(listaMensajes).size().isEqualTo(0); Verificar que la lista de
+					// mensajes está vacía
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. Da error al pedir un mensaje no existente")
+				public void errordevuelveMensajeById() {
+
+					var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. Da error al eliminar un mensaje no existente")
+				public void errorEliminaMensajeById() {
+
+					var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
+
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+
+				}
+
+				@Test
+				@DisplayName("ACCESO DENEGADO. Inserta correctamente un mensaje nuevo")
+				public void InsertaMensaje() {
+
+					Set<DestinatarioDTO> listaDestinatarios = new HashSet<>(
+							Arrays.asList(destinatario2, destinatario3));
+
+					MensajeNuevoDTO mensajeNuevo = MensajeNuevoDTO.builder()
+							.asunto("Saludos")
+							.contenido("Hola hola")
+							.destinatarios(listaDestinatarios)
+							.copia(listaDestinatarios)
+							.copiaOculta(listaDestinatarios)
 							.build();
+					String url = "http://localhost:" + port + "/mensaje/centro?centro=1";
+					HttpEntity<MensajeNuevoDTO> request = new HttpEntity<>(mensajeNuevo);
 
-					private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
-							.nombre("Centro1")
-							.direccion("Calle del Centro1, 1")
+					ResponseEntity<MensajeDTO> respuesta = restTemplate.exchange(url,
+							HttpMethod.POST, request,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
+
+				// TO DO
+
+			}
+
+			@Nested
+			@DisplayName("Cuando hay mensajes")
+			public class ListaMensajesLlena {
+				private DestinatarioDTO destinatario1 = DestinatarioDTO.builder()
+						.id(1)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private CentroNuevoDTO centro1 = CentroNuevoDTO.builder()
+						.nombre("Centro1")
+						.direccion("Calle del Centro1, 1")
+						.build();
+
+				private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
+						.id(2)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
+						.id(3)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
+						.nombre("Centro2")
+						.direccion("Calle del Centro2, 2")
+						.build();
+
+				private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
+						.nombre("Centro3")
+						.direccion("Calle del Centro3, 3")
+						.build();
+
+				private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
+						.id(3)
+						.tipo(TipoDestinatario.CENTRO)
+						.build();
+
+				@BeforeEach
+				public void insertarCentro() {
+					centroRepository.save(Mapper.toCentro(centro1));
+					centroRepository.save(Mapper.toCentro(centro2));
+					centroRepository.save(Mapper.toCentro(centro3));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
+					destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
+					Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(
+							Arrays.asList(destinatario2, destinatario3));
+					// listaDestinatariosDTO.add(destinatario2);
+					// listaDestinatariosDTO.add(destinatario3);
+					MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
+							.asunto("Asunto1")
+							.remitente(destinatario1)
+							.destinatarios(listaDestinatariosDTO)
+							.copia(listaDestinatariosDTO)
+							.copiaOculta(listaDestinatariosDTO)
 							.build();
+					mensajeRepository.save(Mapper.toMensaje(mensaje1));
 
-					private DestinatarioDTO destinatario2 = DestinatarioDTO.builder()
-							.id(2)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
+				}
 
-					private DestinatarioDTO destinatario3 = DestinatarioDTO.builder()
-							.id(3)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
+				@Test
+				@DisplayName("ACCESO DENEGADO. Devuelve correctamente el mensaje")
+				public void devuelveMensajeById() {
 
-					private CentroNuevoDTO centro2 = CentroNuevoDTO.builder()
-							.nombre("Centro2")
-							.direccion("Calle del Centro2, 2")
-							.build();
+					var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
 
-					private CentroNuevoDTO centro3 = CentroNuevoDTO.builder()
-							.nombre("Centro3")
-							.direccion("Calle del Centro3, 3")
-							.build();
+					var respuesta = restTemplate.exchange(peticion,
+							new ParameterizedTypeReference<MensajeDTO>() {
+							});
 
-					private DestinatarioDTO remitente1 = DestinatarioDTO.builder()
-							.id(3)
-							.tipo(TipoDestinatario.CENTRO)
-							.build();
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 
-					@BeforeEach
-					public void insertarCentro() {
-						centroRepository.save(Mapper.toCentro(centro1));
-						centroRepository.save(Mapper.toCentro(centro2));
-						centroRepository.save(Mapper.toCentro(centro3));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario1));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario2));
-						destinatarioRepository.save(Mapper.toDestinatario(destinatario3));
-						Set<DestinatarioDTO> listaDestinatariosDTO = new HashSet<>(
-								Arrays.asList(destinatario2, destinatario3));
-						// listaDestinatariosDTO.add(destinatario2);
-						// listaDestinatariosDTO.add(destinatario3);
-						MensajeNuevoDTO mensaje1 = MensajeNuevoDTO.builder()
-								.asunto("Asunto1")
-								.remitente(destinatario1)
-								.destinatarios(listaDestinatariosDTO)
-								.copia(listaDestinatariosDTO)
-								.copiaOculta(listaDestinatariosDTO)
-								.build();
-						mensajeRepository.save(Mapper.toMensaje(mensaje1));
+				}
 
-					}
+				@Test
+				@DisplayName("ACCESO DENEGADO. Elimina correctamente un mensaje existente")
+				public void EliminaMensajeById() {
 
-					@Test
-					@DisplayName("ACCESO DENEGADO. Devuelve correctamente el mensaje")
-					public void devuelveMensajeById() {
+					var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
 
-						var peticion = get("http", "localhost", port, "/mensaje/centro/1", token);
+					var respuesta = restTemplate.exchange(peticion,
+							Void.class);
 
-						var respuesta = restTemplate.exchange(peticion,
-								new ParameterizedTypeReference<MensajeDTO>() {
-								});
+					assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
 
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
+				}
 
-					}
+				@Test
+				@DisplayName("ACCESO DENEGADO. Devuelve la lista de mensajes de un centro correctamente")
+				public void devuelveListaMensajes() {
 
-					@Test
-					@DisplayName("ACCESO DENEGADO. Elimina correctamente un mensaje existente")
-					public void EliminaMensajeById() {
+					var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1", token);
 
-						var peticion = delete("http", "localhost", port, "/mensaje/centro/1", token);
+					var responseEntity = restTemplate.exchange(peticion,
+							Void.class);
+					/*
+					 * ResponseEntity<List<MensajeDTO>> responseEntity =
+					 * restTemplate.exchange("http://localhost:" + port +
+					 * "/mensaje/centro?centro=1",
+					 * HttpMethod.GET,
+					 * null,
+					 * new ParameterizedTypeReference<List<MensajeDTO>>() {
+					 * });
+					 */
 
-						var respuesta = restTemplate.exchange(peticion,
-								Void.class);
-
-						assertThat(respuesta.getStatusCode().value()).isEqualTo(403);
-
-					}
-
-					@Test
-					@DisplayName("ACCESO DENEGADO. Devuelve la lista de mensajes de un centro correctamente")
-					public void devuelveListaMensajes() {
-
-						var peticion = get("http", "localhost", port, "/mensaje/centro?centro=1", token);
-
-						var responseEntity = restTemplate.exchange(peticion,
-								Void.class);
-						/*
-						 * ResponseEntity<List<MensajeDTO>> responseEntity =
-						 * restTemplate.exchange("http://localhost:" + port +
-						 * "/mensaje/centro?centro=1",
-						 * HttpMethod.GET,
-						 * null,
-						 * new ParameterizedTypeReference<List<MensajeDTO>>() {
-						 * });
-						 */
-
-						assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
-
-					}
+					assertThat(responseEntity.getStatusCode().value()).isEqualTo(403);
 
 				}
 
 			}
+
 		}
 	}
+
+}
